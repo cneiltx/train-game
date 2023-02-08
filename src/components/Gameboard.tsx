@@ -33,7 +33,7 @@ export const Gameboard = (props: GameboardProps) => {
   const DrawPlaceholders = (context: CanvasRenderingContext2D) => {
     for (const route of map.routes) {
       for (const position of route.positions) {
-        DrawPlaceholder(context, position.x, position.y, position.angle, route.color);
+        DrawPlaceholder(context, position.x, position.y, position.angle, route.color, route.carLength);
       }
     }
   }
@@ -46,13 +46,13 @@ export const Gameboard = (props: GameboardProps) => {
     DrawCity(context, 1264, 158, 'Montreal', -10, -20, 'left');
     DrawCity(context, 1353, 255, 'Boston', 15, 0, 'left');
     DrawCity(context, 116, 106, 'Seattle', -15, 5, 'right');
-    DrawCity(context, 432, 215, 'Billings', -20, 12, 'right'); // substituted for Helena
-    DrawCity(context, 799, 266, 'Minneapolis', 15, 0, 'left'); // substituted for Duluth
+    DrawCity(context, 432, 215, 'Billings', -35, 12, 'right'); // substituted for Helena
+    DrawCity(context, 799, 266, 'Minneapolis', -35, 15, 'right'); // substituted for Duluth
     DrawCity(context, 1154, 255, 'Toronto', 15, 0, 'left');
     DrawCity(context, 724, 389, 'Omaha', 15, 0, 'left');
     DrawCity(context, 936, 347, 'Chicago', 15, 0, 'left');
     DrawCity(context, 1148, 364, 'Pittsburgh', 15, 0, 'left');
-    DrawCity(context, 1304, 316, 'New York', 15, 0, 'left');
+    DrawCity(context, 1304, 316, 'New York', -10, -10, 'right');
     DrawCity(context, 1229, 402, 'Washington', 15, 0, 'left');
     DrawCity(context, 84, 188, 'Portland', -12, -10, 'right');
     DrawCity(context, 27, 430, 'San Francisco', 30, 30, 'left');
@@ -66,7 +66,7 @@ export const Gameboard = (props: GameboardProps) => {
     DrawCity(context, 1210, 608, 'Charleston', 15, 0, 'left');
     DrawCity(context, 105, 573, 'Los Angeles', 5, 20, 'right');
     DrawCity(context, 213, 524, 'Las Vegas', -5, 20, 'left');
-    DrawCity(context, 286, 614, 'Phoenix', 15, 0, 'left');
+    DrawCity(context, 286, 614, 'Phoenix', 8, -28, 'right');
     DrawCity(context, 458, 564, 'Santa Fe', 15, 0, 'left');
     DrawCity(context, 697, 588, 'Oklahoma\nCity', 15, 0, 'left');
     DrawCity(context, 843, 608, 'Little Rock', 15, 0, 'left');
@@ -110,10 +110,9 @@ export const Gameboard = (props: GameboardProps) => {
     context.restore();
   }
 
-  const DrawPlaceholder = (context: CanvasRenderingContext2D, x: number, y: number, angle: number, color: Color) => {
+  const DrawPlaceholder = (context: CanvasRenderingContext2D, x: number, y: number, angle: number, color: Color, carLength: number) => {
     context.save();
-    const width = 45;
-    const height = 15;
+    const carWidth = 15;
 
     switch (color) {
       case Color.Grey:
@@ -158,8 +157,8 @@ export const Gameboard = (props: GameboardProps) => {
     context.translate(x, y);
     context.rotate(angle * Math.PI / 180);
     context.globalAlpha = 0.65;
-    context.strokeRect(-width / 2, -height / 2, width, height);
-    context.fillRect(-width / 2, -height / 2, width, height);
+    context.strokeRect(-carLength / 2, -carWidth / 2, carLength, carWidth);
+    context.fillRect(-carLength / 2, -carWidth / 2, carLength, carWidth);
     context.restore();
   }
 
