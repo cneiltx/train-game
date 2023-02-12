@@ -49,11 +49,11 @@ export const Gameboard = (props: GameboardProps) => {
     DrawCity(context, 432, 215, 'Billings', -35, 12, 'right'); // substituted for Helena
     DrawCity(context, 799, 266, 'Minneapolis', -35, 15, 'right'); // substituted for Duluth
     DrawCity(context, 1154, 255, 'Toronto', 15, 0, 'left');
-    DrawCity(context, 724, 389, 'Omaha', 15, 0, 'left');
+    DrawCity(context, 724, 389, 'Omaha', -12, 25, 'right');
     DrawCity(context, 936, 347, 'Chicago', 15, 0, 'left');
-    DrawCity(context, 1148, 364, 'Pittsburgh', 15, 0, 'left');
-    DrawCity(context, 1304, 316, 'New York', -10, -10, 'right');
-    DrawCity(context, 1229, 402, 'Washington', 15, 0, 'left');
+    DrawCity(context, 1148, 364, 'Pittsburgh', -15, -20, 'right');
+    DrawCity(context, 1304, 316, 'New York', 12, 17, 'left');
+    DrawCity(context, 1229, 402, 'Washington', 82, 0, 'left');
     DrawCity(context, 84, 188, 'Portland', -12, -10, 'right');
     DrawCity(context, 27, 430, 'San Francisco', 30, 30, 'left');
     DrawCity(context, 318, 381, 'Salt Lake City', -45, -18, 'right');
@@ -66,7 +66,7 @@ export const Gameboard = (props: GameboardProps) => {
     DrawCity(context, 1210, 608, 'Charleston', 15, 0, 'left');
     DrawCity(context, 105, 573, 'Los Angeles', 5, 20, 'right');
     DrawCity(context, 213, 524, 'Las Vegas', -5, 20, 'left');
-    DrawCity(context, 286, 614, 'Phoenix', 8, -28, 'right');
+    DrawCity(context, 286, 614, 'Phoenix', 0, 20, 'right');
     DrawCity(context, 458, 564, 'Santa Fe', 15, 0, 'left');
     DrawCity(context, 697, 588, 'Oklahoma\nCity', 15, 0, 'left');
     DrawCity(context, 843, 608, 'Little Rock', 15, 0, 'left');
