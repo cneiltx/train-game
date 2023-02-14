@@ -61,12 +61,12 @@ export class GameMap {
     this.routes.push(route);
     route.positions.push(new RoutePosition(126, 76, 94));
 
-    route = new Route('Seattle', 'Calgary', Color.Grey);
+    route = new Route('Seattle', 'Calgary', Color.Grey, 46);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(160, 105, 0));
-    route.positions.push(new RoutePosition(209, 101, -10));
-    route.positions.push(new RoutePosition(259, 88, -20));
-    route.positions.push(new RoutePosition(303, 58, -50));
+    route.positions.push(new RoutePosition(162, 105, 0));
+    route.positions.push(new RoutePosition(211, 101, -9));
+    route.positions.push(new RoutePosition(260, 89, -19));
+    route.positions.push(new RoutePosition(303, 59, -50));
 
     route = new Route('Seattle', 'Billings', Color.Yellow, 44);
     this.routes.push(route);
@@ -315,12 +315,12 @@ export class GameMap {
     route.positions.push(new RoutePosition(853, 366, -20));
     route.positions.push(new RoutePosition(894, 355, -10));
 
-    route = new Route('Chicago', 'Toronto', Color.White, 46);
+    route = new Route('Chicago', 'Toronto', Color.White, 50);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(972, 323, -30));
-    route.positions.push(new RoutePosition(1021, 308, -5));
-    route.positions.push(new RoutePosition(1072, 304, -5));
-    route.positions.push(new RoutePosition(1120, 285, -40));
+    route.positions.push(new RoutePosition(960, 310, -50));
+    route.positions.push(new RoutePosition(1010, 286, 0));
+    route.positions.push(new RoutePosition(1065, 294, 17));
+    route.positions.push(new RoutePosition(1119, 284, -40));
 
     route = new Route('Toronto', 'Pittsburgh', Color.Grey, 30);
     this.routes.push(route);
@@ -368,5 +368,181 @@ export class GameMap {
     this.routes.push(route);
     route.positions.push(new RoutePosition(1198, 357, -18));
     route.positions.push(new RoutePosition(1252, 340, -18));
+
+    route = new Route('Pittsburgh', 'Washington', Color.Grey, 25);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(1174, 390, 45));
+    route.positions.push(new RoutePosition(1203, 402, 0));
+
+    route = new Route('Chicago', 'Pittsburgh', Color.Orange, 47);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(987, 336, 5));
+    route.positions.push(new RoutePosition(1039, 340, 5));
+    route.positions.push(new RoutePosition(1090, 344, 5));
+
+    route = new Route('Chicago', 'Pittsburgh', Color.Black, 47);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(985, 355, 5));
+    route.positions.push(new RoutePosition(1037, 359, 5));
+    route.positions.push(new RoutePosition(1088, 363, 5));
+
+    route = new Route('Raleigh', 'Washington', Color.Grey, 34);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(1206, 477, -80));
+    route.positions.push(new RoutePosition(1213, 439, -80));
+
+    route = new Route('Raleigh', 'Washington', Color.Grey, 34);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(1225, 480, -80));
+    route.positions.push(new RoutePosition(1232, 442, -80));
+
+    route = new Route('Pittsburgh', 'Raleigh', Color.Grey, 56);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(1150, 422, 90));
+    route.positions.push(new RoutePosition(1170, 480, 52));
+
+    route = new Route('Nashville', 'Pittsburgh', Color.Yellow, 43);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(1010, 505, -53));
+    route.positions.push(new RoutePosition(1045, 471, -33));
+    route.positions.push(new RoutePosition(1087, 446, -27));
+    route.positions.push(new RoutePosition(1123, 412, -65));
+
+    route = new Route('Saint Louis', 'Pittsburgh', Color.Green, 43);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(923, 464, -15));
+    route.positions.push(new RoutePosition(968, 450, -20));
+    route.positions.push(new RoutePosition(1013, 434, -20));
+    route.positions.push(new RoutePosition(1058, 417, -23));
+    route.positions.push(new RoutePosition(1100, 393, -35));
+
+    route = new Route('Saint Louis', 'Chicago', Color.Green, 40);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(884, 427, -62));
+    route.positions.push(new RoutePosition(905, 388, -62));
+
+    route = new Route('Saint Louis', 'Chicago', Color.White, 40);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(902, 437, -62));
+    route.positions.push(new RoutePosition(923, 398, -62));
+
+    route = new Route('Oklahoma City', 'Kansas City', Color.Grey, 43);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(708, 542, -60));
+    route.positions.push(new RoutePosition(732, 500, -60));
+
+    route = new Route('Oklahoma City', 'Kansas City', Color.Grey, 43);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(725, 552, -60));
+    route.positions.push(new RoutePosition(749, 510, -60));
+
+    route = new Route('Kansas City', 'Saint Louis', Color.Blue, 35);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(800, 457, 5));
+    route.positions.push(new RoutePosition(840, 460, 5));
+
+    route = new Route('Kansas City', 'Saint Louis', Color.Pink, 35);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(799, 477, 5));
+    route.positions.push(new RoutePosition(839, 480, 5));
+
+    route = new Route('Denver', 'Oklahoma City', Color.Red, 47);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(527, 482, 55));
+    route.positions.push(new RoutePosition(572, 508, 5));
+    route.positions.push(new RoutePosition(622, 520, 20));
+    route.positions.push(new RoutePosition(665, 550, 50));
+
+    route = new Route('Denver', 'Kansas City', Color.Black, 45);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(549, 436, 8));
+    route.positions.push(new RoutePosition(599, 443, 8));
+    route.positions.push(new RoutePosition(649, 450, 8));
+    route.positions.push(new RoutePosition(699, 457, 8));
+
+    route = new Route('Oklahoma City', 'Dallas', Color.Grey, 25);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(693, 625, 72));
+    route.positions.push(new RoutePosition(702, 654, 72));
+
+    route = new Route('Oklahoma City', 'Dallas', Color.Grey, 25);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(712, 619, 72));
+    route.positions.push(new RoutePosition(721, 648, 72));
+
+    route = new Route('Dallas', 'Houston', Color.Grey, 56);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(732, 729, 65));
+
+    route = new Route('Dallas', 'Houston', Color.Grey, 56);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(751, 721, 65));
+
+    route = new Route('Santa Fe', 'Oklahoma City', Color.Blue, 60);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(513, 568, 6));
+    route.positions.push(new RoutePosition(577, 575, 6));
+    route.positions.push(new RoutePosition(641, 582, 6));
+
+    route = new Route('El Paso', 'Oklahoma City', Color.Yellow, 40);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(486, 678, -40));
+    route.positions.push(new RoutePosition(527, 657, -15));
+    route.positions.push(new RoutePosition(571, 645, -15));
+    route.positions.push(new RoutePosition(615, 633, -15));
+    route.positions.push(new RoutePosition(657, 616, -30));
+
+    route = new Route('El Paso', 'Dallas', Color.Red, 53);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(502, 708, -6));
+    route.positions.push(new RoutePosition(560, 702, -6));
+    route.positions.push(new RoutePosition(618, 696, -6));
+    route.positions.push(new RoutePosition(676, 690, -6));
+
+    route = new Route('El Paso', 'Houston', Color.Green, 41);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(491, 739, 25));
+    route.positions.push(new RoutePosition(534, 755, 15));
+    route.positions.push(new RoutePosition(578, 765, 11));
+    route.positions.push(new RoutePosition(624, 770, 0));
+    route.positions.push(new RoutePosition(670, 770, 0));
+    route.positions.push(new RoutePosition(716, 770, 0));
+
+    route = new Route('Oklahoma City', 'Little Rock', Color.Grey, 47);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(744, 594, 9));
+    route.positions.push(new RoutePosition(795, 602, 9));
+
+    route = new Route('Dallas', 'Little Rock', Color.Grey, 46);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(758, 662, -31));
+    route.positions.push(new RoutePosition(802, 636, -31));
+
+    route = new Route('Saint Louis', 'Nashville', Color.Grey, 40);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(911, 499, 34));
+    route.positions.push(new RoutePosition(949, 524, 34));
+
+    route = new Route('Little Rock', 'Saint Louis', Color.Grey, 46);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(854, 565, -75));
+    route.positions.push(new RoutePosition(867, 516, -75));
+
+    route = new Route('Little Rock', 'Nashville', Color.White, 34);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(877, 595, -26));
+    route.positions.push(new RoutePosition(912, 578, -26));
+    route.positions.push(new RoutePosition(947, 561, -26));
+
+    route = new Route('Houston', 'New Orleans', Color.Grey, 57);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(813, 768, -1));
+    route.positions.push(new RoutePosition(875, 767, -1));
+
+    route = new Route('Little Rock', 'New Orleans', Color.Green, 42);
+    this.routes.push(route);
+    route.positions.push(new RoutePosition(862, 646, 60));
+    route.positions.push(new RoutePosition(885, 687, 60));
+    route.positions.push(new RoutePosition(908, 728, 60));
   }
 }

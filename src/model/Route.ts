@@ -8,7 +8,7 @@ export class Route {
   carLength: number;
   positions: RoutePosition[];
 
-  constructor(city1: string, city2: string, color: Color, carLength: number = 45) {
+  constructor(city1: string, city2: string, color: Color, carLength: number) {
     this.city1 = city1;
     this.city2 = city2;
     this.color = color;

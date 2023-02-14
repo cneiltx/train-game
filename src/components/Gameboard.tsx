@@ -50,16 +50,16 @@ export const Gameboard = (props: GameboardProps) => {
     DrawCity(context, 799, 266, 'Minneapolis', -35, 15, 'right'); // substituted for Duluth
     DrawCity(context, 1154, 255, 'Toronto', 15, 0, 'left');
     DrawCity(context, 724, 389, 'Omaha', -12, 25, 'right');
-    DrawCity(context, 936, 347, 'Chicago', 15, 0, 'left');
-    DrawCity(context, 1148, 364, 'Pittsburgh', -15, -20, 'right');
+    DrawCity(context, 936, 347, 'Chicago', -30, -12, 'right');
+    DrawCity(context, 1148, 364, 'Pittsburgh', -12, -38, 'right');
     DrawCity(context, 1304, 316, 'New York', 12, 17, 'left');
-    DrawCity(context, 1229, 402, 'Washington', 82, 0, 'left');
+    DrawCity(context, 1229, 402, 'Washington', 20, 25, 'left');
     DrawCity(context, 84, 188, 'Portland', -12, -10, 'right');
     DrawCity(context, 27, 430, 'San Francisco', 30, 30, 'left');
     DrawCity(context, 318, 381, 'Salt Lake City', -45, -18, 'right');
-    DrawCity(context, 498, 437, 'Denver', 15, 0, 'left');
-    DrawCity(context, 761, 465, 'Kansas\nCity', 15, 0, 'left');
-    DrawCity(context, 877, 472, 'Saint Louis', 15, 0, 'left');
+    DrawCity(context, 498, 437, 'Denver', -40, 22, 'right');
+    DrawCity(context, 761, 465, 'Kansas\nCity', 12, 33, 'left');
+    DrawCity(context, 877, 472, 'Saint\nLouis', -15, -45, 'right');
     DrawCity(context, 985, 545, 'Nashville', 15, 0, 'left');
     DrawCity(context, 1208, 516, 'Raleigh', 15, 0, 'left');
     DrawCity(context, 1064, 615, 'Atlanta', 15, 0, 'left');
@@ -67,12 +67,12 @@ export const Gameboard = (props: GameboardProps) => {
     DrawCity(context, 105, 573, 'Los Angeles', 5, 20, 'right');
     DrawCity(context, 213, 524, 'Las Vegas', -5, 20, 'left');
     DrawCity(context, 286, 614, 'Phoenix', 0, 20, 'right');
-    DrawCity(context, 458, 564, 'Santa Fe', 15, 0, 'left');
-    DrawCity(context, 697, 588, 'Oklahoma\nCity', 15, 0, 'left');
-    DrawCity(context, 843, 608, 'Little Rock', 15, 0, 'left');
-    DrawCity(context, 450, 708, 'El Paso', 15, 0, 'left');
-    DrawCity(context, 720, 682, 'Dallas', 15, 0, 'left');
-    DrawCity(context, 762, 769, 'Houston', 15, 0, 'left');
+    DrawCity(context, 458, 564, 'Santa Fe', 25, -15, 'left');
+    DrawCity(context, 697, 588, 'Oklahoma\nCity', 42, -30, 'left');
+    DrawCity(context, 843, 608, 'Little Rock', 15, 30, 'left');
+    DrawCity(context, 450, 708, 'El Paso', 0, 25, 'right');
+    DrawCity(context, 720, 682, 'Dallas', -27, -10, 'right');
+    DrawCity(context, 762, 769, 'Houston', 0, 25, 'center');
     DrawCity(context, 932, 766, 'New\nOrleans', 15, 0, 'left');
     DrawCity(context, 1238, 862, 'Miami', 15, 0, 'left');
   }
