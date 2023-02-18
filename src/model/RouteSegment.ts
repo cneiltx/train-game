@@ -1,4 +1,4 @@
-export class RoutePosition {
+export class RouteSegment {
   x: number;
   y: number;
   angle: number;

@@ -1,7 +1,15 @@
 import { useEffect, useRef } from 'react';
 import usMap from '../images/ttr-us-map.png';
-import { Color } from '../model/Color';
+import redCar from '../images/car-red.png';
+import yellowCar from '../images/car-yellow.png';
+import blueCar from '../images/car-blue.png';
+import greenCar from '../images/car-green.png';
+import purpleCar from '../images/car-purple.png';
+import blackCar from '../images/car-black.png';
+import { RouteColor } from '../model/RouteColor';
 import { GameMap } from '../model/GameMap';
+import { TrainColor } from '../model/TrainColor';
+import { Route } from '../model/Route';
 
 export type GameboardProps = {
   width: string;
@@ -25,16 +33,22 @@ export const Gameboard = (props: GameboardProps) => {
       context.globalAlpha = 0.7;
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
       context.restore();
-      DrawPlaceholders(context);
+      DrawRoutes(context);
       DrawCities(context);
     }
   }, []);
 
-  const DrawPlaceholders = (context: CanvasRenderingContext2D) => {
+  const FindOpenRoute = (city1: string, city2: string) => {
+    return map.routes.find(item => item.train === null && ((item.city1 === city1 && item.city2 === city2) || (item.city1 === city2 && item.city2 === city1)));
+  }
+
+  const DrawRoutes = (context: CanvasRenderingContext2D) => {
     for (const route of map.routes) {
-      for (const position of route.positions) {
-        DrawPlaceholder(context, position.x, position.y, position.angle, route.color, route.carLength);
+      for (const segment of route.segments) {
+        DrawRouteSegment(context, segment.x, segment.y, segment.angle, route.color, route.carLength);
       }
+      route.train = TrainColor.Black;
+      DrawTrain(context, route);
     }
   }
 
@@ -110,44 +124,44 @@ export const Gameboard = (props: GameboardProps) => {
     context.restore();
   }
 
-  const DrawPlaceholder = (context: CanvasRenderingContext2D, x: number, y: number, angle: number, color: Color, carLength: number) => {
+  const DrawRouteSegment = (context: CanvasRenderingContext2D, x: number, y: number, angle: number, color: RouteColor, carLength: number) => {
     context.save();
     const carWidth = 15;
 
     switch (color) {
-      case Color.Grey:
+      case RouteColor.Grey:
         context.strokeStyle = 'floralwhite';
         context.fillStyle = 'dimgrey';
         break;
-      case Color.Black:
+      case RouteColor.Black:
         context.strokeStyle = 'floralwhite';
         context.fillStyle = 'black';
         break;
-      case Color.White:
+      case RouteColor.White:
         context.strokeStyle = 'dimgrey';
         context.fillStyle = 'floralwhite';
         break;
-      case Color.Red:
+      case RouteColor.Red:
         context.strokeStyle = 'floralwhite';
         context.fillStyle = 'firebrick';
         break;
-      case Color.Yellow:
+      case RouteColor.Yellow:
         context.strokeStyle = 'floralwhite';
         context.fillStyle = 'gold';
         break;
-      case Color.Blue:
+      case RouteColor.Blue:
         context.strokeStyle = 'floralwhite';
         context.fillStyle = 'royalblue';
         break;
-      case Color.Orange:
+      case RouteColor.Orange:
         context.strokeStyle = 'floralwhite';
         context.fillStyle = 'orange';
         break;
-      case Color.Green:
+      case RouteColor.Green:
         context.strokeStyle = 'floralwhite';
         context.fillStyle = 'mediumseagreen';
         break;
-      case Color.Pink:
+      case RouteColor.Pink:
         context.strokeStyle = 'floralwhite';
         context.fillStyle = 'palevioletred';
         break;
@@ -156,10 +170,45 @@ export const Gameboard = (props: GameboardProps) => {
     context.lineWidth = 4
     context.translate(x, y);
     context.rotate(angle * Math.PI / 180);
-    context.globalAlpha = 0.65;
+    context.globalAlpha = 0.45;
     context.strokeRect(-carLength / 2, -carWidth / 2, carLength, carWidth);
     context.fillRect(-carLength / 2, -carWidth / 2, carLength, carWidth);
     context.restore();
+  }
+
+  const DrawTrain = (context: CanvasRenderingContext2D, route: Route) => {
+    const carWidth = 15;
+
+    for (const segment of route.segments) {
+      const image = new Image();
+
+      switch (route.train) {
+        case TrainColor.Red:
+          image.src = redCar;
+          break;
+        case TrainColor.Yellow:
+          image.src = yellowCar;
+          break;
+        case TrainColor.Blue:
+          image.src = blueCar;
+          break;
+        case TrainColor.Green:
+          image.src = greenCar;
+          break;
+        case TrainColor.Purple:
+          image.src = purpleCar;
+          break;
+        case TrainColor.Black:
+          image.src = blackCar;
+          break;
+      }
+
+      context.save();
+      context.translate(segment.x, segment.y);
+      context.rotate(segment.angle * Math.PI / 180);
+      context.drawImage(image, -route.carLength / 2, -carWidth / 2, route.carLength, carWidth);
+      context.restore();
+    }
   }
 
   return <canvas className='gameboard' ref={canvasRef} {...props} />

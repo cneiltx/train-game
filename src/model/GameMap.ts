@@ -1,6 +1,6 @@
-import { Color } from "./Color";
+import { RouteColor } from "./RouteColor";
 import { Route } from "./Route";
-import { RoutePosition } from "./RoutePosition";
+import { RouteSegment } from "./RouteSegment";
 
 export class GameMap {
   routes: Route[];
@@ -11,600 +11,600 @@ export class GameMap {
   }
 
   private populateRoutes() {
-    let route = new Route('Vancouver', 'Calgary', Color.Grey, 53);
+    let route = new Route('Vancouver', 'Calgary', RouteColor.Grey, 53);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(167, 39, -5));
-    route.positions.push(new RoutePosition(225, 34, -5));
-    route.positions.push(new RoutePosition(283, 29, -5));
+    route.segments.push(new RouteSegment(167, 39, -5));
+    route.segments.push(new RouteSegment(225, 34, -5));
+    route.segments.push(new RouteSegment(283, 29, -5));
 
-    route = new Route('Calgary', 'Winnipeg', Color.White, 50);
+    route = new Route('Calgary', 'Winnipeg', RouteColor.White, 50);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(378, 33, 10));
-    route.positions.push(new RoutePosition(432, 43, 10));
-    route.positions.push(new RoutePosition(486, 53, 10));
-    route.positions.push(new RoutePosition(540, 63, 10));
-    route.positions.push(new RoutePosition(594, 73, 10));
-    route.positions.push(new RoutePosition(648, 83, 10));
+    route.segments.push(new RouteSegment(378, 33, 10));
+    route.segments.push(new RouteSegment(432, 43, 10));
+    route.segments.push(new RouteSegment(486, 53, 10));
+    route.segments.push(new RouteSegment(540, 63, 10));
+    route.segments.push(new RouteSegment(594, 73, 10));
+    route.segments.push(new RouteSegment(648, 83, 10));
 
-    route = new Route('Winnipeg', 'Sault St. Marie', Color.Grey, 40);
+    route = new Route('Winnipeg', 'Sault St. Marie', RouteColor.Grey, 40);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(740, 102, 15));
-    route.positions.push(new RoutePosition(784, 114, 15));
-    route.positions.push(new RoutePosition(828, 126, 15));
-    route.positions.push(new RoutePosition(872, 138, 15));
-    route.positions.push(new RoutePosition(916, 150, 15));
-    route.positions.push(new RoutePosition(960, 162, 15));
+    route.segments.push(new RouteSegment(740, 102, 15));
+    route.segments.push(new RouteSegment(784, 114, 15));
+    route.segments.push(new RouteSegment(828, 126, 15));
+    route.segments.push(new RouteSegment(872, 138, 15));
+    route.segments.push(new RouteSegment(916, 150, 15));
+    route.segments.push(new RouteSegment(960, 162, 15));
 
-    route = new Route('Sault St. Marie', 'Montreal', Color.Black, 39);
+    route = new Route('Sault St. Marie', 'Montreal', RouteColor.Black, 39);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1046, 168, -7));
-    route.positions.push(new RoutePosition(1089, 163, -7));
-    route.positions.push(new RoutePosition(1133, 158, -7));
-    route.positions.push(new RoutePosition(1176, 153, -7));
-    route.positions.push(new RoutePosition(1219, 152, 5));
+    route.segments.push(new RouteSegment(1046, 168, -7));
+    route.segments.push(new RouteSegment(1089, 163, -7));
+    route.segments.push(new RouteSegment(1133, 158, -7));
+    route.segments.push(new RouteSegment(1176, 153, -7));
+    route.segments.push(new RouteSegment(1219, 152, 5));
 
-    route = new Route('Montreal', 'Boston', Color.Grey, 42);
+    route = new Route('Montreal', 'Boston', RouteColor.Grey, 42);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1286, 196, 50));
-    route.positions.push(new RoutePosition(1316, 231, 50));
+    route.segments.push(new RouteSegment(1286, 196, 50));
+    route.segments.push(new RouteSegment(1316, 231, 50));
 
-    route = new Route('Montreal', 'Boston', Color.Grey, 42);
+    route = new Route('Montreal', 'Boston', RouteColor.Grey, 42);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1301, 184, 50));
-    route.positions.push(new RoutePosition(1331, 219, 50));
+    route.segments.push(new RouteSegment(1301, 184, 50));
+    route.segments.push(new RouteSegment(1331, 219, 50));
 
-    route = new Route('Vancouver', 'Seattle', Color.Grey, 30);
+    route = new Route('Vancouver', 'Seattle', RouteColor.Grey, 30);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(107, 75, 94));
+    route.segments.push(new RouteSegment(107, 75, -86));
 
-    route = new Route('Vancouver', 'Seattle', Color.Grey, 30);
+    route = new Route('Vancouver', 'Seattle', RouteColor.Grey, 30);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(126, 76, 94));
+    route.segments.push(new RouteSegment(126, 76, -86));
 
-    route = new Route('Seattle', 'Calgary', Color.Grey, 46);
+    route = new Route('Seattle', 'Calgary', RouteColor.Grey, 46);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(162, 105, 0));
-    route.positions.push(new RoutePosition(211, 101, -9));
-    route.positions.push(new RoutePosition(260, 89, -19));
-    route.positions.push(new RoutePosition(303, 59, -50));
+    route.segments.push(new RouteSegment(162, 105, 0));
+    route.segments.push(new RouteSegment(211, 101, -9));
+    route.segments.push(new RouteSegment(260, 89, -19));
+    route.segments.push(new RouteSegment(303, 59, -50));
 
-    route = new Route('Seattle', 'Billings', Color.Yellow, 44);
+    route = new Route('Seattle', 'Billings', RouteColor.Yellow, 44);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(150, 135, 30));
-    route.positions.push(new RoutePosition(197, 154, 15));
-    route.positions.push(new RoutePosition(245, 167, 15));
-    route.positions.push(new RoutePosition(292, 180, 15));
-    route.positions.push(new RoutePosition(339, 193, 15));
-    route.positions.push(new RoutePosition(386, 206, 15));
+    route.segments.push(new RouteSegment(150, 135, 30));
+    route.segments.push(new RouteSegment(197, 154, 15));
+    route.segments.push(new RouteSegment(245, 167, 15));
+    route.segments.push(new RouteSegment(292, 180, 15));
+    route.segments.push(new RouteSegment(339, 193, 15));
+    route.segments.push(new RouteSegment(386, 206, 15));
 
-    route = new Route('Calgary', 'Billings', Color.Grey, 40);
+    route = new Route('Calgary', 'Billings', RouteColor.Grey, 40);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(346, 62, 60));
-    route.positions.push(new RoutePosition(368, 101, 60));
-    route.positions.push(new RoutePosition(390, 140, 60));
-    route.positions.push(new RoutePosition(412, 179, 60));
+    route.segments.push(new RouteSegment(346, 62, 60));
+    route.segments.push(new RouteSegment(368, 101, 60));
+    route.segments.push(new RouteSegment(390, 140, 60));
+    route.segments.push(new RouteSegment(412, 179, 60));
 
-    route = new Route('Billings', 'Winnipeg', Color.Blue, 58);
+    route = new Route('Billings', 'Winnipeg', RouteColor.Blue, 58);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(470, 179, -40));
-    route.positions.push(new RoutePosition(530, 154, -5));
-    route.positions.push(new RoutePosition(593, 149, -5));
-    route.positions.push(new RoutePosition(654, 126, -38));
+    route.segments.push(new RouteSegment(470, 179, -40));
+    route.segments.push(new RouteSegment(530, 154, -5));
+    route.segments.push(new RouteSegment(593, 149, -5));
+    route.segments.push(new RouteSegment(654, 126, -38));
 
-    route = new Route('Billings', 'Minneapolis', Color.Orange, 49);
+    route = new Route('Billings', 'Minneapolis', RouteColor.Orange, 49);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(480, 220, 8));
-    route.positions.push(new RoutePosition(534, 228, 8));
-    route.positions.push(new RoutePosition(588, 236, 8));
-    route.positions.push(new RoutePosition(642, 244, 8));
-    route.positions.push(new RoutePosition(696, 252, 8));
-    route.positions.push(new RoutePosition(750, 260, 8));
+    route.segments.push(new RouteSegment(480, 220, 8));
+    route.segments.push(new RouteSegment(534, 228, 8));
+    route.segments.push(new RouteSegment(588, 236, 8));
+    route.segments.push(new RouteSegment(642, 244, 8));
+    route.segments.push(new RouteSegment(696, 252, 8));
+    route.segments.push(new RouteSegment(750, 260, 8));
 
-    route = new Route('Winnipeg', 'Minneapolis', Color.Black, 37);
+    route = new Route('Winnipeg', 'Minneapolis', RouteColor.Black, 37);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(715, 128, 58));
-    route.positions.push(new RoutePosition(737, 163, 58));
-    route.positions.push(new RoutePosition(759, 198, 58));
-    route.positions.push(new RoutePosition(781, 233, 58));
+    route.segments.push(new RouteSegment(715, 128, 58));
+    route.segments.push(new RouteSegment(737, 163, 58));
+    route.segments.push(new RouteSegment(759, 198, 58));
+    route.segments.push(new RouteSegment(781, 233, 58));
 
-    route = new Route('Minneapolis', 'Toronto', Color.Pink, 46);
+    route = new Route('Minneapolis', 'Toronto', RouteColor.Pink, 46);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(850, 264, -2));
-    route.positions.push(new RoutePosition(901, 262, -2));
-    route.positions.push(new RoutePosition(952, 260, -2));
-    route.positions.push(new RoutePosition(1003, 258, -2));
-    route.positions.push(new RoutePosition(1054, 256, -2));
-    route.positions.push(new RoutePosition(1105, 254, -2));
+    route.segments.push(new RouteSegment(850, 264, -2));
+    route.segments.push(new RouteSegment(901, 262, -2));
+    route.segments.push(new RouteSegment(952, 260, -2));
+    route.segments.push(new RouteSegment(1003, 258, -2));
+    route.segments.push(new RouteSegment(1054, 256, -2));
+    route.segments.push(new RouteSegment(1105, 254, -2));
 
-    route = new Route('Minneapolis', 'Sault St. Marie', Color.Grey, 55);
+    route = new Route('Minneapolis', 'Sault St. Marie', RouteColor.Grey, 55);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(840, 231, -35));
-    route.positions.push(new RoutePosition(898, 213, -2));
-    route.positions.push(new RoutePosition(958, 200, -25));
+    route.segments.push(new RouteSegment(840, 231, -35));
+    route.segments.push(new RouteSegment(898, 213, -2));
+    route.segments.push(new RouteSegment(958, 200, -25));
 
-    route = new Route('Sault St. Marie', 'Toronto', Color.Grey, 55);
+    route = new Route('Sault St. Marie', 'Toronto', RouteColor.Grey, 55);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1050, 202, 20));
-    route.positions.push(new RoutePosition(1106, 224, 23));
+    route.segments.push(new RouteSegment(1050, 202, 20));
+    route.segments.push(new RouteSegment(1106, 224, 23));
 
-    route = new Route('Seattle', 'Portland', Color.Grey, 40);
+    route = new Route('Seattle', 'Portland', RouteColor.Grey, 40);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(92, 145, 113));
+    route.segments.push(new RouteSegment(92, 145, -67));
 
-    route = new Route('Seattle', 'Portland', Color.Grey, 40);
+    route = new Route('Seattle', 'Portland', RouteColor.Grey, 40);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(110, 153, 113));
+    route.segments.push(new RouteSegment(110, 153, -67));
 
-    route = new Route('Portland', 'San Francisco', Color.Green, 40);
+    route = new Route('Portland', 'San Francisco', RouteColor.Green, 40);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(55, 214, 120));
-    route.positions.push(new RoutePosition(35, 255, 110));
-    route.positions.push(new RoutePosition(23, 299, 100));
-    route.positions.push(new RoutePosition(19, 343, 90));
-    route.positions.push(new RoutePosition(19, 388, 90));
+    route.segments.push(new RouteSegment(55, 214, -60));
+    route.segments.push(new RouteSegment(35, 255, -70));
+    route.segments.push(new RouteSegment(23, 299, -80));
+    route.segments.push(new RouteSegment(19, 343, -90));
+    route.segments.push(new RouteSegment(19, 388, -90));
 
-    route = new Route('Portland', 'San Francisco', Color.Pink, 38);
+    route = new Route('Portland', 'San Francisco', RouteColor.Pink, 38);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(73, 223, 120));
-    route.positions.push(new RoutePosition(54, 262, 110));
-    route.positions.push(new RoutePosition(43, 304, 100));
-    route.positions.push(new RoutePosition(39, 347, 90));
-    route.positions.push(new RoutePosition(39, 390, 90));
+    route.segments.push(new RouteSegment(73, 223, -60));
+    route.segments.push(new RouteSegment(54, 262, -70));
+    route.segments.push(new RouteSegment(43, 304, -80));
+    route.segments.push(new RouteSegment(39, 347, -90));
+    route.segments.push(new RouteSegment(39, 390, -90));
 
-    route = new Route('Portland', 'Salt Lake City', Color.Blue, 40);
+    route = new Route('Portland', 'Salt Lake City', RouteColor.Blue, 40);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(118, 212, 40));
-    route.positions.push(new RoutePosition(152, 240, 40));
-    route.positions.push(new RoutePosition(186, 268, 40));
-    route.positions.push(new RoutePosition(220, 296, 40));
-    route.positions.push(new RoutePosition(254, 324, 40));
-    route.positions.push(new RoutePosition(288, 352, 40));
+    route.segments.push(new RouteSegment(118, 212, 40));
+    route.segments.push(new RouteSegment(152, 240, 40));
+    route.segments.push(new RouteSegment(186, 268, 40));
+    route.segments.push(new RouteSegment(220, 296, 40));
+    route.segments.push(new RouteSegment(254, 324, 40));
+    route.segments.push(new RouteSegment(288, 352, 40));
 
-    route = new Route('San Francisco', 'Salt Lake City', Color.Orange, 43);
+    route = new Route('San Francisco', 'Salt Lake City', RouteColor.Orange, 43);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(76, 413, -10));
-    route.positions.push(new RoutePosition(123, 405, -10));
-    route.positions.push(new RoutePosition(170, 397, -10));
-    route.positions.push(new RoutePosition(217, 389, -10));
-    route.positions.push(new RoutePosition(264, 381, -10));
+    route.segments.push(new RouteSegment(76, 413, -10));
+    route.segments.push(new RouteSegment(123, 405, -10));
+    route.segments.push(new RouteSegment(170, 397, -10));
+    route.segments.push(new RouteSegment(217, 389, -10));
+    route.segments.push(new RouteSegment(264, 381, -10));
 
-    route = new Route('San Francisco', 'Salt Lake City', Color.White, 43);
+    route = new Route('San Francisco', 'Salt Lake City', RouteColor.White, 43);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(80, 433, -10));
-    route.positions.push(new RoutePosition(127, 425, -10));
-    route.positions.push(new RoutePosition(174, 417, -10));
-    route.positions.push(new RoutePosition(221, 409, -10));
-    route.positions.push(new RoutePosition(268, 401, -10));
+    route.segments.push(new RouteSegment(80, 433, -10));
+    route.segments.push(new RouteSegment(127, 425, -10));
+    route.segments.push(new RouteSegment(174, 417, -10));
+    route.segments.push(new RouteSegment(221, 409, -10));
+    route.segments.push(new RouteSegment(268, 401, -10));
 
-    route = new Route('Salt Lake City', 'Billings', Color.Pink, 48);
+    route = new Route('Salt Lake City', 'Billings', RouteColor.Pink, 48);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(344, 341, -57));
-    route.positions.push(new RoutePosition(372, 297, -57));
-    route.positions.push(new RoutePosition(400, 253, -57));
+    route.segments.push(new RouteSegment(344, 341, -57));
+    route.segments.push(new RouteSegment(372, 297, -57));
+    route.segments.push(new RouteSegment(400, 253, -57));
 
-    route = new Route('San Francisco', 'Los Angeles', Color.Yellow, 40);
+    route = new Route('San Francisco', 'Los Angeles', RouteColor.Yellow, 40);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(28, 473, 75));
-    route.positions.push(new RoutePosition(44, 516, 65));
-    route.positions.push(new RoutePosition(70, 554, 45));
+    route.segments.push(new RouteSegment(28, 473, 75));
+    route.segments.push(new RouteSegment(44, 516, 65));
+    route.segments.push(new RouteSegment(70, 554, 45));
 
-    route = new Route('San Francisco', 'Los Angeles', Color.Pink, 36);
+    route = new Route('San Francisco', 'Los Angeles', RouteColor.Pink, 36);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(47, 466, 75));
-    route.positions.push(new RoutePosition(61, 505, 65));
-    route.positions.push(new RoutePosition(85, 540, 45));
+    route.segments.push(new RouteSegment(47, 466, 75));
+    route.segments.push(new RouteSegment(61, 505, 65));
+    route.segments.push(new RouteSegment(85, 540, 45));
 
-    route = new Route('Los Angeles', 'Las Vegas', Color.Grey, 37);
+    route = new Route('Los Angeles', 'Las Vegas', RouteColor.Grey, 37);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(135, 544, -40));
-    route.positions.push(new RoutePosition(174, 527, -8));
+    route.segments.push(new RouteSegment(135, 544, -40));
+    route.segments.push(new RouteSegment(174, 527, -8));
 
-    route = new Route('Las Vegas', 'Salt Lake City', Color.Orange, 40);
+    route = new Route('Las Vegas', 'Salt Lake City', RouteColor.Orange, 40);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(249, 496, -45));
-    route.positions.push(new RoutePosition(278, 462, -55));
-    route.positions.push(new RoutePosition(300, 423, -65));
+    route.segments.push(new RouteSegment(249, 496, -45));
+    route.segments.push(new RouteSegment(278, 462, -55));
+    route.segments.push(new RouteSegment(300, 423, -65));
 
-    route = new Route('Billings', 'Denver', Color.Green, 44);
+    route = new Route('Billings', 'Denver', RouteColor.Green, 44);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(436, 260, 80));
-    route.positions.push(new RoutePosition(453, 306, 60));
-    route.positions.push(new RoutePosition(473, 350, 73));
-    route.positions.push(new RoutePosition(487, 396, 73));
+    route.segments.push(new RouteSegment(436, 260, 80));
+    route.segments.push(new RouteSegment(453, 306, 60));
+    route.segments.push(new RouteSegment(473, 350, 73));
+    route.segments.push(new RouteSegment(487, 396, 73));
 
-    route = new Route('Salt Lake City', 'Denver', Color.Red, 43);
+    route = new Route('Salt Lake City', 'Denver', RouteColor.Red, 43);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(364, 385, 20));
-    route.positions.push(new RoutePosition(409, 401, 20));
-    route.positions.push(new RoutePosition(454, 417, 20));
+    route.segments.push(new RouteSegment(364, 385, 20));
+    route.segments.push(new RouteSegment(409, 401, 20));
+    route.segments.push(new RouteSegment(454, 417, 20));
 
-    route = new Route('Salt Lake City', 'Denver', Color.Yellow, 43);
+    route = new Route('Salt Lake City', 'Denver', RouteColor.Yellow, 43);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(357, 404, 20));
-    route.positions.push(new RoutePosition(402, 420, 20));
-    route.positions.push(new RoutePosition(447, 436, 20));
+    route.segments.push(new RouteSegment(357, 404, 20));
+    route.segments.push(new RouteSegment(402, 420, 20));
+    route.segments.push(new RouteSegment(447, 436, 20));
 
-    route = new Route('Los Angeles', 'El Paso', Color.Black, 53);
+    route = new Route('Los Angeles', 'El Paso', RouteColor.Black, 53);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(140, 610, 40));
-    route.positions.push(new RoutePosition(185, 645, 35));
-    route.positions.push(new RoutePosition(233, 676, 30));
-    route.positions.push(new RoutePosition(286, 698, 15));
-    route.positions.push(new RoutePosition(343, 708, 5));
-    route.positions.push(new RoutePosition(400, 710, 0));
+    route.segments.push(new RouteSegment(140, 610, 40));
+    route.segments.push(new RouteSegment(185, 645, 35));
+    route.segments.push(new RouteSegment(233, 676, 30));
+    route.segments.push(new RouteSegment(286, 698, 15));
+    route.segments.push(new RouteSegment(343, 708, 5));
+    route.segments.push(new RouteSegment(400, 710, 0));
 
-    route = new Route('Los Angeles', 'Phoenix', Color.Grey, 44);
+    route = new Route('Los Angeles', 'Phoenix', RouteColor.Grey, 44);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(149, 583, 14));
-    route.positions.push(new RoutePosition(197, 595, 14));
-    route.positions.push(new RoutePosition(245, 606, 14));
+    route.segments.push(new RouteSegment(149, 583, 14));
+    route.segments.push(new RouteSegment(197, 595, 14));
+    route.segments.push(new RouteSegment(245, 606, 14));
 
-    route = new Route('Phoenix', 'Denver', Color.White, 42);
+    route = new Route('Phoenix', 'Denver', RouteColor.White, 42);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(313, 580, -50));
-    route.positions.push(new RoutePosition(348, 549, -35));
-    route.positions.push(new RoutePosition(390, 527, -22));
-    route.positions.push(new RoutePosition(432, 505, -35));
-    route.positions.push(new RoutePosition(466, 473, -50));
+    route.segments.push(new RouteSegment(313, 580, -50));
+    route.segments.push(new RouteSegment(348, 549, -35));
+    route.segments.push(new RouteSegment(390, 527, -22));
+    route.segments.push(new RouteSegment(432, 505, -35));
+    route.segments.push(new RouteSegment(466, 473, -50));
 
-    route = new Route('Phoenix', 'Santa Fe', Color.Grey, 43);
+    route = new Route('Phoenix', 'Santa Fe', RouteColor.Grey, 43);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(330, 607, -15));
-    route.positions.push(new RoutePosition(375, 593, -20));
-    route.positions.push(new RoutePosition(420, 577, -20));
+    route.segments.push(new RouteSegment(330, 607, -15));
+    route.segments.push(new RouteSegment(375, 593, -20));
+    route.segments.push(new RouteSegment(420, 577, -20));
 
-    route = new Route('Phoenix', 'El Paso', Color.Grey, 44);
+    route = new Route('Phoenix', 'El Paso', RouteColor.Grey, 44);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(326, 643, 30));
-    route.positions.push(new RoutePosition(371, 661, 14));
-    route.positions.push(new RoutePosition(415, 680, 35));
+    route.segments.push(new RouteSegment(326, 643, 30));
+    route.segments.push(new RouteSegment(371, 661, 14));
+    route.segments.push(new RouteSegment(415, 680, 35));
 
-    route = new Route('El Paso', 'Santa Fe', Color.Grey, 46);
+    route = new Route('El Paso', 'Santa Fe', RouteColor.Grey, 46);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(453, 661, -88));
-    route.positions.push(new RoutePosition(455, 610, -88));
+    route.segments.push(new RouteSegment(453, 661, -88));
+    route.segments.push(new RouteSegment(455, 610, -88));
 
-    route = new Route('Santa Fe', 'Denver', Color.Grey, 43);
+    route = new Route('Santa Fe', 'Denver', RouteColor.Grey, 43);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(478, 530, -60));
-    route.positions.push(new RoutePosition(494, 486, -80));
+    route.segments.push(new RouteSegment(478, 530, -60));
+    route.segments.push(new RouteSegment(494, 486, -80));
 
-    route = new Route('Denver', 'Omaha', Color.Pink, 45);
+    route = new Route('Denver', 'Omaha', RouteColor.Pink, 45);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(532, 408, -35));
-    route.positions.push(new RoutePosition(580, 393, 0));
-    route.positions.push(new RoutePosition(630, 393, 0));
-    route.positions.push(new RoutePosition(679, 391, -5));
+    route.segments.push(new RouteSegment(532, 408, -35));
+    route.segments.push(new RouteSegment(580, 393, 0));
+    route.segments.push(new RouteSegment(630, 393, 0));
+    route.segments.push(new RouteSegment(679, 391, -5));
 
-    route = new Route('Billings', 'Omaha', Color.Red, 56);
+    route = new Route('Billings', 'Omaha', RouteColor.Red, 56);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(468, 251, 45));
-    route.positions.push(new RoutePosition(518, 285, 25));
-    route.positions.push(new RoutePosition(574, 307, 18));
-    route.positions.push(new RoutePosition(632, 325, 18));
-    route.positions.push(new RoutePosition(685, 355, 40));
+    route.segments.push(new RouteSegment(468, 251, 45));
+    route.segments.push(new RouteSegment(518, 285, 25));
+    route.segments.push(new RouteSegment(574, 307, 18));
+    route.segments.push(new RouteSegment(632, 325, 18));
+    route.segments.push(new RouteSegment(685, 355, 40));
 
-    route = new Route('Omaha', 'Minneapolis', Color.Grey, 45);
+    route = new Route('Omaha', 'Minneapolis', RouteColor.Grey, 45);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(738, 343, -58));
-    route.positions.push(new RoutePosition(764, 301, -58));
+    route.segments.push(new RouteSegment(738, 343, -58));
+    route.segments.push(new RouteSegment(764, 301, -58));
 
-    route = new Route('Omaha', 'Minneapolis', Color.Grey, 45);
+    route = new Route('Omaha', 'Minneapolis', RouteColor.Grey, 45);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(756, 353, -58));
-    route.positions.push(new RoutePosition(782, 311, -58));
+    route.segments.push(new RouteSegment(756, 353, -58));
+    route.segments.push(new RouteSegment(782, 311, -58));
 
-    route = new Route('Minneapolis', 'Chicago', Color.Red, 36);
+    route = new Route('Minneapolis', 'Chicago', RouteColor.Red, 36);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(831, 294, 38));
-    route.positions.push(new RoutePosition(871, 307, 0));
-    route.positions.push(new RoutePosition(910, 320, 40));
+    route.segments.push(new RouteSegment(831, 294, 38));
+    route.segments.push(new RouteSegment(871, 307, 0));
+    route.segments.push(new RouteSegment(910, 320, 40));
 
-    route = new Route('Omaha', 'Kansas City', Color.Grey, 42);
+    route = new Route('Omaha', 'Kansas City', RouteColor.Grey, 42);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(733, 432, 65));
+    route.segments.push(new RouteSegment(733, 432, 65));
 
-    route = new Route('Omaha', 'Kansas City', Color.Grey, 42);
+    route = new Route('Omaha', 'Kansas City', RouteColor.Grey, 42);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(751, 424, 65));
+    route.segments.push(new RouteSegment(751, 424, 65));
 
-    route = new Route('Omaha', 'Chicago', Color.Blue, 39);
+    route = new Route('Omaha', 'Chicago', RouteColor.Blue, 39);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(769, 388, 0));
-    route.positions.push(new RoutePosition(812, 381, -20));
-    route.positions.push(new RoutePosition(853, 366, -20));
-    route.positions.push(new RoutePosition(894, 355, -10));
+    route.segments.push(new RouteSegment(769, 388, 0));
+    route.segments.push(new RouteSegment(812, 381, -20));
+    route.segments.push(new RouteSegment(853, 366, -20));
+    route.segments.push(new RouteSegment(894, 355, -10));
 
-    route = new Route('Chicago', 'Toronto', Color.White, 50);
+    route = new Route('Chicago', 'Toronto', RouteColor.White, 50);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(960, 310, -50));
-    route.positions.push(new RoutePosition(1010, 286, 0));
-    route.positions.push(new RoutePosition(1065, 294, 17));
-    route.positions.push(new RoutePosition(1119, 284, -40));
+    route.segments.push(new RouteSegment(960, 310, -50));
+    route.segments.push(new RouteSegment(1010, 286, 0));
+    route.segments.push(new RouteSegment(1065, 294, 17));
+    route.segments.push(new RouteSegment(1119, 284, -40));
 
-    route = new Route('Toronto', 'Pittsburgh', Color.Grey, 30);
+    route = new Route('Toronto', 'Pittsburgh', RouteColor.Grey, 30);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1153, 293, 95));
-    route.positions.push(new RoutePosition(1150, 327, 95));
+    route.segments.push(new RouteSegment(1153, 293, -85));
+    route.segments.push(new RouteSegment(1150, 327, -85));
 
-    route = new Route('Boston', 'New York', Color.Yellow, 25);
+    route = new Route('Boston', 'New York', RouteColor.Yellow, 25);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1331, 269, -50));
-    route.positions.push(new RoutePosition(1312, 292, -50));
+    route.segments.push(new RouteSegment(1331, 269, -50));
+    route.segments.push(new RouteSegment(1312, 292, -50));
 
-    route = new Route('Boston', 'New York', Color.Red, 25);
+    route = new Route('Boston', 'New York', RouteColor.Red, 25);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1347, 281, -50));
-    route.positions.push(new RoutePosition(1328, 304, -50));
+    route.segments.push(new RouteSegment(1347, 281, -50));
+    route.segments.push(new RouteSegment(1328, 304, -50));
 
-    route = new Route('Montreal', 'New York', Color.Blue, 41);
+    route = new Route('Montreal', 'New York', RouteColor.Blue, 41);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1251, 202, 100));
-    route.positions.push(new RoutePosition(1250, 247, 82));
-    route.positions.push(new RoutePosition(1272, 290, 45));
+    route.segments.push(new RouteSegment(1251, 202, 100));
+    route.segments.push(new RouteSegment(1250, 247, 82));
+    route.segments.push(new RouteSegment(1272, 290, 45));
 
-    route = new Route('Toronto', 'Montreal', Color.Grey, 32);
+    route = new Route('Toronto', 'Montreal', RouteColor.Grey, 32);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1226, 180, -30));
-    route.positions.push(new RoutePosition(1191, 192, -5));
-    route.positions.push(new RoutePosition(1163, 215, -75));
+    route.segments.push(new RouteSegment(1226, 180, -30));
+    route.segments.push(new RouteSegment(1191, 192, -5));
+    route.segments.push(new RouteSegment(1163, 215, -75));
 
-    route = new Route('New York', 'Washington', Color.Orange, 32);
+    route = new Route('New York', 'Washington', RouteColor.Orange, 32);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1290, 354, 100));
-    route.positions.push(new RoutePosition(1263, 382, -10));
+    route.segments.push(new RouteSegment(1290, 354, -80));
+    route.segments.push(new RouteSegment(1263, 382, -10));
 
-    route = new Route('New York', 'Washington', Color.Black, 46);
+    route = new Route('New York', 'Washington', RouteColor.Black, 46);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1308, 365, 100));
-    route.positions.push(new RoutePosition(1273, 400, -10));
+    route.segments.push(new RouteSegment(1308, 365, -80));
+    route.segments.push(new RouteSegment(1273, 400, -10));
 
-    route = new Route('Pittsburgh', 'New York', Color.White, 52);
+    route = new Route('Pittsburgh', 'New York', RouteColor.White, 52);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1192, 339, -18));
-    route.positions.push(new RoutePosition(1246, 322, -18));
+    route.segments.push(new RouteSegment(1192, 339, -18));
+    route.segments.push(new RouteSegment(1246, 322, -18));
 
-    route = new Route('Pittsburgh', 'New York', Color.Green, 52);
+    route = new Route('Pittsburgh', 'New York', RouteColor.Green, 52);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1198, 357, -18));
-    route.positions.push(new RoutePosition(1252, 340, -18));
+    route.segments.push(new RouteSegment(1198, 357, -18));
+    route.segments.push(new RouteSegment(1252, 340, -18));
 
-    route = new Route('Pittsburgh', 'Washington', Color.Grey, 25);
+    route = new Route('Pittsburgh', 'Washington', RouteColor.Grey, 25);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1174, 390, 45));
-    route.positions.push(new RoutePosition(1203, 402, 0));
+    route.segments.push(new RouteSegment(1174, 390, 45));
+    route.segments.push(new RouteSegment(1203, 402, 0));
 
-    route = new Route('Chicago', 'Pittsburgh', Color.Orange, 47);
+    route = new Route('Chicago', 'Pittsburgh', RouteColor.Orange, 47);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(987, 336, 5));
-    route.positions.push(new RoutePosition(1039, 340, 5));
-    route.positions.push(new RoutePosition(1090, 344, 5));
+    route.segments.push(new RouteSegment(987, 336, 5));
+    route.segments.push(new RouteSegment(1039, 340, 5));
+    route.segments.push(new RouteSegment(1090, 344, 5));
 
-    route = new Route('Chicago', 'Pittsburgh', Color.Black, 47);
+    route = new Route('Chicago', 'Pittsburgh', RouteColor.Black, 47);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(985, 355, 5));
-    route.positions.push(new RoutePosition(1037, 359, 5));
-    route.positions.push(new RoutePosition(1088, 363, 5));
+    route.segments.push(new RouteSegment(985, 355, 5));
+    route.segments.push(new RouteSegment(1037, 359, 5));
+    route.segments.push(new RouteSegment(1088, 363, 5));
 
-    route = new Route('Raleigh', 'Washington', Color.Grey, 34);
+    route = new Route('Raleigh', 'Washington', RouteColor.Grey, 34);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1206, 477, -80));
-    route.positions.push(new RoutePosition(1213, 439, -80));
+    route.segments.push(new RouteSegment(1206, 477, -80));
+    route.segments.push(new RouteSegment(1213, 439, -80));
 
-    route = new Route('Raleigh', 'Washington', Color.Grey, 34);
+    route = new Route('Raleigh', 'Washington', RouteColor.Grey, 34);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1225, 480, -80));
-    route.positions.push(new RoutePosition(1232, 442, -80));
+    route.segments.push(new RouteSegment(1225, 480, -80));
+    route.segments.push(new RouteSegment(1232, 442, -80));
 
-    route = new Route('Pittsburgh', 'Raleigh', Color.Grey, 56);
+    route = new Route('Pittsburgh', 'Raleigh', RouteColor.Grey, 56);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1150, 422, 90));
-    route.positions.push(new RoutePosition(1170, 480, 52));
+    route.segments.push(new RouteSegment(1150, 422, 90));
+    route.segments.push(new RouteSegment(1170, 480, 52));
 
-    route = new Route('Nashville', 'Pittsburgh', Color.Yellow, 43);
+    route = new Route('Nashville', 'Pittsburgh', RouteColor.Yellow, 43);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1010, 505, -53));
-    route.positions.push(new RoutePosition(1045, 471, -33));
-    route.positions.push(new RoutePosition(1087, 446, -27));
-    route.positions.push(new RoutePosition(1123, 412, -65));
+    route.segments.push(new RouteSegment(1010, 505, -53));
+    route.segments.push(new RouteSegment(1045, 471, -33));
+    route.segments.push(new RouteSegment(1087, 446, -27));
+    route.segments.push(new RouteSegment(1123, 412, -65));
 
-    route = new Route('Saint Louis', 'Pittsburgh', Color.Green, 43);
+    route = new Route('Saint Louis', 'Pittsburgh', RouteColor.Green, 43);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(923, 464, -15));
-    route.positions.push(new RoutePosition(968, 450, -20));
-    route.positions.push(new RoutePosition(1013, 434, -20));
-    route.positions.push(new RoutePosition(1058, 417, -23));
-    route.positions.push(new RoutePosition(1100, 393, -35));
+    route.segments.push(new RouteSegment(923, 464, -15));
+    route.segments.push(new RouteSegment(968, 450, -20));
+    route.segments.push(new RouteSegment(1013, 434, -20));
+    route.segments.push(new RouteSegment(1058, 417, -23));
+    route.segments.push(new RouteSegment(1100, 393, -35));
 
-    route = new Route('Saint Louis', 'Chicago', Color.Green, 40);
+    route = new Route('Saint Louis', 'Chicago', RouteColor.Green, 40);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(884, 427, -62));
-    route.positions.push(new RoutePosition(905, 388, -62));
+    route.segments.push(new RouteSegment(884, 427, -62));
+    route.segments.push(new RouteSegment(905, 388, -62));
 
-    route = new Route('Saint Louis', 'Chicago', Color.White, 40);
+    route = new Route('Saint Louis', 'Chicago', RouteColor.White, 40);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(902, 437, -62));
-    route.positions.push(new RoutePosition(923, 398, -62));
+    route.segments.push(new RouteSegment(902, 437, -62));
+    route.segments.push(new RouteSegment(923, 398, -62));
 
-    route = new Route('Oklahoma City', 'Kansas City', Color.Grey, 43);
+    route = new Route('Oklahoma City', 'Kansas City', RouteColor.Grey, 43);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(708, 542, -60));
-    route.positions.push(new RoutePosition(732, 500, -60));
+    route.segments.push(new RouteSegment(708, 542, -60));
+    route.segments.push(new RouteSegment(732, 500, -60));
 
-    route = new Route('Oklahoma City', 'Kansas City', Color.Grey, 43);
+    route = new Route('Oklahoma City', 'Kansas City', RouteColor.Grey, 43);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(725, 552, -60));
-    route.positions.push(new RoutePosition(749, 510, -60));
+    route.segments.push(new RouteSegment(725, 552, -60));
+    route.segments.push(new RouteSegment(749, 510, -60));
 
-    route = new Route('Kansas City', 'Saint Louis', Color.Blue, 35);
+    route = new Route('Kansas City', 'Saint Louis', RouteColor.Blue, 35);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(800, 457, 5));
-    route.positions.push(new RoutePosition(840, 460, 5));
+    route.segments.push(new RouteSegment(800, 457, 5));
+    route.segments.push(new RouteSegment(840, 460, 5));
 
-    route = new Route('Kansas City', 'Saint Louis', Color.Pink, 35);
+    route = new Route('Kansas City', 'Saint Louis', RouteColor.Pink, 35);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(799, 477, 5));
-    route.positions.push(new RoutePosition(839, 480, 5));
+    route.segments.push(new RouteSegment(799, 477, 5));
+    route.segments.push(new RouteSegment(839, 480, 5));
 
-    route = new Route('Denver', 'Oklahoma City', Color.Red, 47);
+    route = new Route('Denver', 'Oklahoma City', RouteColor.Red, 47);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(527, 482, 55));
-    route.positions.push(new RoutePosition(572, 508, 5));
-    route.positions.push(new RoutePosition(622, 520, 20));
-    route.positions.push(new RoutePosition(665, 550, 50));
+    route.segments.push(new RouteSegment(527, 482, 55));
+    route.segments.push(new RouteSegment(572, 508, 5));
+    route.segments.push(new RouteSegment(622, 520, 20));
+    route.segments.push(new RouteSegment(665, 550, 50));
 
-    route = new Route('Denver', 'Kansas City', Color.Black, 45);
+    route = new Route('Denver', 'Kansas City', RouteColor.Black, 45);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(549, 436, 8));
-    route.positions.push(new RoutePosition(599, 443, 8));
-    route.positions.push(new RoutePosition(649, 450, 8));
-    route.positions.push(new RoutePosition(699, 457, 8));
+    route.segments.push(new RouteSegment(549, 436, 8));
+    route.segments.push(new RouteSegment(599, 443, 8));
+    route.segments.push(new RouteSegment(649, 450, 8));
+    route.segments.push(new RouteSegment(699, 457, 8));
 
-    route = new Route('Oklahoma City', 'Dallas', Color.Grey, 25);
+    route = new Route('Oklahoma City', 'Dallas', RouteColor.Grey, 25);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(693, 625, 72));
-    route.positions.push(new RoutePosition(702, 654, 72));
+    route.segments.push(new RouteSegment(693, 625, 72));
+    route.segments.push(new RouteSegment(702, 654, 72));
 
-    route = new Route('Oklahoma City', 'Dallas', Color.Grey, 25);
+    route = new Route('Oklahoma City', 'Dallas', RouteColor.Grey, 25);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(712, 619, 72));
-    route.positions.push(new RoutePosition(721, 648, 72));
+    route.segments.push(new RouteSegment(712, 619, 72));
+    route.segments.push(new RouteSegment(721, 648, 72));
 
-    route = new Route('Dallas', 'Houston', Color.Grey, 56);
+    route = new Route('Dallas', 'Houston', RouteColor.Grey, 56);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(732, 729, 65));
+    route.segments.push(new RouteSegment(732, 729, 65));
 
-    route = new Route('Dallas', 'Houston', Color.Grey, 56);
+    route = new Route('Dallas', 'Houston', RouteColor.Grey, 56);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(751, 721, 65));
+    route.segments.push(new RouteSegment(751, 721, 65));
 
-    route = new Route('Santa Fe', 'Oklahoma City', Color.Blue, 60);
+    route = new Route('Santa Fe', 'Oklahoma City', RouteColor.Blue, 60);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(513, 568, 6));
-    route.positions.push(new RoutePosition(577, 575, 6));
-    route.positions.push(new RoutePosition(641, 582, 6));
+    route.segments.push(new RouteSegment(513, 568, 6));
+    route.segments.push(new RouteSegment(577, 575, 6));
+    route.segments.push(new RouteSegment(641, 582, 6));
 
-    route = new Route('El Paso', 'Oklahoma City', Color.Yellow, 40);
+    route = new Route('El Paso', 'Oklahoma City', RouteColor.Yellow, 40);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(486, 678, -40));
-    route.positions.push(new RoutePosition(527, 657, -15));
-    route.positions.push(new RoutePosition(571, 645, -15));
-    route.positions.push(new RoutePosition(615, 633, -15));
-    route.positions.push(new RoutePosition(657, 616, -30));
+    route.segments.push(new RouteSegment(486, 678, -40));
+    route.segments.push(new RouteSegment(527, 657, -15));
+    route.segments.push(new RouteSegment(571, 645, -15));
+    route.segments.push(new RouteSegment(615, 633, -15));
+    route.segments.push(new RouteSegment(657, 616, -30));
 
-    route = new Route('El Paso', 'Dallas', Color.Red, 53);
+    route = new Route('El Paso', 'Dallas', RouteColor.Red, 53);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(502, 708, -6));
-    route.positions.push(new RoutePosition(560, 702, -6));
-    route.positions.push(new RoutePosition(618, 696, -6));
-    route.positions.push(new RoutePosition(676, 690, -6));
+    route.segments.push(new RouteSegment(502, 708, -6));
+    route.segments.push(new RouteSegment(560, 702, -6));
+    route.segments.push(new RouteSegment(618, 696, -6));
+    route.segments.push(new RouteSegment(676, 690, -6));
 
-    route = new Route('El Paso', 'Houston', Color.Green, 41);
+    route = new Route('El Paso', 'Houston', RouteColor.Green, 41);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(491, 739, 25));
-    route.positions.push(new RoutePosition(534, 755, 15));
-    route.positions.push(new RoutePosition(578, 765, 11));
-    route.positions.push(new RoutePosition(624, 770, 0));
-    route.positions.push(new RoutePosition(670, 770, 0));
-    route.positions.push(new RoutePosition(716, 770, 0));
+    route.segments.push(new RouteSegment(491, 739, 25));
+    route.segments.push(new RouteSegment(534, 755, 15));
+    route.segments.push(new RouteSegment(578, 765, 11));
+    route.segments.push(new RouteSegment(624, 770, 0));
+    route.segments.push(new RouteSegment(670, 770, 0));
+    route.segments.push(new RouteSegment(716, 770, 0));
 
-    route = new Route('Oklahoma City', 'Little Rock', Color.Grey, 47);
+    route = new Route('Oklahoma City', 'Little Rock', RouteColor.Grey, 47);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(744, 594, 9));
-    route.positions.push(new RoutePosition(795, 602, 9));
+    route.segments.push(new RouteSegment(744, 594, 9));
+    route.segments.push(new RouteSegment(795, 602, 9));
 
-    route = new Route('Dallas', 'Little Rock', Color.Grey, 46);
+    route = new Route('Dallas', 'Little Rock', RouteColor.Grey, 46);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(758, 662, -31));
-    route.positions.push(new RoutePosition(802, 636, -31));
+    route.segments.push(new RouteSegment(758, 662, -31));
+    route.segments.push(new RouteSegment(802, 636, -31));
 
-    route = new Route('Saint Louis', 'Nashville', Color.Grey, 40);
+    route = new Route('Saint Louis', 'Nashville', RouteColor.Grey, 40);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(911, 499, 34));
-    route.positions.push(new RoutePosition(949, 524, 34));
+    route.segments.push(new RouteSegment(911, 499, 34));
+    route.segments.push(new RouteSegment(949, 524, 34));
 
-    route = new Route('Little Rock', 'Saint Louis', Color.Grey, 46);
+    route = new Route('Little Rock', 'Saint Louis', RouteColor.Grey, 46);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(854, 565, -75));
-    route.positions.push(new RoutePosition(867, 516, -75));
+    route.segments.push(new RouteSegment(854, 565, -75));
+    route.segments.push(new RouteSegment(867, 516, -75));
 
-    route = new Route('Little Rock', 'Nashville', Color.White, 34);
+    route = new Route('Little Rock', 'Nashville', RouteColor.White, 34);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(877, 595, -26));
-    route.positions.push(new RoutePosition(912, 578, -26));
-    route.positions.push(new RoutePosition(947, 561, -26));
+    route.segments.push(new RouteSegment(877, 595, -26));
+    route.segments.push(new RouteSegment(912, 578, -26));
+    route.segments.push(new RouteSegment(947, 561, -26));
 
-    route = new Route('Houston', 'New Orleans', Color.Grey, 57);
+    route = new Route('Houston', 'New Orleans', RouteColor.Grey, 57);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(813, 768, -1));
-    route.positions.push(new RoutePosition(875, 767, -1));
+    route.segments.push(new RouteSegment(813, 768, -1));
+    route.segments.push(new RouteSegment(875, 767, -1));
 
-    route = new Route('Little Rock', 'New Orleans', Color.Green, 43);
+    route = new Route('Little Rock', 'New Orleans', RouteColor.Green, 43);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(843, 652, 90));
-    route.positions.push(new RoutePosition(861, 698, 50));
-    route.positions.push(new RoutePosition(894, 733, 45));
+    route.segments.push(new RouteSegment(843, 652, 90));
+    route.segments.push(new RouteSegment(861, 698, 50));
+    route.segments.push(new RouteSegment(894, 733, 45));
 
-    route = new Route('Nashville', 'Atlanta', Color.Grey, 58);
+    route = new Route('Nashville', 'Atlanta', RouteColor.Grey, 58);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1023, 581, 42));
+    route.segments.push(new RouteSegment(1023, 581, 42));
 
-    route = new Route('Atlanta', 'Raleigh', Color.Grey, 58);
+    route = new Route('Atlanta', 'Raleigh', RouteColor.Grey, 58);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1102, 572, -37));
-    route.positions.push(new RoutePosition(1153, 534, -37));
+    route.segments.push(new RouteSegment(1102, 572, -37));
+    route.segments.push(new RouteSegment(1153, 534, -37));
 
-    route = new Route('Atlanta', 'Raleigh', Color.Grey, 58);
+    route = new Route('Atlanta', 'Raleigh', RouteColor.Grey, 58);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1114, 588, -37));
-    route.positions.push(new RoutePosition(1165, 550, -37));
+    route.segments.push(new RouteSegment(1114, 588, -37));
+    route.segments.push(new RouteSegment(1165, 550, -37));
 
-    route = new Route('Raleigh', 'Charleston', Color.Grey, 30);
+    route = new Route('Raleigh', 'Charleston', RouteColor.Grey, 30);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1225, 545, 60));
-    route.positions.push(new RoutePosition(1225, 581, -60));
+    route.segments.push(new RouteSegment(1225, 545, 60));
+    route.segments.push(new RouteSegment(1225, 581, 120));
 
-    route = new Route('New Orleans', 'Atlanta', Color.Yellow, 42);
+    route = new Route('New Orleans', 'Atlanta', RouteColor.Yellow, 42);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(927, 718, 90));
-    route.positions.push(new RoutePosition(939, 672, -60));
-    route.positions.push(new RoutePosition(973, 638, -30));
-    route.positions.push(new RoutePosition(1018, 622, -10));
+    route.segments.push(new RouteSegment(927, 718, -90));
+    route.segments.push(new RouteSegment(939, 672, -60));
+    route.segments.push(new RouteSegment(973, 638, -30));
+    route.segments.push(new RouteSegment(1018, 622, -10));
 
-    route = new Route('New Orleans', 'Atlanta', Color.Orange, 35);
+    route = new Route('New Orleans', 'Atlanta', RouteColor.Orange, 35);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(946, 721, 90));
-    route.positions.push(new RoutePosition(956, 681, -60));
-    route.positions.push(new RoutePosition(986, 653, -30));
-    route.positions.push(new RoutePosition(1025, 640, -10));
+    route.segments.push(new RouteSegment(946, 721, -90));
+    route.segments.push(new RouteSegment(956, 681, -60));
+    route.segments.push(new RouteSegment(986, 653, -30));
+    route.segments.push(new RouteSegment(1025, 640, -10));
 
-    route = new Route('Atlanta', 'Miami', Color.Blue, 47);
+    route = new Route('Atlanta', 'Miami', RouteColor.Blue, 47);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1090, 655, 55));
-    route.positions.push(new RoutePosition(1120, 698, 55));
-    route.positions.push(new RoutePosition(1150, 741, 55));
-    route.positions.push(new RoutePosition(1180, 784, 55));
-    route.positions.push(new RoutePosition(1210, 827, 55));
+    route.segments.push(new RouteSegment(1090, 655, 55));
+    route.segments.push(new RouteSegment(1120, 698, 55));
+    route.segments.push(new RouteSegment(1150, 741, 55));
+    route.segments.push(new RouteSegment(1180, 784, 55));
+    route.segments.push(new RouteSegment(1210, 827, 55));
 
-    route = new Route('Charleston', 'Miami', Color.Pink, 52);
+    route = new Route('Charleston', 'Miami', RouteColor.Pink, 52);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1187, 651, 115));
-    route.positions.push(new RoutePosition(1182, 709, 75));
-    route.positions.push(new RoutePosition(1206, 762, 55));
-    route.positions.push(new RoutePosition(1232, 813, 72));
+    route.segments.push(new RouteSegment(1187, 651, 115));
+    route.segments.push(new RouteSegment(1182, 709, 75));
+    route.segments.push(new RouteSegment(1206, 762, 55));
+    route.segments.push(new RouteSegment(1232, 813, 72));
 
-    route = new Route('New Orleans', 'Miami', Color.Red, 46);
+    route = new Route('New Orleans', 'Miami', RouteColor.Red, 46);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(978, 748, -15));
-    route.positions.push(new RoutePosition(1029, 741, 0));
-    route.positions.push(new RoutePosition(1080, 745, 10));
-    route.positions.push(new RoutePosition(1127, 769, 45));
-    route.positions.push(new RoutePosition(1160, 808, 55));
-    route.positions.push(new RoutePosition(1194, 846, 39));
+    route.segments.push(new RouteSegment(978, 748, -15));
+    route.segments.push(new RouteSegment(1029, 741, 0));
+    route.segments.push(new RouteSegment(1080, 745, 10));
+    route.segments.push(new RouteSegment(1127, 769, 45));
+    route.segments.push(new RouteSegment(1160, 808, 55));
+    route.segments.push(new RouteSegment(1194, 846, 39));
 
-    route = new Route('Atlanta', 'Charleston', Color.Grey, 48);
+    route = new Route('Atlanta', 'Charleston', RouteColor.Grey, 48);
     this.routes.push(route);
-    route.positions.push(new RoutePosition(1112, 627, 10));
-    route.positions.push(new RoutePosition(1165, 621, -23));
+    route.segments.push(new RouteSegment(1112, 627, 10));
+    route.segments.push(new RouteSegment(1165, 621, -23));
   }
 }
