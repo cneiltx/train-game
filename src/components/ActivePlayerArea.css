@@ -1,0 +1,6 @@
+.ActivePlayerArea {
+  background-color: blue;
+  grid-column: 1 / 4;
+  width: 1920px;
+  height: 170px;
+}

@@ -1,10 +1,10 @@
-export enum RouteColor {
+export enum TrainCardColor {
   Black,
   Blue,
   Green,
-  Grey,
   Orange,
-  Pink,
+  Purple,
+  Rainbow,
   Red,
   White,
   Yellow,

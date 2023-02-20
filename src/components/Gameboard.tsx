@@ -1,21 +1,22 @@
 import { useEffect, useRef } from 'react';
 import usMap from '../images/ttr-us-map.png';
-import redCar from '../images/car-red.png';
-import yellowCar from '../images/car-yellow.png';
-import blueCar from '../images/car-blue.png';
-import greenCar from '../images/car-green.png';
-import purpleCar from '../images/car-purple.png';
-import blackCar from '../images/car-black.png';
-import { RouteColor } from '../model/RouteColor';
+import blackCar from '../images/train-cars/car-black.png';
+import blueCar from '../images/train-cars/car-blue.png';
+import greenCar from '../images/train-cars/car-green.png';
+import purpleCar from '../images/train-cars/car-purple.png';
+import redCar from '../images/train-cars/car-red.png';
+import yellowCar from '../images/train-cars/car-yellow.png';
 import { GameMap } from '../model/GameMap';
-import { TrainColor } from '../model/TrainColor';
 import { Route } from '../model/Route';
+import { RouteColor } from '../model/RouteColor';
+import { TrainColor } from '../model/TrainColor';
 
 export type GameboardProps = {
-  width: string;
-  height: string;
+  width: number;
 }
 
+const drawWidth = 1425;
+const drawHeight = 910;
 const map = new GameMap();
 
 export const Gameboard = (props: GameboardProps) => {
@@ -33,22 +34,20 @@ export const Gameboard = (props: GameboardProps) => {
       context.globalAlpha = 0.7;
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
       context.restore();
+      const scaleFactor = props.width / drawWidth;
+      context.save();
+      context.scale(scaleFactor, scaleFactor);
       DrawRoutes(context);
       DrawCities(context);
+      context.restore();
     }
   }, []);
-
-  const FindOpenRoute = (city1: string, city2: string) => {
-    return map.routes.find(item => item.train === null && ((item.city1 === city1 && item.city2 === city2) || (item.city1 === city2 && item.city2 === city1)));
-  }
 
   const DrawRoutes = (context: CanvasRenderingContext2D) => {
     for (const route of map.routes) {
       for (const segment of route.segments) {
         DrawRouteSegment(context, segment.x, segment.y, segment.angle, route.color, route.carLength);
       }
-      route.train = TrainColor.Black;
-      DrawTrain(context, route);
     }
   }
 
@@ -211,5 +210,5 @@ export const Gameboard = (props: GameboardProps) => {
     }
   }
 
-  return <canvas className='gameboard' ref={canvasRef} {...props} />
+  return <canvas ref={canvasRef} width={props.width + 'px'} height={props.width * drawHeight / drawWidth + 'px'} />
 }

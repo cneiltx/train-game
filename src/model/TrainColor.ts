@@ -1,8 +1,8 @@
 export enum TrainColor {
-  Red,
-  Yellow,
   Blue,
+  Black,
   Green,
   Purple,
-  Black
+  Red,
+  Yellow,
 }

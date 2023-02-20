@@ -1,6 +1,7 @@
 import { RouteColor } from "./RouteColor";
 import { Route } from "./Route";
 import { RouteSegment } from "./RouteSegment";
+import { USCities } from "./USCities";
 
 export class GameMap {
   routes: Route[];
@@ -11,7 +12,7 @@ export class GameMap {
   }
 
   private populateRoutes() {
-    let route = new Route('Vancouver', 'Calgary', RouteColor.Grey, 53);
+    let route = new Route(USCities.Vancouver, USCities.Calgary, RouteColor.Grey, 53);
     this.routes.push(route);
     route.segments.push(new RouteSegment(167, 39, -5));
     route.segments.push(new RouteSegment(225, 34, -5));
