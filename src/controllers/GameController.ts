@@ -3,9 +3,11 @@ import { Player } from "../model/Player";
 import { DestinationCard } from "../model/DestinationCard";
 import { TrainCard } from "../model/TrainCard";
 import { USCities } from "../model/USCities";
+import { GameStatus } from "../model/GameStatus";
 
 export class GameController {
   gameID: string;
+  status = GameStatus.Initializing;
   players: Player[] = [];
   trainCardDeck: TrainCard[] = [];
   faceUpTrainCards: TrainCard[] = [];
@@ -16,8 +18,8 @@ export class GameController {
     this.gameID = gameID;
   }
 
-  StartGame(players: Player[]) {
-    this.players = players;
+  StartGame() {
+    this.status = GameStatus.Playing;
     this.InitializeTrainCards();
     this.InitializeDestinationCards();
     this.DealTrainCards();

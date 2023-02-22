@@ -3,6 +3,7 @@ import './DrawCardArea.css';
 import { TrainCard } from './TrainCard';
 
 export type DrawCardAreaProps = {
+
 }
 
 export const DrawCardArea = (props: DrawCardAreaProps) => {

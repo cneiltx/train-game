@@ -1,18 +1,32 @@
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 import './App.css';
-import { ActivePlayerArea } from './components/ActivePlayerArea';
-import { DrawCardArea } from './components/DrawCardArea';
-import { Gameboard } from './components/Gameboard';
-import { PlayersArea } from './components/PlayersArea';
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import { useState } from 'react';
+import { GameController } from './controllers/GameController';
+import { Game } from './pages/Game';
+import { Lobby } from './pages/Lobby';
 
-function App() {
+export function App() {
+  const [game, setGame] = useState<GameController>();
+
+  const handleStartGame = (game: GameController) => {
+    setGame(game);
+  }
+
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+  });
+
   return (
-    <div className="App">
-      <PlayersArea />
-      <Gameboard width={1425} />
-      <DrawCardArea />
-      <ActivePlayerArea />
-    </div>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      {!game && <Lobby onStartGame={handleStartGame} />}
+      {game && <Game game={game} />}
+    </ThemeProvider>
   );
 }
-
-export default App;
