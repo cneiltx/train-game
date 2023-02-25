@@ -1,16 +1,17 @@
 import { GameStatus } from "../model/GameStatus";
+import { Player } from "../model/Player";
 import { GameController } from "./GameController";
 
 export class LobbyController {
   games: GameController[] = [];
 
-  CreateGame() {
+  CreateGame(player: Player) {
     const game = new GameController(this.GenerateGameID());
     this.games.push(game);
     return game;
   }
 
-  JoinGame(gameID: string) {
+  JoinGame(gameID: string, player: Player) {
     const game = this.games.find(game => game.gameID === gameID);
 
     if (!game) {
@@ -25,7 +26,8 @@ export class LobbyController {
       throw new Error('This game has already completed. Please create a new game.');
     }
 
-
+    game.players.push(player);
+    return game;
   }
 
   private GenerateGameID() {

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import blackCard from '../images/train-cards/card-black.png';
 import blueCard from '../images/train-cards/card-blue.png';
 import greenCard from '../images/train-cards/card-green.png';
@@ -8,23 +8,20 @@ import rainbowCard from '../images/train-cards/card-rainbow.png';
 import redCard from '../images/train-cards/card-red.png';
 import whiteCard from '../images/train-cards/card-white.png';
 import yellowCard from '../images/train-cards/card-yellow.png';
+import cardBack from '../images/train-cards/card-back.png';
 import { TrainCardColor } from "../model/TrainCardColor";
+import { Box } from "@mui/material";
 
-export type TrainCardProps = {
-  width: number;
+export type TrainDeckCardProps = {
   color: TrainCardColor;
+  faceUp: boolean;
 }
 
-export const TrainCard = (props: TrainCardProps) => {
+export const TrainDeckCard = (props: TrainDeckCardProps) => {
   const aspectRatio = 1.55;
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  let imageSource;
 
-  useEffect(() => {
-    const canvas = canvasRef.current!;
-    const context = canvas.getContext('2d')!;
-    const image = new Image();
-    let imageSource = '';
-
+  if (props.faceUp) {
     switch (props.color) {
       case TrainCardColor.Black:
         imageSource = blackCard;
@@ -54,12 +51,11 @@ export const TrainCard = (props: TrainCardProps) => {
         imageSource = yellowCard;
         break;
     }
+  } else {
+    imageSource = cardBack;
+  }
 
-    image.src = imageSource;
-    image.onload = () => {
-      context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    }
-  }, []);
-
-  return <canvas className='TrainCard' ref={canvasRef} width={props.width + 'px'} height={(props.width / aspectRatio) + 'px'} />
+  return (
+    <Box component='img' maxWidth='100%' maxHeight='100%' src={imageSource} sx={{ aspectRatio: aspectRatio }} />
+  );
 }
