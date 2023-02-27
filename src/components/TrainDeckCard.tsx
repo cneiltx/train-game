@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import blackCard from '../images/train-cards/card-black.png';
 import blueCard from '../images/train-cards/card-blue.png';
 import greenCard from '../images/train-cards/card-green.png';
@@ -15,6 +14,7 @@ import { Box } from "@mui/material";
 export type TrainDeckCardProps = {
   color: TrainCardColor;
   faceUp: boolean;
+  extraProps?: any;
 }
 
 export const TrainDeckCard = (props: TrainDeckCardProps) => {
@@ -56,6 +56,6 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   }
 
   return (
-    <Box component='img' maxWidth='100%' maxHeight='100%' src={imageSource} sx={{ aspectRatio: aspectRatio }} />
+    <Box component='img' src={imageSource} sx={{ aspectRatio: aspectRatio }} {...props.extraProps} />
   );
 }

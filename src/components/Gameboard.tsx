@@ -10,38 +10,49 @@ import { GameMap } from '../model/GameMap';
 import { Route } from '../model/Route';
 import { RouteColor } from '../model/RouteColor';
 import { TrainColor } from '../model/TrainColor';
+import { Box } from '@mui/material';
 
 export type GameboardProps = {
-  width: number;
+  extraProps?: any;
 }
 
-const drawWidth = 1425;
-const drawHeight = 910;
-const map = new GameMap();
-
 export const Gameboard = (props: GameboardProps) => {
+  const drawWidth = 1425;
+  const drawHeight = 910;
+  const map = new GameMap();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const image = new Image();
 
   useEffect(() => {
-    const canvas = canvasRef.current!;
-    const context = canvas.getContext('2d')!;
-    const image = new Image();
+    window.addEventListener('resize', onResize);
     image.src = usMap;
     image.onload = () => {
-      context.save();
-      context.fillStyle = 'white';
-      context.fillRect(0, 0, canvas.width, canvas.height);
-      context.globalAlpha = 0.7;
-      context.drawImage(image, 0, 0, canvas.width, canvas.height);
-      context.restore();
-      const scaleFactor = props.width / drawWidth;
-      context.save();
-      context.scale(scaleFactor, scaleFactor);
-      DrawRoutes(context);
-      DrawCities(context);
-      context.restore();
+      onResize();
     }
+    return () => window.removeEventListener('resize', onResize);
   }, []);
+
+  const onResize = () => {
+    const canvas = canvasRef.current!;
+    canvas.width = canvas.clientHeight * drawWidth / drawHeight;
+    canvas.height = canvas.clientHeight;
+    DrawMap(canvas.clientHeight / drawHeight);
+  }
+
+  const DrawMap = (scale: number) => {
+    const canvas = canvasRef.current!;
+    const context = canvas.getContext('2d')!;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.save();
+    context.fillStyle = 'white';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.globalAlpha = 0.7;
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    context.restore();
+    context.scale(scale, scale);
+    DrawRoutes(context);
+    DrawCities(context);
+  }
 
   const DrawRoutes = (context: CanvasRenderingContext2D) => {
     for (const route of map.routes) {
@@ -210,5 +221,5 @@ export const Gameboard = (props: GameboardProps) => {
     }
   }
 
-  return <canvas ref={canvasRef} width={props.width + 'px'} height={props.width * drawHeight / drawWidth + 'px'} />
+  return <Box border='solid red' component='canvas' ref={canvasRef} {...props.extraProps} />
 }
