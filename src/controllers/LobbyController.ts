@@ -5,13 +5,13 @@ import { GameController } from "./GameController";
 export class LobbyController {
   games: GameController[] = [];
 
-  CreateGame(player: Player) {
-    const game = new GameController(this.GenerateGameID());
+  createGame(player: Player) {
+    const game = new GameController(this.generateGameID());
     this.games.push(game);
     return game;
   }
 
-  JoinGame(gameID: string, player: Player) {
+  joinGame(gameID: string, player: Player) {
     const game = this.games.find(game => game.gameID === gameID);
 
     if (!game) {
@@ -30,7 +30,7 @@ export class LobbyController {
     return game;
   }
 
-  private GenerateGameID() {
+  private generateGameID() {
     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let id: string;
 

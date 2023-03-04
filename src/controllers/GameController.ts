@@ -1,9 +1,9 @@
-import { CardColor } from "../model/CardColor";
 import { Player } from "../model/Player";
 import { DestinationCard } from "../model/DestinationCard";
 import { TrainCard } from "../model/TrainCard";
 import { USCities } from "../model/USCities";
 import { GameStatus } from "../model/GameStatus";
+import { TrainCardColor } from "../model/TrainCardColor";
 
 export class GameController {
   gameID: string;
@@ -18,26 +18,26 @@ export class GameController {
     this.gameID = gameID;
   }
 
-  StartGame() {
+  startGame() {
     this.status = GameStatus.Playing;
-    this.InitializeTrainCards();
-    this.InitializeDestinationCards();
-    this.DealTrainCards();
+    this.initializeTrainCards();
+    this.initializeDestinationCards();
+    this.dealTrainCards();
   }
 
-  InitializeTrainCards() {
-    for (const color of this.GetEnumValues<CardColor>(CardColor)) {
+  initializeTrainCards() {
+    for (const color of this.getEnumValues<TrainCardColor>(TrainCardColor)) {
       for (let i = 0; i < 12; i++) {
         this.trainCardDeck.push(new TrainCard(color));
       }
     }
 
-    this.trainCardDeck.push(new TrainCard(CardColor.Rainbow));
-    this.trainCardDeck.push(new TrainCard(CardColor.Rainbow));
-    this.Shuffle(this.trainCardDeck);
+    this.trainCardDeck.push(new TrainCard(TrainCardColor.Rainbow));
+    this.trainCardDeck.push(new TrainCard(TrainCardColor.Rainbow));
+    this.shuffle(this.trainCardDeck);
   }
 
-  InitializeDestinationCards() {
+  initializeDestinationCards() {
     this.destinationCardDeck.push(new DestinationCard(USCities.Billings, USCities.LosAngeles, 8));
     this.destinationCardDeck.push(new DestinationCard(USCities.Boston, USCities.Miami, 12));
     this.destinationCardDeck.push(new DestinationCard(USCities.Calgary, USCities.Phoenix, 13));
@@ -68,57 +68,57 @@ export class GameController {
     this.destinationCardDeck.push(new DestinationCard(USCities.Winnipeg, USCities.Houston, 12));
     this.destinationCardDeck.push(new DestinationCard(USCities.Winnipeg, USCities.LittleRock, 11));
     this.destinationCardDeck.push(new DestinationCard(USCities.Vancouver, USCities.Montreal, 20));
-    this.Shuffle(this.destinationCardDeck);
+    this.shuffle(this.destinationCardDeck);
   }
 
-  DealTrainCards() {
+  dealTrainCards() {
     for (let i = 0; i < 4; i++) {
       for (const player of this.players) {
-        const card = this.DrawTrainCard();
+        const card = this.drawTrainCard();
         if (card) {
-          player.trainCards.push();
+          player.trainCards.push(card);
         }
       }
     }
 
     for (let i = 0; i < 5; i++) {
-      const card = this.DrawTrainCard();
+      const card = this.drawTrainCard();
       if (card) {
-        this.faceUpTrainCards.push();
+        this.faceUpTrainCards.push(card);
       }
     }
   }
 
-  DealDestinationCards() {
+  dealDestinationCards() {
     for (let i = 0; i < 3; i++) {
       for (const player of this.players) {
-        const card = this.DrawDestinationCard();
+        const card = this.drawDestinationCard();
         if (card) {
-          player.destinationCards.push();
+          player.destinationCards.push(card);
         }
       }
     }
   }
 
-  DrawTrainCard() {
+  drawTrainCard() {
     if (this.trainCardDeck.length === 0 && this.discardedTrainCards.length > 0) {
       this.trainCardDeck.push(...this.discardedTrainCards);
       this.discardedTrainCards.length = 0;
-      this.Shuffle(this.trainCardDeck);
+      this.shuffle(this.trainCardDeck);
     }
 
     return this.trainCardDeck.pop();
   }
 
-  DrawDestinationCard() {
+  drawDestinationCard() {
     return this.destinationCardDeck.pop();
   }
 
-  GetEnumValues<T>(enumType: object) {
-    return Object.values(enumType).filter(value => Number.isNaN(+value)) as T[];
+  getEnumValues<T>(enumType: object) {
+    return Object.values(enumType).filter(value => !isNaN(Number(value))) as T[];
   }
 
-  Shuffle(array: Array<any>) {
+  shuffle(array: Array<any>) {
     let currentIndex = array.length;
 
     while (currentIndex !== 0) {

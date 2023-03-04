@@ -1,9 +1,9 @@
-import { CardColor } from "./CardColor";
+import { TrainCardColor } from "./TrainCardColor";
 
 export class TrainCard {
-  color: CardColor;
+  color: TrainCardColor;
 
-  constructor(color: CardColor) {
+  constructor(color: TrainCardColor) {
     this.color = color;
   }
 }

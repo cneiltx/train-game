@@ -12,6 +12,7 @@ export function App() {
   const [game, setGame] = useState<GameController>();
 
   const onCreateGame = (game: GameController) => {
+    game.startGame(); // TODO: Remove
     setGame(game);
   }
 

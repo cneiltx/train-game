@@ -33,7 +33,7 @@ export const Lobby = (props: LobbyProps) => {
 
   const onJoinGame = () => {
     try {
-      const game = lobby.JoinGame(gameID, createPlayer());
+      const game = lobby.joinGame(gameID, createPlayer());
       setJoinError('');
       props.onJoinGame(game);
     } catch (e) {
@@ -44,7 +44,7 @@ export const Lobby = (props: LobbyProps) => {
   }
 
   const onCreateGame = () => {
-    props.onCreateGame(lobby.CreateGame(createPlayer()));
+    props.onCreateGame(lobby.createGame(createPlayer()));
   }
 
   const createPlayer = () => {

@@ -1,3 +1,4 @@
+// TODO: Remove string values and add maps for UI strings
 export enum USCities {
   Atlanta = 'Atlanta',
   Billings = 'Billings',

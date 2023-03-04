@@ -17,8 +17,6 @@ export type GameboardProps = {
 }
 
 export const Gameboard = (props: GameboardProps) => {
-  const drawWidth = 1425;
-  const drawHeight = 910;
   const map = new GameMap();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const image = new Image();
@@ -34,12 +32,12 @@ export const Gameboard = (props: GameboardProps) => {
 
   const onResize = () => {
     const canvas = canvasRef.current!;
-    canvas.width = canvas.clientHeight * drawWidth / drawHeight;
+    canvas.width = canvas.clientHeight * image.width / image.height;
     canvas.height = canvas.clientHeight;
-    DrawMap(canvas.clientHeight / drawHeight);
+    drawMap(canvas.clientHeight / image.height);
   }
 
-  const DrawMap = (scale: number) => {
+  const drawMap = (scale: number) => {
     const canvas = canvasRef.current!;
     const context = canvas.getContext('2d')!;
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -50,58 +48,58 @@ export const Gameboard = (props: GameboardProps) => {
     context.drawImage(image, 0, 0, canvas.width, canvas.height);
     context.restore();
     context.scale(scale, scale);
-    DrawRoutes(context);
-    DrawCities(context);
+    drawRoutes(context);
+    drawCities(context);
   }
 
-  const DrawRoutes = (context: CanvasRenderingContext2D) => {
+  const drawRoutes = (context: CanvasRenderingContext2D) => {
     for (const route of map.routes) {
       for (const segment of route.segments) {
-        DrawRouteSegment(context, segment.x, segment.y, segment.angle, route.color, route.carLength);
+        drawRouteSegment(context, segment.x, segment.y, segment.angle, route.color, route.carLength);
       }
     }
   }
 
-  const DrawCities = (context: CanvasRenderingContext2D) => {
-    DrawCity(context, 120, 45, 'Vancouver', 10, -20, 'right');
-    DrawCity(context, 330, 25, 'Calgary', 10, -15, 'left');
-    DrawCity(context, 698, 91, 'Winnipeg', -10, -20, 'left');
-    DrawCity(context, 1005, 175, 'Sault St.\nMarie', 0, -40, 'center');
-    DrawCity(context, 1264, 158, 'Montreal', -10, -20, 'left');
-    DrawCity(context, 1353, 255, 'Boston', 15, 0, 'left');
-    DrawCity(context, 116, 106, 'Seattle', -15, 5, 'right');
-    DrawCity(context, 432, 215, 'Billings', -31, 13, 'right'); // substituted for Helena
-    DrawCity(context, 799, 266, 'Minneapolis', -37, 15, 'right'); // substituted for Duluth
-    DrawCity(context, 1154, 255, 'Toronto', 15, 0, 'left');
-    DrawCity(context, 724, 389, 'Omaha', -11, 23, 'right');
-    DrawCity(context, 936, 347, 'Chicago', 2, 26, 'left');
-    DrawCity(context, 1148, 364, 'Pittsburgh', -10, -38, 'right');
-    DrawCity(context, 1304, 316, 'New York', 12, 17, 'left');
-    DrawCity(context, 1229, 402, 'Washington', 16, 21, 'left');
-    DrawCity(context, 84, 188, 'Portland', -12, -10, 'right');
-    DrawCity(context, 27, 430, 'San Francisco', 30, 27, 'left');
-    DrawCity(context, 318, 381, 'Salt Lake City', -45, -20, 'right');
-    DrawCity(context, 498, 437, 'Denver', -40, 22, 'right');
-    DrawCity(context, 761, 465, 'Kansas\nCity', 9, 31, 'left');
-    DrawCity(context, 877, 472, 'Saint\nLouis', -14, -45, 'right');
-    DrawCity(context, 985, 545, 'Nashville', 15, 0, 'left');
-    DrawCity(context, 1208, 516, 'Raleigh', 15, 0, 'left');
-    DrawCity(context, 1064, 615, 'Atlanta', -35, -10, 'right');
-    DrawCity(context, 1210, 608, 'Charleston', 15, 3, 'left');
-    DrawCity(context, 105, 573, 'Los Angeles', 5, 20, 'right');
-    DrawCity(context, 213, 524, 'Las Vegas', -5, 20, 'left');
-    DrawCity(context, 286, 614, 'Phoenix', 0, 20, 'right');
-    DrawCity(context, 458, 564, 'Santa Fe', 12, 25, 'left');
-    DrawCity(context, 697, 588, 'Oklahoma\nCity', 39, -28, 'left');
-    DrawCity(context, 843, 608, 'Little Rock', 15, 14, 'left');
-    DrawCity(context, 450, 708, 'El Paso', 0, 25, 'right');
-    DrawCity(context, 720, 682, 'Dallas', -27, -10, 'right');
-    DrawCity(context, 762, 769, 'Houston', 0, 25, 'center');
-    DrawCity(context, 932, 766, 'New\nOrleans', 0, 22, 'right');
-    DrawCity(context, 1238, 862, 'Miami', 15, 0, 'left');
+  const drawCities = (context: CanvasRenderingContext2D) => {
+    drawCity(context, 120, 45, 'Vancouver', 10, -20, 'right');
+    drawCity(context, 330, 25, 'Calgary', 10, -15, 'left');
+    drawCity(context, 698, 91, 'Winnipeg', -10, -20, 'left');
+    drawCity(context, 1005, 175, 'Sault St.\nMarie', 0, -40, 'center');
+    drawCity(context, 1264, 158, 'Montreal', -10, -20, 'left');
+    drawCity(context, 1353, 255, 'Boston', 15, 0, 'left');
+    drawCity(context, 116, 106, 'Seattle', -15, 5, 'right');
+    drawCity(context, 432, 215, 'Billings', -31, 13, 'right'); // substituted for Helena
+    drawCity(context, 799, 266, 'Minneapolis', -37, 15, 'right'); // substituted for Duluth
+    drawCity(context, 1154, 255, 'Toronto', 15, 0, 'left');
+    drawCity(context, 724, 389, 'Omaha', -11, 23, 'right');
+    drawCity(context, 936, 347, 'Chicago', 2, 26, 'left');
+    drawCity(context, 1148, 364, 'Pittsburgh', -10, -38, 'right');
+    drawCity(context, 1304, 316, 'New York', 12, 17, 'left');
+    drawCity(context, 1229, 402, 'Washington', 16, 21, 'left');
+    drawCity(context, 84, 188, 'Portland', -12, -10, 'right');
+    drawCity(context, 27, 430, 'San Francisco', 30, 27, 'left');
+    drawCity(context, 318, 381, 'Salt Lake City', -45, -20, 'right');
+    drawCity(context, 498, 437, 'Denver', -40, 22, 'right');
+    drawCity(context, 761, 465, 'Kansas\nCity', 9, 31, 'left');
+    drawCity(context, 877, 472, 'Saint\nLouis', -14, -45, 'right');
+    drawCity(context, 985, 545, 'Nashville', 15, 0, 'left');
+    drawCity(context, 1208, 516, 'Raleigh', 15, 0, 'left');
+    drawCity(context, 1064, 615, 'Atlanta', -35, -10, 'right');
+    drawCity(context, 1210, 608, 'Charleston', 15, 3, 'left');
+    drawCity(context, 105, 573, 'Los Angeles', 5, 20, 'right');
+    drawCity(context, 213, 524, 'Las Vegas', -5, 20, 'left');
+    drawCity(context, 286, 614, 'Phoenix', 0, 20, 'right');
+    drawCity(context, 458, 564, 'Santa Fe', 12, 25, 'left');
+    drawCity(context, 697, 588, 'Oklahoma\nCity', 39, -28, 'left');
+    drawCity(context, 843, 608, 'Little Rock', 15, 14, 'left');
+    drawCity(context, 450, 708, 'El Paso', 0, 25, 'right');
+    drawCity(context, 720, 682, 'Dallas', -27, -10, 'right');
+    drawCity(context, 762, 769, 'Houston', 0, 25, 'center');
+    drawCity(context, 932, 766, 'New\nOrleans', 0, 22, 'right');
+    drawCity(context, 1238, 862, 'Miami', 15, 0, 'left');
   }
 
-  const DrawCity = (context: CanvasRenderingContext2D, x: number, y: number, name: string, xOffset: number, yOffset: number, align: CanvasTextAlign) => {
+  const drawCity = (context: CanvasRenderingContext2D, x: number, y: number, name: string, xOffset: number, yOffset: number, align: CanvasTextAlign) => {
     context.save();
     const cityRadius = 7.5;
     context.strokeStyle = 'gold';
@@ -120,7 +118,7 @@ export const Gameboard = (props: GameboardProps) => {
     const fontSize = 16;
     context.strokeStyle = 'white';
     context.font = `bold ${fontSize}px system-ui`;
-    context.lineWidth = 2
+    context.lineWidth = 2;
     context.fillStyle = 'black';
     context.textAlign = align;
     context.textBaseline = 'middle';
@@ -134,7 +132,7 @@ export const Gameboard = (props: GameboardProps) => {
     context.restore();
   }
 
-  const DrawRouteSegment = (context: CanvasRenderingContext2D, x: number, y: number, angle: number, color: RouteColor, carLength: number) => {
+  const drawRouteSegment = (context: CanvasRenderingContext2D, x: number, y: number, angle: number, color: RouteColor, carLength: number) => {
     context.save();
     const carWidth = 15;
 
@@ -186,7 +184,7 @@ export const Gameboard = (props: GameboardProps) => {
     context.restore();
   }
 
-  const DrawTrain = (context: CanvasRenderingContext2D, route: Route) => {
+  const drawTrain = (context: CanvasRenderingContext2D, route: Route) => {
     const carWidth = 15;
 
     for (const segment of route.segments) {

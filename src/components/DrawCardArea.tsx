@@ -9,14 +9,16 @@ export type DrawCardAreaProps = {
 }
 
 export const DrawCardArea = (props: DrawCardAreaProps) => {
+  const cards = [];
+
+  for (const card of props.faceUpTrainCards) {
+    cards.push(<TrainDeckCard color={card.color} faceUp={true} extraProps={{ height: '12%' }} />);
+  }
+
   return (
-    <Stack border='solid red' height='100%' padding={1} spacing={1} alignItems='flex-start' {...props.extraProps}>
+    <Stack border='solid red' padding={1} spacing={1} alignItems='flex-start' {...props.extraProps}>
       <TrainDeckCard color={TrainCardColor.Red} faceUp={false} extraProps={{ height: '12%' }} />
-      <TrainDeckCard color={TrainCardColor.Red} faceUp={true} extraProps={{ height: '12%' }} />
-      <TrainDeckCard color={TrainCardColor.Red} faceUp={true} extraProps={{ height: '12%' }} />
-      <TrainDeckCard color={TrainCardColor.Red} faceUp={true} extraProps={{ height: '12%' }} />
-      <TrainDeckCard color={TrainCardColor.Red} faceUp={true} extraProps={{ height: '12%' }} />
-      <TrainDeckCard color={TrainCardColor.Red} faceUp={true} extraProps={{ height: '12%' }} />
+      {cards}
     </Stack>
   );
 }

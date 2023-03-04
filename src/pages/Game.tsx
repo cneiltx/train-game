@@ -14,13 +14,13 @@ export const Game = (props: GameProps) => {
   const [faceUpTrainCards, setFaceUpTrainCards] = useState(props.game.faceUpTrainCards);
 
   return (
-    <Stack spacing={0.5} border='solid blue'>
-      <Stack spacing={0.5} border='solid green' height='80vh' direction='row' alignItems='stretch' justifyContent='space-between'>
+    <Stack height='100vh'>
+      <Stack height='80vh' direction='row' alignItems='stretch' justifyContent='space-between'>
         <PlayersArea />
         <Gameboard />
         <DrawCardArea faceUpTrainCards={faceUpTrainCards} />
       </Stack>
-      <ActivePlayerArea />
+      <ActivePlayerArea extraProps={{ sx: { height: '20vh' } }} />
     </Stack>
   );
 }
