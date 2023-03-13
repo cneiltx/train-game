@@ -16,7 +16,6 @@ export type DestinationDeckCardProps = {
 export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const image = new Image();
-  const cityMap = getCityMap();
 
   useEffect(() => {
     if (props.faceUp) {
@@ -69,7 +68,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   const drawCities = (context: CanvasRenderingContext2D) => {
     const cityRadius = 1.1;
     context.fillStyle = 'indianred';
-    getCityMap().forEach((coordinate) => {
+    cityMap.forEach((coordinate) => {
       context.beginPath();
       let [x, y] = [coordinate.x, coordinate.y];
       if (props.rotate) {
@@ -93,7 +92,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     context.fillStyle = 'black';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    const text = 'Billings - Atlanta';
+    const text = `${props.city1} - ${props.city2}`;
     context.fillText(text, x, y);
     context.restore();
   }
@@ -139,7 +138,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     const cityInnerRadius = 2;
     const cityOuterRadius = 7;
     context.fillStyle = 'navy';
-    getCityMap().forEach((coordinate) => {
+    cityMap.forEach((coordinate) => {
       context.beginPath();
       const coordinates = cityMap.get(city)!;
       let [x, y] = [coordinates.x, coordinates.y];
@@ -152,46 +151,44 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     })
   }
 
-  function getCityMap(): Map<USCities, { x: number, y: number }> {
-    const map = new Map<USCities, { x: number, y: number }>();
-    map.set(USCities.Atlanta, { x: 156, y: 109 });
-    map.set(USCities.Billings, { x: 79, y: 62 });
-    map.set(USCities.Boston, { x: 188, y: 66 });
-    map.set(USCities.Calgary, { x: 66, y: 40 });
-    map.set(USCities.Charleston, { x: 173, y: 108 });
-    map.set(USCities.Chicago, { x: 139, y: 78 });
-    map.set(USCities.Dallas, { x: 112, y: 118 });
-    map.set(USCities.Denver, { x: 87, y: 88 });
-    map.set(USCities.ElPaso, { x: 81, y: 120 });
-    map.set(USCities.Houston, { x: 115, y: 128 });
-    map.set(USCities.KansasCity, { x: 117, y: 91 });
-    map.set(USCities.LasVegas, { x: 52, y: 97 });
-    map.set(USCities.LittleRock, { x: 128, y: 109 });
-    map.set(USCities.LosAngeles, { x: 36, y: 102 });
-    map.set(USCities.Miami, { x: 176, y: 137 });
-    map.set(USCities.Minneapolis, { x: 122, y: 68 });
-    map.set(USCities.Montreal, { x: 176, y: 55 });
-    map.set(USCities.Nashville, { x: 145, y: 102 });
-    map.set(USCities.NewOrleans, { x: 138, y: 127 });
-    map.set(USCities.NewYork, { x: 182, y: 73 });
-    map.set(USCities.OklahomaCity, { x: 110, y: 106 });
-    map.set(USCities.Omaha, { x: 113, y: 82 });
-    map.set(USCities.Phoenix, { x: 60, y: 109 });
-    map.set(USCities.Pittsburgh, { x: 165, y: 80 });
-    map.set(USCities.Portland, { x: 37, y: 57 });
-    map.set(USCities.Raleigh, { x: 174, y: 98 });
-    map.set(USCities.SaintLouis, { x: 131, y: 93 });
-    map.set(USCities.SaltLakeCity, { x: 63, y: 82 });
-    map.set(USCities.SanFrancisco, { x: 30, y: 88 });
-    map.set(USCities.SantaFe, { x: 81, y: 104 });
-    map.set(USCities.SaultSteMarie, { x: 148, y: 59 });
-    map.set(USCities.Seattle, { x: 41, y: 49 });
-    map.set(USCities.Toronto, { x: 165, y: 66 });
-    map.set(USCities.Vancouver, { x: 41, y: 41 });
-    map.set(USCities.Washington, { x: 175, y: 84 });
-    map.set(USCities.Winnipeg, { x: 109, y: 47 });
-    return map;
-  }
+  const cityMap = new Map([
+    [USCities.Atlanta, { x: 156, y: 109 }],
+    [USCities.Billings, { x: 79, y: 62 }],
+    [USCities.Boston, { x: 188, y: 66 }],
+    [USCities.Calgary, { x: 66, y: 40 }],
+    [USCities.Charleston, { x: 173, y: 108 }],
+    [USCities.Chicago, { x: 139, y: 78 }],
+    [USCities.Dallas, { x: 112, y: 118 }],
+    [USCities.Denver, { x: 87, y: 88 }],
+    [USCities.ElPaso, { x: 81, y: 120 }],
+    [USCities.Houston, { x: 115, y: 128 }],
+    [USCities.KansasCity, { x: 117, y: 91 }],
+    [USCities.LasVegas, { x: 52, y: 97 }],
+    [USCities.LittleRock, { x: 128, y: 109 }],
+    [USCities.LosAngeles, { x: 36, y: 102 }],
+    [USCities.Miami, { x: 176, y: 137 }],
+    [USCities.Minneapolis, { x: 122, y: 68 }],
+    [USCities.Montreal, { x: 176, y: 55 }],
+    [USCities.Nashville, { x: 145, y: 102 }],
+    [USCities.NewOrleans, { x: 138, y: 127 }],
+    [USCities.NewYork, { x: 182, y: 73 }],
+    [USCities.OklahomaCity, { x: 110, y: 106 }],
+    [USCities.Omaha, { x: 113, y: 82 }],
+    [USCities.Phoenix, { x: 60, y: 109 }],
+    [USCities.Pittsburgh, { x: 165, y: 80 }],
+    [USCities.Portland, { x: 37, y: 57 }],
+    [USCities.Raleigh, { x: 174, y: 98 }],
+    [USCities.SaintLouis, { x: 131, y: 93 }],
+    [USCities.SaltLakeCity, { x: 63, y: 82 }],
+    [USCities.SanFrancisco, { x: 30, y: 88 }],
+    [USCities.SantaFe, { x: 81, y: 104 }],
+    [USCities.SaultSteMarie, { x: 148, y: 59 }],
+    [USCities.Seattle, { x: 41, y: 49 }],
+    [USCities.Toronto, { x: 165, y: 66 }],
+    [USCities.Vancouver, { x: 41, y: 41 }],
+    [USCities.Washington, { x: 175, y: 84 }],
+    [USCities.Winnipeg, { x: 109, y: 47 }],
+  ]);
 
   return <Box component='canvas' ref={canvasRef} {...props.extraProps} />;
 }

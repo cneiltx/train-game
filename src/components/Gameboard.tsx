@@ -11,6 +11,7 @@ import { Route } from '../model/Route';
 import { RouteColor } from '../model/RouteColor';
 import { TrainColor } from '../model/TrainColor';
 import { Box } from '@mui/material';
+import { USCities } from '../model/USCities';
 
 export type GameboardProps = {
   extraProps?: any;
@@ -55,51 +56,58 @@ export const Gameboard = (props: GameboardProps) => {
   const drawRoutes = (context: CanvasRenderingContext2D) => {
     for (const route of map.routes) {
       for (const segment of route.segments) {
-        drawRouteSegment(context, segment.x, segment.y, segment.angle, route.color, route.carLength);
+        drawRouteSegment(context, segment.x, segment.y, segment.angle, route.color, route.segmentLength);
       }
     }
   }
 
   const drawCities = (context: CanvasRenderingContext2D) => {
-    drawCity(context, 120, 45, 'Vancouver', 10, -20, 'right');
-    drawCity(context, 330, 25, 'Calgary', 10, -15, 'left');
-    drawCity(context, 698, 91, 'Winnipeg', -10, -20, 'left');
-    drawCity(context, 1005, 175, 'Sault St.\nMarie', 0, -40, 'center');
-    drawCity(context, 1264, 158, 'Montreal', -10, -20, 'left');
-    drawCity(context, 1353, 255, 'Boston', 15, 0, 'left');
-    drawCity(context, 116, 106, 'Seattle', -15, 5, 'right');
-    drawCity(context, 432, 215, 'Billings', -31, 13, 'right'); // substituted for Helena
-    drawCity(context, 799, 266, 'Minneapolis', -37, 15, 'right'); // substituted for Duluth
-    drawCity(context, 1154, 255, 'Toronto', 15, 0, 'left');
-    drawCity(context, 724, 389, 'Omaha', -11, 23, 'right');
-    drawCity(context, 936, 347, 'Chicago', 2, 26, 'left');
-    drawCity(context, 1148, 364, 'Pittsburgh', -10, -38, 'right');
-    drawCity(context, 1304, 316, 'New York', 12, 17, 'left');
-    drawCity(context, 1229, 402, 'Washington', 16, 21, 'left');
-    drawCity(context, 84, 188, 'Portland', -12, -10, 'right');
-    drawCity(context, 27, 430, 'San Francisco', 30, 27, 'left');
-    drawCity(context, 318, 381, 'Salt Lake City', -45, -20, 'right');
-    drawCity(context, 498, 437, 'Denver', -40, 22, 'right');
-    drawCity(context, 761, 465, 'Kansas\nCity', 9, 31, 'left');
-    drawCity(context, 877, 472, 'Saint\nLouis', -14, -45, 'right');
-    drawCity(context, 985, 545, 'Nashville', 15, 0, 'left');
-    drawCity(context, 1208, 516, 'Raleigh', 15, 0, 'left');
-    drawCity(context, 1064, 615, 'Atlanta', -35, -10, 'right');
-    drawCity(context, 1210, 608, 'Charleston', 15, 3, 'left');
-    drawCity(context, 105, 573, 'Los Angeles', 5, 20, 'right');
-    drawCity(context, 213, 524, 'Las Vegas', -5, 20, 'left');
-    drawCity(context, 286, 614, 'Phoenix', 0, 20, 'right');
-    drawCity(context, 458, 564, 'Santa Fe', 12, 25, 'left');
-    drawCity(context, 697, 588, 'Oklahoma\nCity', 39, -28, 'left');
-    drawCity(context, 843, 608, 'Little Rock', 15, 14, 'left');
-    drawCity(context, 450, 708, 'El Paso', 0, 25, 'right');
-    drawCity(context, 720, 682, 'Dallas', -27, -10, 'right');
-    drawCity(context, 762, 769, 'Houston', 0, 25, 'center');
-    drawCity(context, 932, 766, 'New\nOrleans', 0, 22, 'right');
-    drawCity(context, 1238, 862, 'Miami', 15, 0, 'left');
+    drawCity(context, 120, 45, USCities.Vancouver, 10, -20, 'right');
+    drawCity(context, 330, 25, USCities.Calgary, 10, -15, 'left');
+    drawCity(context, 698, 91, USCities.Winnipeg, -10, -20, 'left');
+    drawCity(context, 1005, 175, USCities.SaultSteMarie, 0, -40, 'center');
+    drawCity(context, 1264, 158, USCities.Montreal, -10, -20, 'left');
+    drawCity(context, 1353, 255, USCities.Boston, 15, 0, 'left');
+    drawCity(context, 116, 106, USCities.Seattle, -15, 5, 'right');
+    drawCity(context, 432, 215, USCities.Billings, -31, 13, 'right'); // substituted for Helena
+    drawCity(context, 799, 266, USCities.Minneapolis, -37, 15, 'right'); // substituted for Duluth
+    drawCity(context, 1154, 255, USCities.Toronto, 15, 0, 'left');
+    drawCity(context, 724, 389, USCities.Omaha, -11, 23, 'right');
+    drawCity(context, 936, 347, USCities.Chicago, 2, 26, 'left');
+    drawCity(context, 1148, 364, USCities.Pittsburgh, -10, -38, 'right');
+    drawCity(context, 1304, 316, USCities.NewYork, 12, 17, 'left');
+    drawCity(context, 1229, 402, USCities.Washington, 16, 21, 'left');
+    drawCity(context, 84, 188, USCities.Portland, -12, -10, 'right');
+    drawCity(context, 27, 430, USCities.SanFrancisco, 30, 27, 'left');
+    drawCity(context, 318, 381, USCities.SaltLakeCity, -45, -20, 'right');
+    drawCity(context, 498, 437, USCities.Denver, -40, 22, 'right');
+    drawCity(context, 761, 465, USCities.KansasCity, 9, 31, 'left');
+    drawCity(context, 877, 472, USCities.SaintLouis, -14, -45, 'right');
+    drawCity(context, 985, 545, USCities.Nashville, 15, 0, 'left');
+    drawCity(context, 1208, 516, USCities.Raleigh, 15, 0, 'left');
+    drawCity(context, 1064, 615, USCities.Atlanta, -35, -10, 'right');
+    drawCity(context, 1210, 608, USCities.Charleston, 15, 3, 'left');
+    drawCity(context, 105, 573, USCities.LosAngeles, 5, 20, 'right');
+    drawCity(context, 213, 524, USCities.LasVegas, -5, 20, 'left');
+    drawCity(context, 286, 614, USCities.Phoenix, 0, 20, 'right');
+    drawCity(context, 458, 564, USCities.SantaFe, 12, 25, 'left');
+    drawCity(context, 697, 588, USCities.OklahomaCity, 39, -28, 'left');
+    drawCity(context, 843, 608, USCities.LittleRock, 15, 14, 'left');
+    drawCity(context, 450, 708, USCities.ElPaso, 0, 25, 'right');
+    drawCity(context, 720, 682, USCities.Dallas, -27, -10, 'right');
+    drawCity(context, 762, 769, USCities.Houston, 0, 25, 'center');
+    drawCity(context, 932, 766, USCities.NewOrleans, 0, 22, 'right');
+    drawCity(context, 1238, 862, USCities.Miami, 15, 0, 'left');
   }
 
-  const drawCity = (context: CanvasRenderingContext2D, x: number, y: number, name: string, xOffset: number, yOffset: number, align: CanvasTextAlign) => {
+  const citySplitNames = new Map([
+    [USCities.KansasCity, 'Kansas\nCity'],
+    [USCities.OklahomaCity, 'Oklahoma\nCity'],
+    [USCities.SaintLouis, 'Saint\nLouis'],
+    [USCities.SaultSteMarie, 'Sault Ste.\nMarie'],
+  ]);
+
+  const drawCity = (context: CanvasRenderingContext2D, x: number, y: number, city: USCities, xOffset: number, yOffset: number, align: CanvasTextAlign) => {
     context.save();
     const cityRadius = 7.5;
     context.strokeStyle = 'gold';
@@ -122,7 +130,10 @@ export const Gameboard = (props: GameboardProps) => {
     context.fillStyle = 'black';
     context.textAlign = align;
     context.textBaseline = 'middle';
-    const lines = name.split('\n');
+    let lines = [city.toString()];
+    if (citySplitNames.has(city)) {
+      lines = citySplitNames.get(city)!.split('\n');
+    }
 
     lines.forEach((line, index) => {
       context.strokeText(line, x + xOffset, y + yOffset + fontSize * index);
@@ -214,7 +225,7 @@ export const Gameboard = (props: GameboardProps) => {
       context.save();
       context.translate(segment.x, segment.y);
       context.rotate(segment.angle * Math.PI / 180);
-      context.drawImage(image, -route.carLength / 2, -carWidth / 2, route.carLength, carWidth);
+      context.drawImage(image, -route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
       context.restore();
     }
   }
