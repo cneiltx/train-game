@@ -4,7 +4,7 @@ import { TrainColor } from "./TrainColor";
 
 export class Player {
   name: string;
-  color: TrainColor | undefined;
+  color: TrainColor = TrainColor.Red;
   avatarImageSrc: string;
   points = 0;
   trains = 45;

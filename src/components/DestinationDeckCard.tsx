@@ -34,34 +34,51 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
 
   const onResize = () => {
     const canvas = canvasRef.current!;
-    canvas.height = canvas.clientHeight;
+    let scale = 1;
+
+    if (canvas.parentElement!.clientWidth / image.width > canvas.parentElement!.clientHeight / image.height) {
+      canvas.height = canvas.parentElement!.clientHeight - (canvas.offsetHeight - canvas.clientHeight);
+      canvas.width = canvas.height * image.width / image.height;
+      scale = canvas.height / image.height;
+    } else {
+      canvas.width = canvas.parentElement!.clientWidth - (canvas.offsetWidth - canvas.clientWidth);
+      canvas.height = canvas.width * image.height / image.width;
+      scale = canvas.width / image.width;
+    }
 
     if (props.rotate) {
       canvas.width = canvas.clientHeight * image.height / image.width;
       drawCard(canvas.clientHeight / image.width);
     } else {
       canvas.width = canvas.clientHeight * image.width / image.height;
-      drawCard(canvas.clientHeight / image.height);
+      drawCard(scale);
     }
   }
 
   const drawCard = (scale: number) => {
     const canvas = canvasRef.current!;
     const context = canvas.getContext('2d')!;
+    drawBackground(context, canvas.width, canvas.height, scale);
+
+    if (props.faceUp) {
+      context.scale(scale, scale);
+      drawTitle(context);
+      drawValue(context);
+      drawRoute(context);
+      drawCities(context);
+      context.restore();
+    }
+  }
+
+  const drawBackground = (context: CanvasRenderingContext2D, width: number, height: number, scale: number) => {
     context.save();
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.translate(canvas.width / 2, canvas.height / 2);
+    context.clearRect(0, 0, width, height);
+    context.translate(width / 2, height / 2);
     if (props.rotate) {
       context.rotate(-90 * Math.PI / 180);
     }
     context.scale(scale, scale);
     context.drawImage(image, -image.width / 2, -image.height / 2);
-    context.restore();
-    context.scale(scale, scale);
-    drawTitle(context);
-    drawValue(context);
-    drawRoute(context);
-    drawCities(context);
     context.restore();
   }
 
@@ -135,20 +152,17 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   }
 
   const drawCityRing = (context: CanvasRenderingContext2D, city: USCities) => {
-    const cityInnerRadius = 2;
-    const cityOuterRadius = 7;
     context.fillStyle = 'navy';
-    cityMap.forEach((coordinate) => {
-      context.beginPath();
-      const coordinates = cityMap.get(city)!;
-      let [x, y] = [coordinates.x, coordinates.y];
-      if (props.rotate) {
-        [x, y] = [y, image.width - x];
-      }
-      context.arc(x, y, cityInnerRadius, 0, 2 * Math.PI, true);
-      context.arc(x, y, cityOuterRadius, 0, 2 * Math.PI, false);
-      context.fill();
-    })
+    context.beginPath();
+    const coordinates = cityMap.get(city)!;
+    let [x, y] = [coordinates.x, coordinates.y];
+    if (props.rotate) {
+      [x, y] = [y, image.width - x];
+    }
+    context.strokeStyle = 'navy';
+    context.lineWidth = 4;
+    context.arc(x, y, 4, 0, 2 * Math.PI);
+    context.stroke();
   }
 
   const cityMap = new Map([
@@ -190,5 +204,9 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     [USCities.Winnipeg, { x: 109, y: 47 }],
   ]);
 
-  return <Box component='canvas' ref={canvasRef} {...props.extraProps} />;
+  return (
+    <Box border='solid green' {...props.extraProps} display='flex' justifyContent='center' alignItems='center' >
+      <Box border='solid orange' component='canvas' ref={canvasRef} />
+    </Box>
+  );
 }

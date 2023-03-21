@@ -9,13 +9,17 @@ export class GameController {
   gameID: string;
   status = GameStatus.Initializing;
   players: Player[] = [];
+  localPlayer: Player;
+  activePlayer: Player | null = null;
   trainCardDeck: TrainCard[] = [];
   faceUpTrainCards: TrainCard[] = [];
   discardedTrainCards: TrainCard[] = [];
   destinationCardDeck: DestinationCard[] = [];
 
-  constructor(gameID: string) {
+  constructor(gameID: string, localPlayer: Player) {
     this.gameID = gameID;
+    this.localPlayer = localPlayer;
+    this.players.push(localPlayer);
   }
 
   startGame() {

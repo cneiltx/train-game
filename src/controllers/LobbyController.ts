@@ -6,7 +6,7 @@ export class LobbyController {
   games: GameController[] = [];
 
   createGame(player: Player) {
-    const game = new GameController(this.generateGameID());
+    const game = new GameController(this.generateGameID(), player);
     this.games.push(game);
     return game;
   }

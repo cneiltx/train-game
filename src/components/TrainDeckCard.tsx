@@ -68,15 +68,31 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
 
   const onResize = () => {
     const canvas = canvasRef.current!;
-    canvas.height = canvas.clientHeight;
+    let scale = 1;
 
     if (props.rotate) {
-      canvas.width = canvas.clientHeight * image.height / image.width;
-      DrawCard(canvas.clientHeight / image.width);
+      if (canvas.parentElement!.clientWidth / image.height > canvas.parentElement!.clientHeight / image.width) {
+        canvas.height = canvas.parentElement!.clientHeight - (canvas.offsetHeight - canvas.clientHeight);
+        canvas.width = canvas.height * image.height / image.width;
+        scale = canvas.height / image.width;
+      } else {
+        canvas.width = canvas.parentElement!.clientWidth - (canvas.offsetWidth - canvas.clientWidth);
+        canvas.height = canvas.width * image.width / image.height;
+        scale = canvas.width / image.height;
+      }
     } else {
-      canvas.width = canvas.clientHeight * image.width / image.height;
-      DrawCard(canvas.clientHeight / image.height);
+      if (canvas.parentElement!.clientWidth / image.width > canvas.parentElement!.clientHeight / image.height) {
+        canvas.height = canvas.parentElement!.clientHeight - (canvas.offsetHeight - canvas.clientHeight);
+        canvas.width = canvas.height * image.width / image.height;
+        scale = canvas.height / image.height;
+      } else {
+        canvas.width = canvas.parentElement!.clientWidth - (canvas.offsetWidth - canvas.clientWidth);
+        canvas.height = canvas.width * image.height / image.width;
+        scale = canvas.width / image.width;
+      }
     }
+
+    DrawCard(scale);
   }
 
   const DrawCard = (scale: number) => {
@@ -93,5 +109,9 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
     context.restore();
   }
 
-  return <Box component='canvas' ref={canvasRef} {...props.extraProps} />;
+  return (
+    <Box border='solid green' {...props.extraProps} display='flex' justifyContent='center' alignItems='center' >
+      <Box border='solid orange' component='canvas' ref={canvasRef} />
+    </Box>
+  );
 }

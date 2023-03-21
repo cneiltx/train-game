@@ -1,20 +1,21 @@
 import { Stack } from "@mui/material";
-import { TrainCardColor } from "../model/TrainCardColor";
-import { TrainDeckCard } from "./TrainDeckCard";
+import { Player } from "../model/Player";
+import { PlayerSummary } from "./PlayerSummary";
 
 export type PlayersAreaProps = {
+  players: Player[];
+  activePlayer: Player | null;
+  localPlayer: Player;
   extraProps?: any;
 }
 
 export const PlayersArea = (props: PlayersAreaProps) => {
   return (
-    <Stack border='solid red' padding={1} spacing={1} alignItems='flex-start' {...props.extraProps}>
-      <TrainDeckCard color={TrainCardColor.Red} faceUp={false} extraProps={{ height: '15%' }} />
-      <TrainDeckCard color={TrainCardColor.Red} faceUp={true} extraProps={{ height: '15%' }} />
-      <TrainDeckCard color={TrainCardColor.Red} faceUp={true} extraProps={{ height: '15%' }} />
-      <TrainDeckCard color={TrainCardColor.Red} faceUp={true} extraProps={{ height: '15%' }} />
-      <TrainDeckCard color={TrainCardColor.Red} faceUp={true} extraProps={{ height: '15%' }} />
-      <TrainDeckCard color={TrainCardColor.Red} faceUp={true} extraProps={{ height: '15%' }} />
+    <Stack border='solid red' padding='1vh' spacing='1vh' {...props.extraProps} >
+      <PlayerSummary player={props.players[0]} extraProps={{ height: '15vh', width: '15vw' }} />
+      <PlayerSummary player={props.players[0]} extraProps={{ height: '15vh', width: '15vw' }} />
+      <PlayerSummary player={props.players[0]} extraProps={{ height: '15vh', width: '15vw' }} />
+      <PlayerSummary player={props.players[0]} extraProps={{ height: '15vh', width: '15vw' }} />
     </Stack>
   );
 }

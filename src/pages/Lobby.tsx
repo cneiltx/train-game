@@ -48,7 +48,7 @@ export const Lobby = (props: LobbyProps) => {
   }
 
   const createPlayer = () => {
-    return new Player(name, gameID);
+    return new Player(name, avatar);
   }
 
   return (

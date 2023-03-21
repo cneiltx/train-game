@@ -3,7 +3,6 @@ import usMap from '../images/ttr-us-map.png';
 import blackCar from '../images/train-cars/car-black.png';
 import blueCar from '../images/train-cars/car-blue.png';
 import greenCar from '../images/train-cars/car-green.png';
-import purpleCar from '../images/train-cars/car-purple.png';
 import redCar from '../images/train-cars/car-red.png';
 import yellowCar from '../images/train-cars/car-yellow.png';
 import { GameMap } from '../model/GameMap';
@@ -33,9 +32,19 @@ export const Gameboard = (props: GameboardProps) => {
 
   const onResize = () => {
     const canvas = canvasRef.current!;
-    canvas.width = canvas.clientHeight * image.width / image.height;
-    canvas.height = canvas.clientHeight;
-    drawMap(canvas.clientHeight / image.height);
+    let scale = 1;
+
+    if (canvas.parentElement!.clientWidth / image.width > canvas.parentElement!.clientHeight / image.height) {
+      canvas.height = canvas.parentElement!.clientHeight - (canvas.offsetHeight - canvas.clientHeight);
+      canvas.width = canvas.height * image.width / image.height;
+      scale = canvas.height / image.height;
+    } else {
+      canvas.width = canvas.parentElement!.clientWidth - (canvas.offsetWidth - canvas.clientWidth);
+      canvas.height = canvas.width * image.height / image.width;
+      scale = canvas.width / image.width;
+    }
+
+    drawMap(scale);
   }
 
   const drawMap = (scale: number) => {
@@ -214,9 +223,6 @@ export const Gameboard = (props: GameboardProps) => {
         case TrainColor.Green:
           image.src = greenCar;
           break;
-        case TrainColor.Purple:
-          image.src = purpleCar;
-          break;
         case TrainColor.Black:
           image.src = blackCar;
           break;
@@ -230,5 +236,9 @@ export const Gameboard = (props: GameboardProps) => {
     }
   }
 
-  return <Box border='solid red' component='canvas' ref={canvasRef} {...props.extraProps} />
+  return (
+    <Box border='solid red' {...props.extraProps} display='flex' justifyContent='center' alignItems='center' >
+      <Box border='solid green' component='canvas' ref={canvasRef} />
+    </Box>
+  );
 }
