@@ -114,7 +114,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   const DrawName = (context: CanvasRenderingContext2D) => {
-    context.font = '1em system-ui';
+    context.font = '1.5em system-ui';
     context.fillStyle = 'white';
     context.textAlign = 'left';
     context.textBaseline = 'middle';
@@ -138,44 +138,44 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   const DrawScore = (context: CanvasRenderingContext2D) => {
     context.fillStyle = color;
     context.beginPath();
-    context.roundRect(referenceHeight * 0.3, referenceHeight * 0.75, referenceHeight * 0.4, referenceHeight * 0.25, referenceHeight * 0.05);
+    context.roundRect(referenceHeight * 0.25, referenceHeight * 0.75, referenceHeight * 0.5, referenceHeight * 0.25, referenceHeight * 0.08);
     context.fill();
     context.fillStyle = 'white';
-    context.font = 'bold 1em system-ui';
+    context.font = 'bold 1.5em system-ui';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    context.fillText(props.player.points.toString(), referenceHeight * 0.5, referenceHeight * 0.88);
+    context.fillText(props.player.points.toString(), referenceHeight * 0.5, referenceHeight * 0.89);
   }
 
   const DrawTrainCount = (context: CanvasRenderingContext2D) => {
     context.strokeStyle = color;
     context.fillStyle = 'white';
-    context.lineWidth = 2;
+    context.lineWidth = 4;
     context.beginPath();
-    context.arc(referenceHeight, referenceHeight * 0.75, 24, 0, 2 * Math.PI);
+    context.arc(referenceHeight, referenceHeight * 0.75, referenceHeight * 0.2, 0, 2 * Math.PI);
     context.fill();
     context.stroke();
-    context.drawImage(trainCar, referenceHeight * 0.775, referenceHeight * 0.61);
+    context.drawImage(trainCar, referenceHeight * 0.85, referenceHeight * 0.63);
     context.fillStyle = 'black';
-    context.font = 'bold 1em system-ui';
+    context.font = 'bold 1.2em system-ui';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    context.fillText(props.player.trains.toString(), referenceHeight, referenceHeight * 0.85);
+    context.fillText(props.player.trains.toString(), referenceHeight, referenceHeight * 0.84);
   }
 
   const DrawTrainCardCount = (context: CanvasRenderingContext2D) => {
     context.drawImage(trainCardImage, referenceHeight * 1.35, referenceHeight * 0.475, referenceHeight * 0.2 * trainCardImage.width / trainCardImage.height, referenceHeight * 0.2);
     context.fillStyle = 'white';
-    context.font = 'bold 1em system-ui';
+    context.font = 'bold 1.2em system-ui';
     context.textAlign = 'left';
     context.textBaseline = 'middle';
-    context.fillText(props.player.trainCards.length.toString(), referenceHeight * 1.72, referenceHeight * 0.575);
+    context.fillText(props.player.trainCards.length.toString(), referenceHeight * 1.72, referenceHeight * 0.58);
   }
 
   const DrawDestinationCardCount = (context: CanvasRenderingContext2D) => {
     context.drawImage(destinationCardImage, referenceHeight * 1.35, referenceHeight * 0.725, referenceHeight * 0.2 * destinationCardImage.width / destinationCardImage.height, referenceHeight * 0.2);
     context.fillStyle = 'white';
-    context.font = 'bold 1em system-ui';
+    context.font = 'bold 1.2em system-ui';
     context.textAlign = 'left';
     context.textBaseline = 'middle';
     context.fillText(props.player.destinationCards.length.toString(), referenceHeight * 1.72, referenceHeight * 0.835);

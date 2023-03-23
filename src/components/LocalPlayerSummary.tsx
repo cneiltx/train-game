@@ -17,7 +17,8 @@ export const LocalPlayerSummary = (props: LocalPlayerSummaryProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const avatarImage = new Image();
   const trainCar = new Image();
-  const aspectRatio = 1.5;
+  const referenceWidth = 300;
+  const referenceHeight = 215;
   let color = '';
 
   useEffect(() => {
@@ -60,88 +61,74 @@ export const LocalPlayerSummary = (props: LocalPlayerSummaryProps) => {
 
   const onResize = () => {
     const canvas = canvasRef.current!;
-    canvas.height = canvas.clientHeight;
-    canvas.width = canvas.clientHeight * aspectRatio;
-    DrawContent();
-  }
-
-  const DrawContent = () => {
-    const canvas = canvasRef.current!;
     const context = canvas.getContext('2d')!;
-    DrawBackground(context, canvas.width, canvas.height);
-    DrawAvatar(context, canvas.width, canvas.height);
-    DrawName(context, canvas.width, canvas.height);
-    DrawScore(context, canvas.width, canvas.height);
-    DrawTrainCount(context, canvas.width, canvas.height);
+    let scale = 1;
+
+    if ((canvas.parentElement!.clientWidth - (canvas.offsetWidth - canvas.clientWidth)) /
+      (canvas.parentElement!.clientHeight - (canvas.offsetHeight - canvas.clientHeight)) > referenceWidth / referenceHeight) {
+      canvas.height = canvas.parentElement!.clientHeight - (canvas.offsetHeight - canvas.clientHeight);
+      canvas.width = canvas.height * referenceWidth / referenceHeight;
+      scale = canvas.height / referenceHeight;
+    } else {
+      canvas.width = canvas.parentElement!.clientWidth - (canvas.offsetWidth - canvas.clientWidth);
+      canvas.height = canvas.width * referenceHeight / referenceWidth;
+      scale = canvas.width / referenceWidth;
+    }
+
+    context.scale(scale, scale);
+    DrawBackground(context);
+    DrawAvatar(context);
+    DrawScore(context);
+    DrawTrainCount(context);
   }
 
-  const DrawBackground = (context: CanvasRenderingContext2D, width: number, height: number) => {
-    context.clearRect(0, 0, width, height);
+  const DrawBackground = (context: CanvasRenderingContext2D) => {
+    context.clearRect(0, 0, referenceWidth, referenceHeight);
     context.fillStyle = color;
-    context.fillRect(0, 0, width, height * 0.4);
+    context.fillRect(0, 0, referenceWidth, referenceHeight * 0.4);
   }
 
-  const DrawAvatar = (context: CanvasRenderingContext2D, width: number, height: number) => {
+  const DrawAvatar = (context: CanvasRenderingContext2D) => {
     context.save();
     context.beginPath();
-    context.arc(height * 0.5, height * 0.5, height * 0.4, 0, Math.PI * 2, true);
+    context.arc(referenceHeight * 0.85, referenceHeight * 0.5, referenceHeight * 0.4, 0, Math.PI * 2, true);
     context.closePath();
     context.clip();
-    context.drawImage(avatarImage, height * 0.1, height * 0.1, height * 0.8, height * 0.8);
+    context.drawImage(avatarImage, referenceHeight * 0.45, referenceHeight * 0.1, referenceHeight * 0.8, referenceHeight * 0.8);
     context.restore();
   }
 
-  const DrawName = (context: CanvasRenderingContext2D, width: number, height: number) => {
-    context.font = '1em system-ui';
-    context.fillStyle = 'white';
-    context.textAlign = 'left';
-    context.textBaseline = 'middle';
-    const x = height * 0.95;
-    const padding = width * 0.02;
-    const line1 = props.player.name.trim().split(' ');
-    const line2: string[] = [];
-
-    while (line1.length > 1 && context.measureText(line1.join(' ')).width > width - x - padding) {
-      line2.unshift(line1.pop()!);
-    }
-
-    if (line2.length > 0) {
-      context.fillText(line1.join(' '), x, height * 0.12);
-      context.fillText(line2.join(' '), x, height * 0.29);
-    } else {
-      context.fillText(line1.join(' '), x, height * 0.21);
-    }
-  }
-
-  const DrawScore = (context: CanvasRenderingContext2D, width: number, height: number) => {
+  const DrawScore = (context: CanvasRenderingContext2D) => {
     context.fillStyle = color;
     context.beginPath();
-    context.roundRect(height * 0.3, height * 0.75, height * 0.4, height * 0.25, height * 0.05);
+    context.roundRect(referenceHeight * 0.6, referenceHeight * 0.75, referenceHeight * 0.5, referenceHeight * 0.25, referenceHeight * 0.05);
     context.fill();
     context.fillStyle = 'white';
-    context.font = 'bold 1em system-ui';
+    context.font = 'bold 2.9em system-ui';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    context.fillText(props.player.points.toString(), height * 0.5, height * 0.88);
+    context.fillText(props.player.points.toString(), referenceHeight * 0.85, referenceHeight * 0.89);
   }
 
-  const DrawTrainCount = (context: CanvasRenderingContext2D, width: number, height: number) => {
+  const DrawTrainCount = (context: CanvasRenderingContext2D) => {
     context.strokeStyle = color;
     context.fillStyle = 'white';
-    context.lineWidth = 2;
+    context.lineWidth = 6;
     context.beginPath();
-    context.arc(height, height * 0.75, 24, 0, 2 * Math.PI);
+    context.arc(referenceHeight * 0.35, referenceHeight * 0.75, referenceHeight * 0.2, 0, 2 * Math.PI);
     context.fill();
     context.stroke();
-    context.drawImage(trainCar, height * 0.775, height * 0.61);
+    context.drawImage(trainCar, referenceHeight * 0.195, referenceHeight * 0.64, trainCar.width * 1.5, trainCar.height * 1.5);
     context.fillStyle = 'black';
-    context.font = 'bold 1em system-ui';
+    context.font = 'bold 2em system-ui';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    context.fillText(props.player.trains.toString(), height, height * 0.85);
+    context.fillText(props.player.trains.toString(), referenceHeight * 0.35, referenceHeight * 0.84);
   }
 
   return (
-    <Box border='solid green' component='canvas' ref={canvasRef} {...props.extraProps} />
+    <Box border='solid green' {...props.extraProps} display='flex' justifyContent='center' alignItems='center' >
+      <Box border='solid orange' component='canvas' ref={canvasRef} />
+    </Box>
   );
 }
