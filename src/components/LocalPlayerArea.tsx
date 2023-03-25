@@ -1,10 +1,10 @@
 import { Stack } from '@mui/material';
+import { EnumFunctions } from '../model/EnumFunctions';
 import { Player } from '../model/Player';
 import { TrainCardColor } from '../model/TrainCardColor';
-import { USCities } from '../model/USCities';
-import { DestinationDeckCard } from './DestinationDeckCard';
+import { DestinationCardStack } from './DestinationCardStack';
 import { LocalPlayerSummary } from './LocalPlayerSummary';
-import { TrainDeckCard } from './TrainDeckCard';
+import { TrainCardStack } from './TrainCardStack';
 
 export type LocalPlayerAreaProps = {
   player: Player;
@@ -12,19 +12,21 @@ export type LocalPlayerAreaProps = {
 }
 
 export const LocalPlayerArea = (props: LocalPlayerAreaProps) => {
+  const trainCardStacks = [];
+
+  for (const color of EnumFunctions.getEnumValues<TrainCardColor>(TrainCardColor)) {
+    const cards = props.player.trainCards.filter((card) => { return card.color === color });
+
+    if (cards.length > 0) {
+      trainCardStacks.push(<TrainCardStack cards={cards} faceUp={true} rotate={true} showCount={true} extraProps={{ height: '17vh', width: '6.5vw' }} />);
+    }
+  }
+
   return (
     <Stack border='solid red' padding='1vh' spacing='1vh' direction='row' justifyContent='space-between' {...props.extraProps}>
-      <DestinationDeckCard city1={USCities.SaultSteMarie} city2={USCities.SaltLakeCity} value={5} faceUp={true} rotate={false} extraProps={{ height: '17vh', width: '16vw' }} />
+      <DestinationCardStack cards={props.player.destinationCards} faceUp={true} rotate={false} extraProps={{ height: '17vh', width: '16vw' }} />
       <Stack spacing='1vh' direction='row' justifyContent='center' height='100%'>
-        <TrainDeckCard color={TrainCardColor.Black} faceUp={true} rotate={true} extraProps={{ height: '17vh', width: '6.5vw' }} />
-        <TrainDeckCard color={TrainCardColor.Blue} faceUp={true} rotate={true} extraProps={{ height: '17vh', width: '6.5vw' }} />
-        <TrainDeckCard color={TrainCardColor.Green} faceUp={true} rotate={true} extraProps={{ height: '17vh', width: '6.5vw' }} />
-        <TrainDeckCard color={TrainCardColor.Orange} faceUp={true} rotate={true} extraProps={{ height: '17vh', width: '6.5vw' }} />
-        <TrainDeckCard color={TrainCardColor.Purple} faceUp={true} rotate={true} extraProps={{ height: '17vh', width: '6.5vw' }} />
-        <TrainDeckCard color={TrainCardColor.Rainbow} faceUp={true} rotate={true} extraProps={{ height: '17vh', width: '6.5vw' }} />
-        <TrainDeckCard color={TrainCardColor.Red} faceUp={true} rotate={true} extraProps={{ height: '17vh', width: '6.5vw' }} />
-        <TrainDeckCard color={TrainCardColor.White} faceUp={true} rotate={true} extraProps={{ height: '17vh', width: '6.5vw' }} />
-        <TrainDeckCard color={TrainCardColor.Yellow} faceUp={true} rotate={true} extraProps={{ height: '17vh', width: '6.5vw' }} />
+        {trainCardStacks}
       </Stack>
       <LocalPlayerSummary player={props.player} extraProps={{ height: '17vh', width: '14vw' }} />
     </Stack>

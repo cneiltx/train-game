@@ -11,11 +11,13 @@ import cardBack from '../images/train-cards/card-back.png';
 import { TrainCardColor } from "../model/TrainCardColor";
 import { Box } from "@mui/material";
 import { useEffect, useRef } from 'react';
+import { TrainCard } from '../model/TrainCard';
 
 export type TrainDeckCardProps = {
-  color: TrainCardColor;
+  card: TrainCard;
   faceUp: boolean;
   rotate?: boolean;
+  count?: number;
   extraProps?: any;
 }
 
@@ -25,7 +27,7 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
 
   useEffect(() => {
     if (props.faceUp) {
-      switch (props.color) {
+      switch (props.card.color) {
         case TrainCardColor.Black:
           image.src = blackCard;
           break;
@@ -107,6 +109,19 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
     context.scale(scale, scale);
     context.drawImage(image, -image.width / 2, -image.height / 2);
     context.restore();
+
+    if (props.count) {
+      context.scale(scale, scale);
+      context.font = `bold 40px system-ui`;
+      context.strokeStyle = 'black';
+      context.lineWidth = 6;
+      context.fillStyle = 'white';
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      const text = 'x' + props.count;
+      context.strokeText(text, canvas.width * 0.5 / scale, canvas.height * 0.8 / scale);
+      context.fillText(text, canvas.width * 0.5 / scale, canvas.height * 0.8 / scale);
+    }
   }
 
   return (

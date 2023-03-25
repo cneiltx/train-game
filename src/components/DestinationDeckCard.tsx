@@ -3,11 +3,10 @@ import cardFront from '../images/destination-cards/card-front.png';
 import { Box } from "@mui/material";
 import { USCities } from '../model/USCities';
 import { useEffect, useRef } from 'react';
+import { DestinationCard } from '../model/DestinationCard';
 
 export type DestinationDeckCardProps = {
-  city1: USCities;
-  city2: USCities;
-  value: number;
+  card: DestinationCard;
   faceUp: boolean;
   rotate?: boolean;
   extraProps?: any;
@@ -109,7 +108,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     context.fillStyle = 'black';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    const text = `${props.city1} - ${props.city2}`;
+    const text = `${props.card.city1} - ${props.card.city2}`;
     context.fillText(text, x, y);
     context.restore();
   }
@@ -127,14 +126,14 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     context.fillStyle = 'black';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    const text = props.value.toString();
+    const text = props.card.points.toString();
     context.fillText(text, x, y);
     context.restore();
   }
 
   const drawRoute = (context: CanvasRenderingContext2D) => {
-    const city1Coords = cityMap.get(props.city1)!;
-    const city2Coords = cityMap.get(props.city2)!;
+    const city1Coords = cityMap.get(props.card.city1)!;
+    const city2Coords = cityMap.get(props.card.city2)!;
     let [x1, y1] = [city1Coords.x, city1Coords.y];
     let [x2, y2] = [city2Coords.x, city2Coords.y];
     if (props.rotate) {
@@ -147,8 +146,8 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     context.strokeStyle = 'darkgoldenrod';
     context.lineWidth = 3;
     context.stroke();
-    drawCityRing(context, props.city1);
-    drawCityRing(context, props.city2);
+    drawCityRing(context, props.card.city1);
+    drawCityRing(context, props.card.city2);
   }
 
   const drawCityRing = (context: CanvasRenderingContext2D, city: USCities) => {

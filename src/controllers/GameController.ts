@@ -4,6 +4,7 @@ import { TrainCard } from "../model/TrainCard";
 import { USCities } from "../model/USCities";
 import { GameStatus } from "../model/GameStatus";
 import { TrainCardColor } from "../model/TrainCardColor";
+import { EnumFunctions } from "../model/EnumFunctions";
 
 export class GameController {
   gameID: string;
@@ -27,10 +28,11 @@ export class GameController {
     this.initializeTrainCards();
     this.initializeDestinationCards();
     this.dealTrainCards();
+    this.dealDestinationCards();
   }
 
   initializeTrainCards() {
-    for (const color of this.getEnumValues<TrainCardColor>(TrainCardColor)) {
+    for (const color of EnumFunctions.getEnumValues<TrainCardColor>(TrainCardColor)) {
       for (let i = 0; i < 12; i++) {
         this.trainCardDeck.push(new TrainCard(color));
       }
@@ -116,10 +118,6 @@ export class GameController {
 
   drawDestinationCard() {
     return this.destinationCardDeck.pop();
-  }
-
-  getEnumValues<T>(enumType: object) {
-    return Object.values(enumType).filter(value => !isNaN(Number(value))) as T[];
   }
 
   shuffle(array: Array<any>) {
