@@ -16,8 +16,6 @@ import { TrainCard } from '../model/TrainCard';
 export type TrainDeckCardProps = {
   card: TrainCard;
   faceUp: boolean;
-  rotate?: boolean;
-  count?: number;
   extraProps?: any;
 }
 
@@ -63,70 +61,34 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
     window.addEventListener('resize', onResize);
 
     image.onload = () => {
-      onResize();
+      const canvas = canvasRef.current;
+
+      if (canvas) {
+        canvas.height = image.height;
+        canvas.width = image.width;
+        onResize();
+      }
     }
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
   const onResize = () => {
     const canvas = canvasRef.current!;
-    let scale = 1;
 
-    if (props.rotate) {
-      if (canvas.parentElement!.clientWidth / image.height > canvas.parentElement!.clientHeight / image.width) {
-        canvas.height = canvas.parentElement!.clientHeight - (canvas.offsetHeight - canvas.clientHeight);
-        canvas.width = canvas.height * image.height / image.width;
-        scale = canvas.height / image.width;
-      } else {
-        canvas.width = canvas.parentElement!.clientWidth - (canvas.offsetWidth - canvas.clientWidth);
-        canvas.height = canvas.width * image.width / image.height;
-        scale = canvas.width / image.height;
-      }
-    } else {
-      if (canvas.parentElement!.clientWidth / image.width > canvas.parentElement!.clientHeight / image.height) {
-        canvas.height = canvas.parentElement!.clientHeight - (canvas.offsetHeight - canvas.clientHeight);
-        canvas.width = canvas.height * image.width / image.height;
-        scale = canvas.height / image.height;
-      } else {
-        canvas.width = canvas.parentElement!.clientWidth - (canvas.offsetWidth - canvas.clientWidth);
-        canvas.height = canvas.width * image.height / image.width;
-        scale = canvas.width / image.width;
-      }
+    if (canvas) {
+      const context = canvas.getContext('2d')!;
+      drawCard(canvas, context);
     }
-
-    DrawCard(scale);
   }
 
-  const DrawCard = (scale: number) => {
-    const canvas = canvasRef.current!;
-    const context = canvas.getContext('2d')!;
-    context.save();
+  const drawCard = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.translate(canvas.width / 2, canvas.height / 2);
-    if (props.rotate) {
-      context.rotate(-90 * Math.PI / 180);
-    }
-    context.scale(scale, scale);
-    context.drawImage(image, -image.width / 2, -image.height / 2);
-    context.restore();
-
-    if (props.count) {
-      context.scale(scale, scale);
-      context.font = `bold 40px system-ui`;
-      context.strokeStyle = 'black';
-      context.lineWidth = 6;
-      context.fillStyle = 'white';
-      context.textAlign = 'center';
-      context.textBaseline = 'middle';
-      const text = 'x' + props.count;
-      context.strokeText(text, canvas.width * 0.5 / scale, canvas.height * 0.8 / scale);
-      context.fillText(text, canvas.width * 0.5 / scale, canvas.height * 0.8 / scale);
-    }
+    context.drawImage(image, 0, 0);
   }
 
   return (
-    <Box border='solid green' {...props.extraProps} display='flex' justifyContent='center' alignItems='center' >
-      <Box border='solid orange' component='canvas' ref={canvasRef} />
+    <Box {...props.extraProps} textAlign='center' >
+      <Box component='canvas' ref={canvasRef} sx={{ height: '100%' }} />
     </Box>
   );
 }

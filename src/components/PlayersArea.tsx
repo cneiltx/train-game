@@ -1,21 +1,23 @@
 import { Stack } from "@mui/material";
 import { Player } from "../model/Player";
 import { PlayerSummary } from "./PlayerSummary";
+import tileBlue from '../images/backgrounds/tile-blue.jpg';
 
 export type PlayersAreaProps = {
   players: Player[];
-  activePlayer: Player | null;
+  activePlayer: Player;
   localPlayer: Player;
   extraProps?: any;
 }
 
 export const PlayersArea = (props: PlayersAreaProps) => {
   return (
-    <Stack border='solid red' padding='1vh' spacing='1vh' {...props.extraProps} >
-      <PlayerSummary player={props.players[0]} extraProps={{ height: '15vh', width: '15vw' }} />
-      <PlayerSummary player={props.players[0]} extraProps={{ height: '15vh', width: '15vw' }} />
-      <PlayerSummary player={props.players[0]} extraProps={{ height: '15vh', width: '15vw' }} />
-      <PlayerSummary player={props.players[0]} extraProps={{ height: '15vh', width: '15vw' }} />
+    <Stack style={{ backgroundImage: `url(${tileBlue})`, backgroundRepeat: 'repeat' }} boxShadow='inset 0 0 5px 2px gold' padding='1.5vh' spacing='2vh' {...props.extraProps} >
+      <PlayerSummary player={props.players[0]} extraProps={{ height: '13vh' }} />
+      <PlayerSummary player={props.players[0]} extraProps={{ height: '13vh' }} />
+      <PlayerSummary player={props.players[0]} extraProps={{ height: '13vh' }} />
+      <PlayerSummary player={props.players[0]} extraProps={{ height: '13vh' }} />
+      <PlayerSummary player={props.players[0]} extraProps={{ height: '13vh' }} />
     </Stack>
   );
 }

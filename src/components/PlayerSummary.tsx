@@ -53,6 +53,12 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
         break;
     }
 
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.width = referenceWidth;
+      canvas.height = referenceHeight;
+    }
+
     window.addEventListener('resize', onResize);
 
     avatarImage.onload = () => {
@@ -72,29 +78,18 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }, []);
 
   const onResize = () => {
-    const canvas = canvasRef.current!;
-    const context = canvas.getContext('2d')!;
-    let scale = 1;
+    const canvas = canvasRef.current;
 
-    if ((canvas.parentElement!.clientWidth - (canvas.offsetWidth - canvas.clientWidth)) /
-      (canvas.parentElement!.clientHeight - (canvas.offsetHeight - canvas.clientHeight)) > referenceWidth / referenceHeight) {
-      canvas.height = canvas.parentElement!.clientHeight - (canvas.offsetHeight - canvas.clientHeight);
-      canvas.width = canvas.height * referenceWidth / referenceHeight;
-      scale = canvas.height / referenceHeight;
-    } else {
-      canvas.width = canvas.parentElement!.clientWidth - (canvas.offsetWidth - canvas.clientWidth);
-      canvas.height = canvas.width * referenceHeight / referenceWidth;
-      scale = canvas.width / referenceWidth;
+    if (canvas) {
+      const context = canvas.getContext('2d')!;
+      DrawBackground(context);
+      DrawAvatar(context);
+      DrawName(context);
+      DrawScore(context);
+      DrawTrainCount(context);
+      DrawTrainCardCount(context);
+      DrawDestinationCardCount(context);
     }
-
-    context.scale(scale, scale);
-    DrawBackground(context);
-    DrawAvatar(context);
-    DrawName(context);
-    DrawScore(context);
-    DrawTrainCount(context);
-    DrawTrainCardCount(context);
-    DrawDestinationCardCount(context);
   }
 
   const DrawBackground = (context: CanvasRenderingContext2D) => {
@@ -182,8 +177,8 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   return (
-    <Box border='solid green' {...props.extraProps} display='flex' justifyContent='center' alignItems='center' >
-      <Box border='solid orange' component='canvas' ref={canvasRef} />
+    <Box {...props.extraProps} testAlign='center' >
+      <Box component='canvas' ref={canvasRef} sx={{ height: '100%' }} />
     </Box>
   );
 }

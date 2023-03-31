@@ -8,7 +8,6 @@ import { DestinationCard } from '../model/DestinationCard';
 export type DestinationDeckCardProps = {
   card: DestinationCard;
   faceUp: boolean;
-  rotate?: boolean;
   extraProps?: any;
 }
 
@@ -24,61 +23,41 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     }
 
     window.addEventListener('resize', onResize);
-
     image.onload = () => {
-      onResize();
+      const canvas = canvasRef.current;
+
+      if (canvas) {
+        canvas.height = image.height;
+        canvas.width = image.width;
+        onResize();
+      }
     }
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
   const onResize = () => {
-    const canvas = canvasRef.current!;
-    let scale = 1;
+    const canvas = canvasRef.current;
 
-    if (canvas.parentElement!.clientWidth / image.width > canvas.parentElement!.clientHeight / image.height) {
-      canvas.height = canvas.parentElement!.clientHeight - (canvas.offsetHeight - canvas.clientHeight);
-      canvas.width = canvas.height * image.width / image.height;
-      scale = canvas.height / image.height;
-    } else {
-      canvas.width = canvas.parentElement!.clientWidth - (canvas.offsetWidth - canvas.clientWidth);
-      canvas.height = canvas.width * image.height / image.width;
-      scale = canvas.width / image.width;
-    }
-
-    if (props.rotate) {
-      canvas.width = canvas.clientHeight * image.height / image.width;
-      drawCard(canvas.clientHeight / image.width);
-    } else {
-      canvas.width = canvas.clientHeight * image.width / image.height;
-      drawCard(scale);
+    if (canvas) {
+      const context = canvas.getContext('2d')!;
+      drawCard(canvas, context);
     }
   }
 
-  const drawCard = (scale: number) => {
-    const canvas = canvasRef.current!;
-    const context = canvas.getContext('2d')!;
-    drawBackground(context, canvas.width, canvas.height, scale);
+  const drawCard = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
+    drawBackground(canvas, context);
 
     if (props.faceUp) {
-      context.scale(scale, scale);
       drawTitle(context);
       drawValue(context);
       drawRoute(context);
       drawCities(context);
-      context.restore();
     }
   }
 
-  const drawBackground = (context: CanvasRenderingContext2D, width: number, height: number, scale: number) => {
-    context.save();
-    context.clearRect(0, 0, width, height);
-    context.translate(width / 2, height / 2);
-    if (props.rotate) {
-      context.rotate(-90 * Math.PI / 180);
-    }
-    context.scale(scale, scale);
-    context.drawImage(image, -image.width / 2, -image.height / 2);
-    context.restore();
+  const drawBackground = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0);
   }
 
   const drawCities = (context: CanvasRenderingContext2D) => {
@@ -87,29 +66,22 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     cityMap.forEach((coordinate) => {
       context.beginPath();
       let [x, y] = [coordinate.x, coordinate.y];
-      if (props.rotate) {
-        [x, y] = [y, image.width - x];
-      }
       context.arc(x, y, cityRadius, 0, 2 * Math.PI);
       context.fill();
     })
   }
 
   const drawTitle = (context: CanvasRenderingContext2D) => {
-    const fontSize = 11;
+    const fontSize = 19;
     let [x, y] = [125, 27];
     context.save();
-    if (props.rotate) {
-      context.translate(y, image.width - x);
-      context.rotate(-Math.PI / 2);
-      [x, y] = [0, 0];
-    }
     context.font = `bold ${fontSize}px system-ui`;
     context.fillStyle = 'black';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     const text = `${props.card.city1} - ${props.card.city2}`;
-    context.fillText(text, x, y);
+    context.lineWidth = 1;
+    context.fillText(text, x, y, 180);
     context.restore();
   }
 
@@ -117,11 +89,6 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     const fontSize = 30;
     let [x, y] = [211, 125];
     context.save();
-    if (props.rotate) {
-      context.translate(y, image.width - x);
-      context.rotate(-Math.PI / 2);
-      [x, y] = [0, 0];
-    }
     context.font = `bold ${fontSize}px system-ui`;
     context.fillStyle = 'black';
     context.textAlign = 'center';
@@ -136,10 +103,6 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     const city2Coords = cityMap.get(props.card.city2)!;
     let [x1, y1] = [city1Coords.x, city1Coords.y];
     let [x2, y2] = [city2Coords.x, city2Coords.y];
-    if (props.rotate) {
-      [x1, y1] = [y1, image.width - x1];
-      [x2, y2] = [y2, image.width - x2];
-    }
     context.beginPath();
     context.moveTo(x1, y1);
     context.lineTo(x2, y2);
@@ -155,9 +118,6 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     context.beginPath();
     const coordinates = cityMap.get(city)!;
     let [x, y] = [coordinates.x, coordinates.y];
-    if (props.rotate) {
-      [x, y] = [y, image.width - x];
-    }
     context.strokeStyle = 'navy';
     context.lineWidth = 4;
     context.arc(x, y, 4, 0, 2 * Math.PI);
@@ -204,8 +164,8 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   ]);
 
   return (
-    <Box border='solid green' {...props.extraProps} display='flex' justifyContent='center' alignItems='center' >
-      <Box border='solid orange' component='canvas' ref={canvasRef} />
+    <Box {...props.extraProps} textAlign='center' >
+      <Box component='canvas' ref={canvasRef} sx={{ maxHeight: '100%', maxWidth: '100%' }} />
     </Box>
   );
 }

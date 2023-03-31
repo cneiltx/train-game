@@ -11,7 +11,7 @@ export class GameController {
   status = GameStatus.Initializing;
   players: Player[] = [];
   localPlayer: Player;
-  activePlayer: Player | null = null;
+  activePlayer: Player;
   trainCardDeck: TrainCard[] = [];
   faceUpTrainCards: TrainCard[] = [];
   discardedTrainCards: TrainCard[] = [];
@@ -20,6 +20,7 @@ export class GameController {
   constructor(gameID: string, localPlayer: Player) {
     this.gameID = gameID;
     this.localPlayer = localPlayer;
+    this.activePlayer = localPlayer;
     this.players.push(localPlayer);
   }
 

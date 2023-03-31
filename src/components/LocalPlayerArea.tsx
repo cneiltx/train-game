@@ -1,10 +1,8 @@
-import { Stack } from '@mui/material';
-import { EnumFunctions } from '../model/EnumFunctions';
+import { Box, Stack } from '@mui/material';
 import { Player } from '../model/Player';
-import { TrainCardColor } from '../model/TrainCardColor';
-import { DestinationCardStack } from './DestinationCardStack';
-import { LocalPlayerSummary } from './LocalPlayerSummary';
-import { TrainCardStack } from './TrainCardStack';
+import { DestinationDeckCard } from './DestinationDeckCard';
+import { GameControls } from './GameControls';
+import tileRed from '../images/backgrounds/tile-red.jpg';
 
 export type LocalPlayerAreaProps = {
   player: Player;
@@ -12,23 +10,20 @@ export type LocalPlayerAreaProps = {
 }
 
 export const LocalPlayerArea = (props: LocalPlayerAreaProps) => {
-  const trainCardStacks = [];
+  const destinationCards = [];
 
-  for (const color of EnumFunctions.getEnumValues<TrainCardColor>(TrainCardColor)) {
-    const cards = props.player.trainCards.filter((card) => { return card.color === color });
-
-    if (cards.length > 0) {
-      trainCardStacks.push(<TrainCardStack cards={cards} faceUp={true} rotate={true} showCount={true} extraProps={{ height: '17vh', width: '6.5vw' }} />);
-    }
+  for (const card of props.player.destinationCards) {
+    destinationCards.push(
+      <DestinationDeckCard card={card} faceUp={true} extraProps={{ width: '100%', height: '100%' }} />
+    );
   }
 
   return (
-    <Stack border='solid red' padding='1vh' spacing='1vh' direction='row' justifyContent='space-between' {...props.extraProps}>
-      <DestinationCardStack cards={props.player.destinationCards} faceUp={true} rotate={false} extraProps={{ height: '17vh', width: '16vw' }} />
-      <Stack spacing='1vh' direction='row' justifyContent='center' height='100%'>
-        {trainCardStacks}
+    <Box sx={{ display: 'flex', flexDirection: 'row' }} {...props.extraProps}>
+      <GameControls extraProps={{ height: '100%' }} />
+      <Stack style={{ backgroundImage: `url(${tileRed})`, backgroundRepeat: 'repeat' }} boxShadow='inset 0 0 5px 2px gold' padding='1.5vh' direction='row' spacing='1vh' height='100%' width='100%'>
+        {destinationCards}
       </Stack>
-      <LocalPlayerSummary player={props.player} extraProps={{ height: '17vh', width: '14vw' }} />
-    </Stack>
+    </Box >
   );
 }
