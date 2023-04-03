@@ -5,6 +5,7 @@ import { USCities } from "../model/USCities";
 import { GameStatus } from "../model/GameStatus";
 import { TrainCardColor } from "../model/TrainCardColor";
 import { EnumFunctions } from "../model/EnumFunctions";
+import { GameMap } from "../model/GameMap";
 
 export class GameController {
   gameID: string;
@@ -16,12 +17,14 @@ export class GameController {
   faceUpTrainCards: TrainCard[] = [];
   discardedTrainCards: TrainCard[] = [];
   destinationCardDeck: DestinationCard[] = [];
+  map: GameMap;
 
   constructor(gameID: string, localPlayer: Player) {
     this.gameID = gameID;
     this.localPlayer = localPlayer;
     this.activePlayer = localPlayer;
     this.players.push(localPlayer);
+    this.map = new GameMap();
   }
 
   startGame() {

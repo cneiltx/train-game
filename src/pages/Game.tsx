@@ -4,6 +4,7 @@ import { Gameboard } from '../components/Gameboard';
 import { PlayersArea } from '../components/PlayersArea';
 import { GameController } from '../controllers/GameController';
 import { Stack } from '@mui/material';
+import tileBlack from '../images/backgrounds/tile-black.jpg';
 
 export type GameProps = {
   game: GameController;
@@ -11,13 +12,13 @@ export type GameProps = {
 
 export const Game = (props: GameProps) => {
   return (
-    <Stack>
+    <Stack style={{ backgroundImage: `url(${tileBlack})`, backgroundRepeat: 'repeat' }} >
       <Stack direction='row' justifyContent='space-between'>
         <PlayersArea players={props.game.players} activePlayer={props.game.activePlayer} localPlayer={props.game.localPlayer} />
-        <Gameboard extraProps={{ height: '80vh', width: '100%' }} />
+        <Gameboard map={props.game.map} extraProps={{ height: '80vh', width: '100%' }} />
         <DrawCardArea trainCardDeck={props.game.trainCardDeck} faceUpTrainCards={props.game.faceUpTrainCards} destinationCardDeck={props.game.destinationCardDeck} />
       </Stack>
-      <LocalPlayerArea player={props.game.players[0]} extraProps={{ height: '19vh' }} />
+      <LocalPlayerArea player={props.game.players[0]} extraProps={{ height: '20vh' }} />
     </Stack>
   );
 }

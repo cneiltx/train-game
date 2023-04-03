@@ -1,12 +1,14 @@
 import { GameStatus } from "../model/GameStatus";
 import { Player } from "../model/Player";
+import { GameControllerMock } from "../test/GameControllerMock";
 import { GameController } from "./GameController";
 
 export class LobbyController {
   games: GameController[] = [];
 
   createGame(player: Player) {
-    const game = new GameController(this.generateGameID(), player);
+    // const game = new GameController(this.generateGameID(), player);
+    const game = GameControllerMock.LargeGame();
     this.games.push(game);
     return game;
   }

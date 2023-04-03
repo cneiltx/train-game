@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Player } from "../model/Player";
 import { TrainColor } from "../model/TrainColor";
 import destinationCardBack from '../images/destination-cards/card-back.png';
@@ -9,9 +9,11 @@ import blueCar from '../images/train-cars/car-blue.png';
 import greenCar from '../images/train-cars/car-green.png';
 import redCar from '../images/train-cars/car-red.png';
 import yellowCar from '../images/train-cars/car-yellow.png';
+import { ColorFunctions } from "../model/ColorFunctions";
 
 export type PlayerSummaryProps = {
   player: Player;
+  active?: boolean;
   extraProps?: any;
 }
 
@@ -23,7 +25,6 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   const trainCar = new Image();
   const referenceWidth = 300;
   const referenceHeight = 150;
-  let color = '';
 
   useEffect(() => {
     avatarImage.src = props.player.avatarImageSrc;
@@ -32,23 +33,18 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
 
     switch (props.player.color) {
       case TrainColor.Black:
-        color = 'black';
         trainCar.src = blackCar;
         break;
       case TrainColor.Blue:
-        color = 'darkblue';
         trainCar.src = blueCar;
         break;
       case TrainColor.Green:
-        color = 'green';
         trainCar.src = greenCar;
         break;
       case TrainColor.Red:
-        color = 'firebrick';
         trainCar.src = redCar;
         break;
       case TrainColor.Yellow:
-        color = 'gold';
         trainCar.src = yellowCar;
         break;
     }
@@ -93,8 +89,9 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   const DrawBackground = (context: CanvasRenderingContext2D) => {
-    context.clearRect(0, 0, referenceWidth, referenceHeight);
-    context.fillStyle = color;
+    context.fillStyle = '#203030';
+    context.fillRect(0, 0, referenceWidth, referenceHeight);
+    context.fillStyle = ColorFunctions.getHtmlColor(props.player.color);
     context.fillRect(0, 0, referenceWidth, referenceHeight * 0.4);
   }
 
@@ -131,7 +128,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   const DrawScore = (context: CanvasRenderingContext2D) => {
-    context.fillStyle = color;
+    context.fillStyle = ColorFunctions.getHtmlColor(props.player.color);
     context.beginPath();
     context.roundRect(referenceHeight * 0.25, referenceHeight * 0.75, referenceHeight * 0.5, referenceHeight * 0.25, referenceHeight * 0.08);
     context.fill();
@@ -143,7 +140,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   const DrawTrainCount = (context: CanvasRenderingContext2D) => {
-    context.strokeStyle = color;
+    context.strokeStyle = ColorFunctions.getHtmlColor(props.player.color);
     context.fillStyle = 'white';
     context.lineWidth = 4;
     context.beginPath();
@@ -176,8 +173,13 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
     context.fillText(props.player.destinationCards.length.toString(), referenceHeight * 1.72, referenceHeight * 0.835);
   }
 
+  const glow: any = {};
+  if (props.active) {
+    glow['boxShadow'] = '0 0 4px 3px gold';
+  }
+
   return (
-    <Box {...props.extraProps} testAlign='center' >
+    <Box {...props.extraProps} testAlign='center' {...glow} >
       <Box component='canvas' ref={canvasRef} sx={{ height: '100%' }} />
     </Box>
   );
