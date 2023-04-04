@@ -14,6 +14,7 @@ import { USCities } from '../model/USCities';
 
 export type GameboardProps = {
   map: GameMap;
+  highlightCities?: USCities[];
   extraProps?: any;
 }
 
@@ -117,8 +118,10 @@ export const Gameboard = (props: GameboardProps) => {
   const drawCity = (context: CanvasRenderingContext2D, x: number, y: number, city: USCities, xOffset: number, yOffset: number, align: CanvasTextAlign) => {
     context.save();
     const cityRadius = 7.5;
+    const highlightRadius = 25;
+    const lineWidth = 4;
     context.strokeStyle = 'gold';
-    context.lineWidth = 4
+    context.lineWidth = lineWidth;
     const gradient = context.createRadialGradient(x, y, cityRadius / 4, x, y, cityRadius);
     gradient.addColorStop(0, 'firebrick');
     gradient.addColorStop(.55, 'indianred');
@@ -129,6 +132,14 @@ export const Gameboard = (props: GameboardProps) => {
     context.arc(x, y, cityRadius, 0, 2 * Math.PI);
     context.stroke();
     context.fill();
+
+    if (props.highlightCities && props.highlightCities.find((value) => value === city)) {
+      context.fillStyle = 'navy';
+      context.beginPath();
+      context.arc(x, y, highlightRadius, 0, Math.PI * 2, false);
+      context.arc(x, y, cityRadius + lineWidth / 2, 0, Math.PI * 2, true);
+      context.fill();
+    }
 
     const fontSize = 19;
     context.strokeStyle = 'white';

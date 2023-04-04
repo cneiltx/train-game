@@ -15,7 +15,7 @@ export const DestinationCardStack = (props: DestinationCardStackProps) => {
     return <DestinationDeckCard card={props.cards[0]} faceUp={props.faceUp} extraProps={props.extraProps} />;
   } else {
     return (
-      <Box sx={{ boxShadow: '0.1vh 0.1vh 0 0px black, 0.3vh 0.3vh 0 0px gray, 0.4vh 0.4vh 0 0px black, 0.6vh 0.6vh 0 0px gray', borderRadius: '6px' }}>
+      <Box sx={{ boxShadow: '0.1vh 0.1vh 0 0px black, 0.3vh 0.3vh 0 0px gray, 0.4vh 0.4vh 0 0px black, 0.6vh 0.6vh 0 0px gray', borderRadius: '10%' }}>
         <DestinationDeckCard card={props.cards[0]} faceUp={props.faceUp} extraProps={props.extraProps} />
       </Box>
     );

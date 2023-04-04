@@ -58,6 +58,13 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   const drawBackground = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.drawImage(image, 0, 0);
+
+    if (props.card.complete) {
+      context.fillStyle = 'rgba(76, 187, 23, 0.5)'
+      context.beginPath();
+      context.roundRect(0, 0, canvas.width, canvas.height, 15);
+      context.fill();
+    }
   }
 
   const drawCities = (context: CanvasRenderingContext2D) => {
@@ -162,6 +169,8 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     [USCities.Washington, { x: 175, y: 84 }],
     [USCities.Winnipeg, { x: 109, y: 47 }],
   ]);
+
+  const boxProps: any = {};
 
   return (
     <Box {...props.extraProps} textAlign='center' >

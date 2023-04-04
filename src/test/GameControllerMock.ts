@@ -38,6 +38,7 @@ export class GameControllerMock {
 
     for (let i = 0; i < 9; i++) {
       if (game.destinationCardDeck.length > 0) { daphnePlayer.destinationCards.push(game.drawDestinationCard()!); }
+      if (i > 5) { daphnePlayer.destinationCards[i].complete = true; }
     }
 
     game.players.push(fredPlayer);
