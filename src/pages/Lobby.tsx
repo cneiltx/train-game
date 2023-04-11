@@ -6,12 +6,12 @@ import bwTrain from '../images/backgrounds/bw-train-building.jpeg';
 import { Player } from '../model/Player';
 
 export type LobbyProps = {
+  lobby: LobbyController;
   onCreateGame: (game: GameController) => void;
   onJoinGame: (game: GameController) => void;
 }
 
 export const Lobby = (props: LobbyProps) => {
-  const lobby = new LobbyController();
   const [avatar, setAvatar] = useState('');
   const [name, setName] = useState('');
   const [gameID, setGameID] = useState('');
@@ -31,9 +31,9 @@ export const Lobby = (props: LobbyProps) => {
     setGameID(event.target.value.toUpperCase().trim());
   }
 
-  const onJoinGame = () => {
+  const handleJoinGame = () => {
     try {
-      const game = lobby.joinGame(gameID, createPlayer());
+      const game = props.lobby.joinGame(gameID, createPlayer());
       setJoinError('');
       props.onJoinGame(game);
     } catch (e) {
@@ -43,8 +43,8 @@ export const Lobby = (props: LobbyProps) => {
     }
   }
 
-  const onCreateGame = () => {
-    props.onCreateGame(lobby.createGame(createPlayer()));
+  const handleCreateGame = () => {
+    props.onCreateGame(props.lobby.createGame(createPlayer()));
   }
 
   const createPlayer = () => {
@@ -109,7 +109,7 @@ export const Lobby = (props: LobbyProps) => {
             <Button
               variant='contained'
               disabled={name === '' || avatar === '' || gameID === ''}
-              onClick={onJoinGame}
+              onClick={handleJoinGame}
             >
               Join Game
             </Button>
@@ -123,7 +123,7 @@ export const Lobby = (props: LobbyProps) => {
             <Button
               variant='contained'
               disabled={name === '' || avatar === ''}
-              onClick={onCreateGame}
+              onClick={handleCreateGame}
             >
               New Game
             </Button>

@@ -18,18 +18,16 @@ export class LobbyController {
 
     if (!game) {
       throw new Error(`No game with ID ${gameID} exists. Please check the game ID and try again.`);
-    }
-
-    if (game.status === GameStatus.Playing) {
+    } else if (game.status === GameStatus.Playing) {
       throw new Error('You cannot join because this game is already in progress.');
-    }
-
-    if (game.status === GameStatus.Completed) {
+    } else if (game.status === GameStatus.Completed) {
       throw new Error('This game has already completed. Please create a new game.');
+    } else if (game.players.find((item) => item.name.toLowerCase() === player.name.toLowerCase())) {
+      throw new Error(`A player named ${player.name} already exists in this game. Please use a different name.`);
+    } else {
+      game.players.push(player);
+      return game;
     }
-
-    game.players.push(player);
-    return game;
   }
 
   private generateGameID() {

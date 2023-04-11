@@ -10,13 +10,17 @@ export type PlayersAreaProps = {
 }
 
 export const PlayersArea = (props: PlayersAreaProps) => {
+  const players = [];
+  let index = 0;
+
+  for (const player of props.players) {
+    players.push(<PlayerSummary key={index} player={player} active={player.name === props.activePlayer.name} extraProps={{ height: '13vh' }} />);
+    index++;
+  }
+
   return (
     <Stack boxShadow='inset 0 0 0 3px darkblue' padding='1.5vh' spacing='1.5vh' {...props.extraProps} >
-      {props.players.length > 0 && <PlayerSummary player={props.players[0]} active={props.players[0] === props.activePlayer} extraProps={{ height: '13vh' }} />}
-      {props.players.length > 1 && <PlayerSummary player={props.players[1]} active={props.players[1] === props.activePlayer} extraProps={{ height: '13vh' }} />}
-      {props.players.length > 2 && <PlayerSummary player={props.players[2]} active={props.players[2] === props.activePlayer} extraProps={{ height: '13vh' }} />}
-      {props.players.length > 3 && <PlayerSummary player={props.players[3]} active={props.players[3] === props.activePlayer} extraProps={{ height: '13vh' }} />}
-      {props.players.length > 4 && <PlayerSummary player={props.players[4]} active={props.players[4] === props.activePlayer} extraProps={{ height: '13vh' }} />}
+      {players}
     </Stack>
   );
 }

@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { TrainCard } from '../model/TrainCard';
 import { EnumFunctions } from '../model/EnumFunctions';
 import { TrainCardColor } from '../model/TrainCardColor';
@@ -21,20 +21,20 @@ export const LocalTrainCards = (props: LocalTrainCardsProps) => {
 
   return (
     <Stack boxShadow='inset 0 0 0 3px darkblue' direction='row' padding='1.5vh' spacing='3vh' {...props.extraProps}>
-      <Stack direction='column' spacing='1vh'>
-        {trainCardsByColor.length > 0 && <LocalTrainCardStack cards={trainCardsByColor[0]} />}
-        {trainCardsByColor.length > 1 && <LocalTrainCardStack cards={trainCardsByColor[1]} />}
-        {trainCardsByColor.length > 2 && <LocalTrainCardStack cards={trainCardsByColor[2]} />}
+      <Stack key={1} direction='column' spacing='1vh'>
+        {trainCardsByColor.length > 0 && <LocalTrainCardStack key={trainCardsByColor[0][0].color} cards={trainCardsByColor[0]} />}
+        {trainCardsByColor.length > 1 && <LocalTrainCardStack key={trainCardsByColor[1][0].color} cards={trainCardsByColor[1]} />}
+        {trainCardsByColor.length > 2 && <LocalTrainCardStack key={trainCardsByColor[2][0].color} cards={trainCardsByColor[2]} />}
       </Stack>
-      {trainCardsByColor.length > 3 && <Stack direction='column' spacing='1vh'>
-        {trainCardsByColor.length > 3 && <LocalTrainCardStack cards={trainCardsByColor[3]} />}
-        {trainCardsByColor.length > 4 && <LocalTrainCardStack cards={trainCardsByColor[4]} />}
-        {trainCardsByColor.length > 5 && <LocalTrainCardStack cards={trainCardsByColor[5]} />}
+      {trainCardsByColor.length > 3 && <Stack key={2} direction='column' spacing='1vh'>
+        {trainCardsByColor.length > 3 && <LocalTrainCardStack key={trainCardsByColor[3][0].color} cards={trainCardsByColor[3]} />}
+        {trainCardsByColor.length > 4 && <LocalTrainCardStack key={trainCardsByColor[4][0].color} cards={trainCardsByColor[4]} />}
+        {trainCardsByColor.length > 5 && <LocalTrainCardStack key={trainCardsByColor[5][0].color} cards={trainCardsByColor[5]} />}
       </Stack>}
-      {trainCardsByColor.length > 6 && <Stack direction='column' spacing='1vh'>
-        {trainCardsByColor.length > 6 && <LocalTrainCardStack cards={trainCardsByColor[6]} />}
-        {trainCardsByColor.length > 7 && <LocalTrainCardStack cards={trainCardsByColor[7]} />}
-        {trainCardsByColor.length > 8 && <LocalTrainCardStack cards={trainCardsByColor[8]} />}
+      {trainCardsByColor.length > 6 && <Stack key={3} direction='column' spacing='1vh'>
+        {trainCardsByColor.length > 6 && <LocalTrainCardStack key={trainCardsByColor[6][0].color} cards={trainCardsByColor[6]} />}
+        {trainCardsByColor.length > 7 && <LocalTrainCardStack key={trainCardsByColor[7][0].color} cards={trainCardsByColor[7]} />}
+        {trainCardsByColor.length > 8 && <LocalTrainCardStack key={trainCardsByColor[8][0].color} cards={trainCardsByColor[8]} />}
       </Stack>}
     </Stack>
   );

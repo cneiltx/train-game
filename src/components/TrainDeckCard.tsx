@@ -16,6 +16,8 @@ import { TrainCard } from '../model/TrainCard';
 export type TrainDeckCardProps = {
   card: TrainCard;
   faceUp: boolean;
+  canClick?: boolean;
+  onClick?: (card: TrainCard) => void;
   extraProps?: any;
 }
 
@@ -70,7 +72,7 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
       }
     }
     return () => window.removeEventListener('resize', onResize);
-  }, []);
+  }, [props.canClick, props.card]);
 
   const onResize = () => {
     const canvas = canvasRef.current!;
@@ -86,9 +88,20 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
     context.drawImage(image, 0, 0);
   }
 
+  const style: any = {};
+  if (props.canClick) {
+    style['cursor'] = 'pointer';
+  }
+
+  const handleClick = () => {
+    if (props.onClick) {
+      props.onClick(props.card);
+    }
+  }
+
   return (
-    <Box {...props.extraProps} textAlign='center' >
-      <Box component='canvas' ref={canvasRef} sx={{ height: '100%' }} />
+    <Box {...props.extraProps} style={style} textAlign='center' >
+      <Box component='canvas' ref={canvasRef} onClick={handleClick} sx={{ height: '100%' }} />
     </Box>
   );
 }

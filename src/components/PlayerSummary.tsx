@@ -179,7 +179,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   return (
-    <Box {...props.extraProps} testAlign='center' {...glow} >
+    <Box {...props.extraProps} {...glow} >
       <Box component='canvas' ref={canvasRef} sx={{ height: '100%' }} />
     </Box>
   );

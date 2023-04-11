@@ -7,8 +7,10 @@ import { useState } from 'react';
 import { GameController } from './controllers/GameController';
 import { Game } from './pages/Game';
 import { Lobby } from './pages/Lobby';
+import { LobbyController } from './controllers/LobbyController';
 
 export function App() {
+  const [lobby, setLobby] = useState(new LobbyController());
   const [game, setGame] = useState<GameController>();
 
   const onCreateGame = (game: GameController) => {
@@ -29,7 +31,7 @@ export function App() {
     <ThemeProvider theme={darkTheme}>
       <GlobalStyles styles={{ ...darkScrollbar() }} />
       <CssBaseline />
-      {!game && <Lobby onCreateGame={onCreateGame} onJoinGame={onJoinGame} />}
+      {!game && <Lobby lobby={lobby} onCreateGame={onCreateGame} onJoinGame={onJoinGame} />}
       {game && <Game game={game} />}
     </ThemeProvider>
   );

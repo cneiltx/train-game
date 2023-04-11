@@ -1,7 +1,5 @@
 import { GameController } from "../controllers/GameController";
 import { Player } from "../model/Player";
-import { TrainCard } from "../model/TrainCard";
-import { TrainCardColor } from "../model/TrainCardColor";
 import { TrainColor } from "../model/TrainColor";
 import daphne from './images/daphne.png';
 import fred from './images/fred.png';
@@ -25,22 +23,6 @@ export class GameControllerMock {
     velmaPlayer.color = TrainColor.Yellow;
 
     game.startGame();
-
-    daphnePlayer.trainCards.push(new TrainCard(TrainCardColor.Black));
-    daphnePlayer.trainCards.push(new TrainCard(TrainCardColor.Blue));
-    daphnePlayer.trainCards.push(new TrainCard(TrainCardColor.Green));
-    daphnePlayer.trainCards.push(new TrainCard(TrainCardColor.Orange));
-    daphnePlayer.trainCards.push(new TrainCard(TrainCardColor.Purple));
-    daphnePlayer.trainCards.push(new TrainCard(TrainCardColor.Rainbow));
-    daphnePlayer.trainCards.push(new TrainCard(TrainCardColor.Red));
-    daphnePlayer.trainCards.push(new TrainCard(TrainCardColor.White));
-    daphnePlayer.trainCards.push(new TrainCard(TrainCardColor.Yellow));
-
-    for (let i = 0; i < 9; i++) {
-      if (game.destinationCardDeck.length > 0) { daphnePlayer.destinationCards.push(game.drawDestinationCard()!); }
-      if (i > 5) { daphnePlayer.destinationCards[i].complete = true; }
-    }
-
     game.players.push(fredPlayer);
     game.players.push(scoobyPlayer);
     game.players.push(shaggyPlayer);
