@@ -10,8 +10,8 @@ export type LocalTrainCardStackProps = {
 export const LocalTrainCardStack = (props: LocalTrainCardStackProps) => {
   return (
     <Stack direction='row' {...props.extraProps}>
-      <TrainDeckCard card={props.cards[0]} faceUp={true} extraProps={{ height: '5vh' }} />
-      <Box paddingLeft='1vh' sx={{ font: 'bold 3vh system-ui' }}>{props.cards.length}</Box>
+      <TrainDeckCard key='card' card={props.cards[0]} faceUp={true} extraProps={{ height: '5vh', width: '7.75vh' }} />
+      <Box key='count' paddingLeft='1vh' sx={{ font: 'bold 3vh system-ui' }}>{props.cards.length}</Box>
     </Stack >
   );
 }

@@ -4,12 +4,12 @@ import { TrainColor } from "./TrainColor";
 import { USCities } from "./USCities";
 
 export class Route {
-  id: number;
-  city1: USCities;
-  city2: USCities;
-  color: RouteColor;
-  segmentLength: number;
-  segments: RouteSegment[];
+  readonly id: number;
+  readonly city1: USCities;
+  readonly city2: USCities;
+  readonly color: RouteColor;
+  readonly segmentLength: number;
+  readonly segments: RouteSegment[] = [];
   train: TrainColor | null = null;
 
   constructor(id: number, city1: USCities, city2: USCities, color: RouteColor, segmentLength: number) {
@@ -18,6 +18,5 @@ export class Route {
     this.city2 = city2;
     this.color = color;
     this.segmentLength = segmentLength;
-    this.segments = [];
   }
 }

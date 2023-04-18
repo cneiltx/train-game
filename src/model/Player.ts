@@ -3,13 +3,13 @@ import { TrainCard } from "./TrainCard";
 import { TrainColor } from "./TrainColor";
 
 export class Player {
-  name: string;
+  readonly name: string;
+  readonly avatarImageSrc: string;
+  readonly trainCards: TrainCard[] = [];
+  readonly destinationCards: DestinationCard[] = [];
   color: TrainColor = TrainColor.Red;
-  avatarImageSrc: string;
   points = 0;
   trains = 45;
-  trainCards: TrainCard[] = [];
-  destinationCards: DestinationCard[] = [];
 
   constructor(name: string, avatarImageSrc: string) {
     this.name = name;

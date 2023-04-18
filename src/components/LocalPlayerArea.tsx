@@ -23,9 +23,9 @@ export const LocalPlayerArea = (props: LocalPlayerAreaProps) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row' }} {...props.extraProps}>
-      <GameControls extraProps={{ height: '100%' }} />
-      <LocalTrainCards cards={props.player.trainCards} />
-      <LocalDestinationCards cards={props.player.destinationCards} cities={props.cities} onSelectedCardChange={handleSelectedDestinationCardChange} />
+      <GameControls key='gameControls' extraProps={{ height: '100%' }} />
+      <LocalTrainCards key='trainCards' cards={props.player.trainCards} />
+      <LocalDestinationCards key='destinationCards' cards={props.player.destinationCards} cities={props.cities} onSelectedCardChange={handleSelectedDestinationCardChange} />
     </Box >
   );
 }

@@ -4,7 +4,7 @@ import { GameControllerMock } from "../test/GameControllerMock";
 import { GameController } from "./GameController";
 
 export class LobbyController {
-  games: GameController[] = [];
+  readonly games: GameController[] = [];
 
   createGame(player: Player) {
     // const game = new GameController(this.generateGameID(), player);
@@ -18,16 +18,10 @@ export class LobbyController {
 
     if (!game) {
       throw new Error(`No game with ID ${gameID} exists. Please check the game ID and try again.`);
-    } else if (game.status === GameStatus.Playing) {
-      throw new Error('You cannot join because this game is already in progress.');
-    } else if (game.status === GameStatus.Completed) {
-      throw new Error('This game has already completed. Please create a new game.');
-    } else if (game.players.find((item) => item.name.toLowerCase() === player.name.toLowerCase())) {
-      throw new Error(`A player named ${player.name} already exists in this game. Please use a different name.`);
-    } else {
-      game.players.push(player);
-      return game;
     }
+
+    game.join(player);
+    return game;
   }
 
   private generateGameID() {

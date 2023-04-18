@@ -21,15 +21,15 @@ export const TrainCardStack = (props: TrainCardStackProps) => {
       onClick={props.onClick}
       extraProps={props.extraProps} />;
   } else {
+    const newProps = { ...props.extraProps };
+    newProps['style'] = { boxShadow: '0.1vb 0.1vh 0 0px black, 0.3vh 0.3vh 0 0px gray, 0.4vh 0.4vh 0 0px black, 0.6vh 0.6vh 0 0px gray', borderRadius: '10%' };
     return (
-      <Box sx={{ boxShadow: '0.1vb 0.1vh 0 0px black, 0.3vh 0.3vh 0 0px gray, 0.4vh 0.4vh 0 0px black, 0.6vh 0.6vh 0 0px gray', borderRadius: '10%' }}>
-        <TrainDeckCard
-          card={props.cards[0]}
-          faceUp={props.faceUp}
-          canClick={props.canClick}
-          onClick={props.onClick}
-          extraProps={props.extraProps} />
-      </Box>
+      <TrainDeckCard
+        card={props.cards[0]}
+        faceUp={props.faceUp}
+        canClick={props.canClick}
+        onClick={props.onClick}
+        extraProps={newProps} />
     );
   }
 }

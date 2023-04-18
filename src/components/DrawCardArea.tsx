@@ -1,65 +1,62 @@
 import { TrainDeckCard } from './TrainDeckCard';
-import { TrainCard } from '../model/TrainCard'
 import { Box, Stack } from '@mui/material';
 import { TrainCardStack } from './TrainCardStack';
 import { DestinationCardStack } from './DestinationCardStack';
-import { DestinationCard } from '../model/DestinationCard';
-import { USCity } from '../model/USCity';
-import { useEffect } from 'react';
+import { GameController } from '../controllers/GameController';
+import { useEffect, useState } from 'react';
+import { TrainCard } from '../model/TrainCard';
 
 export type DrawCardAreaProps = {
-  trainCardDeck: TrainCard[];
-  faceUpTrainCards: (TrainCard | null)[];
-  destinationCardDeck: DestinationCard[];
-  cities: USCity[];
-  canDrawTrainCards?: boolean
-  canDrawDestinationCards?: boolean;
-  onDrawTrainCardFromDeck?: (card: TrainCard) => void;
-  onDrawFaceUpTrainCard?: (card: TrainCard) => void;
-  onDrawDestinationCards?: (cards: DestinationCard[]) => void;
+  game: GameController;
   extraProps?: any;
 }
 
 export const DrawCardArea = (props: DrawCardAreaProps) => {
-  useEffect(() => {
-    console.log('changed');
-  }, [props.faceUpTrainCards]);
-
   const cards = [];
-  let index = 0;
+  const [faceUpTrainCards, setFaceUpTrainCards] = useState(props.game.faceUpTrainCards);
 
-  for (const card of props.faceUpTrainCards) {
+  useEffect(() => {
+    props.game.addEventListener('onFaceUpTrainCardsChange', (e) => handleFaceUpTrainCardsChange(e));
+    return props.game.removeEventListener('onFaceUpTrainCardsChange', handleFaceUpTrainCardsChange);
+  }, []);
+
+  const handleFaceUpTrainCardsChange = (event: CustomEventInit<{ cards: TrainCard[] }>) => {
+    setFaceUpTrainCards([...event.detail!.cards]);
+  }
+
+  for (const card of faceUpTrainCards) {
     if (card) {
       cards.push(
         <TrainDeckCard
-          key={index}
+          key={card.id}
           card={card}
           faceUp={true}
-          canClick={props.canDrawTrainCards}
-          onClick={props.onDrawFaceUpTrainCard}
-          extraProps={{ height: '9vh' }} />
+          canClick={props.game.activePlayer.name === props.game.localPlayer.name}
+          onClick={(card) => props.game.drawFaceUpTrainCard(card)}
+          extraProps={{ height: '9vh', width: '14vh' }} />
       );
     } else {
-      cards.push(<Box key={index} height='9vh' />);
+      cards.push(<Box key={-1} height='9vh' />);
     }
-    index++;
   }
 
   return (
-    <Stack boxShadow='inset 0 0 0 3px darkblue' padding='1.5vh' spacing='1.5vh' {...props.extraProps}>
+    <Stack boxShadow='inset 0 0 0 3px darkblue' padding='1.5vh' spacing='1.5vh' alignItems='center' {...props.extraProps}>
       <TrainCardStack
-        cards={props.trainCardDeck}
+        key='trainDeck'
+        cards={props.game.trainCardDeck}
         faceUp={false}
-        canClick={props.canDrawTrainCards}
-        onClick={props.onDrawTrainCardFromDeck}
-        extraProps={{ height: '9vh' }} />
+        canClick={props.game.activePlayer.name === props.game.localPlayer.name}
+        onClick={() => props.game.drawTrainCardFromDeck()}
+        extraProps={{ height: '9vh', width: '14vh' }} />
       {cards}
       <DestinationCardStack
-        cards={props.destinationCardDeck}
-        cities={props.cities}
+        key='destinationDeck'
+        cards={props.game.destinationCardDeck}
+        cities={props.game.map.cities}
         faceUp={false}
-        canClick={props.canDrawDestinationCards}
-        onClick={props.onDrawDestinationCards}
+        canClick={props.game.activePlayer.name === props.game.localPlayer.name}
+        onClick={() => { }}
         extraProps={{ height: '9vh' }} />
     </Stack>
   );

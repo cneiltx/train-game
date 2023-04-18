@@ -32,16 +32,16 @@ export const DestinationCardStack = (props: DestinationCardStackProps) => {
         extraProps={props.extraProps} />
     );
   } else {
+    const newProps = { ...props.extraProps };
+    newProps['style'] = { boxShadow: '0.1vb 0.1vh 0 0px black, 0.3vh 0.3vh 0 0px gray, 0.4vh 0.4vh 0 0px black, 0.6vh 0.6vh 0 0px gray', borderRadius: '10%' };
     return (
-      <Box sx={{ boxShadow: '0.1vh 0.1vh 0 0px black, 0.3vh 0.3vh 0 0px gray, 0.4vh 0.4vh 0 0px black, 0.6vh 0.6vh 0 0px gray', borderRadius: '10%' }}>
-        <DestinationDeckCard
-          card={props.cards[0]}
-          cities={props.cities}
-          faceUp={props.faceUp}
-          canClick={props.canClick}
-          onClick={handleClick}
-          extraProps={props.extraProps} />
-      </Box>
+      <DestinationDeckCard
+        card={props.cards[0]}
+        cities={props.cities}
+        faceUp={props.faceUp}
+        canClick={props.canClick}
+        onClick={handleClick}
+        extraProps={newProps} />
     );
   }
 }

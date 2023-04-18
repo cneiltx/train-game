@@ -9,8 +9,8 @@ import whiteCard from '../images/train-cards/card-white.png';
 import yellowCard from '../images/train-cards/card-yellow.png';
 import cardBack from '../images/train-cards/card-back.png';
 import { TrainCardColor } from "../model/TrainCardColor";
-import { Box } from "@mui/material";
-import { useEffect, useRef } from 'react';
+import { Box, Fade } from "@mui/material";
+import { useEffect, useRef, useState } from 'react';
 import { TrainCard } from '../model/TrainCard';
 
 export type TrainDeckCardProps = {
@@ -24,6 +24,11 @@ export type TrainDeckCardProps = {
 export const TrainDeckCard = (props: TrainDeckCardProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const image = new Image();
+  const [fade, setFade] = useState(false);
+
+  useEffect(() => {
+    setFade(true);
+  }, []);
 
   useEffect(() => {
     if (props.faceUp) {
@@ -88,20 +93,23 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
     context.drawImage(image, 0, 0);
   }
 
-  const style: any = {};
-  if (props.canClick) {
-    style['cursor'] = 'pointer';
-  }
-
   const handleClick = () => {
     if (props.onClick) {
       props.onClick(props.card);
     }
   }
 
+  const style = { ...props.extraProps?.style };
+  if (props.canClick) {
+    style['cursor'] = 'pointer';
+  }
+
+  const newProps = { ...props.extraProps };
+  newProps['style'] = style;
+
   return (
-    <Box {...props.extraProps} style={style} textAlign='center' >
-      <Box component='canvas' ref={canvasRef} onClick={handleClick} sx={{ height: '100%' }} />
-    </Box>
+    <Fade in={true} timeout={750}>
+      <Box {...newProps} component='canvas' ref={canvasRef} onClick={handleClick} />
+    </Fade>
   );
 }

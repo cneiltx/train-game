@@ -11,11 +11,9 @@ export type PlayersAreaProps = {
 
 export const PlayersArea = (props: PlayersAreaProps) => {
   const players = [];
-  let index = 0;
 
   for (const player of props.players) {
-    players.push(<PlayerSummary key={index} player={player} active={player.name === props.activePlayer.name} extraProps={{ height: '13vh' }} />);
-    index++;
+    players.push(<PlayerSummary key={player.name} player={player} active={player.name === props.activePlayer.name} extraProps={{ height: '13vh' }} />);
   }
 
   return (

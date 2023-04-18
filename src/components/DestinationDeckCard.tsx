@@ -1,7 +1,7 @@
 import cardBack from '../images/destination-cards/card-back.png';
 import cardFront from '../images/destination-cards/card-front.png';
-import { Box } from "@mui/material";
-import { useEffect, useRef } from 'react';
+import { Box, Fade } from "@mui/material";
+import { useEffect, useRef, useState } from 'react';
 import { DestinationCard } from '../model/DestinationCard';
 import { USCity } from '../model/USCity';
 
@@ -18,6 +18,11 @@ export type DestinationDeckCardProps = {
 export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const image = new Image();
+  const [fade, setFade] = useState(false);
+
+  useEffect(() => {
+    setFade(true);
+  }, []);
 
   useEffect(() => {
     if (props.faceUp) {
@@ -151,14 +156,17 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     }
   }
 
-  const style: any = {};
+  const style = { ...props.extraProps?.style };
   if (props.canClick) {
     style['cursor'] = 'pointer';
   }
 
+  const newProps = { ...props.extraProps };
+  newProps['style'] = style;
+
   return (
-    <Box {...props.extraProps} style={style} textAlign='center' >
-      <Box component='canvas' ref={canvasRef} onClick={handleClick} sx={{ maxHeight: '100%', maxWidth: '100%' }} />
-    </Box>
+    <Fade in={true} timeout={750}>
+      <Box component='canvas' {...newProps} ref={canvasRef} onClick={handleClick} sx={{ maxHeight: '100%', maxWidth: '100%' }} />
+    </Fade>
   );
 }

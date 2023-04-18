@@ -42,12 +42,10 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
     }
   });
 
-  let index = 0;
-
   for (const card of cardsCopy) {
     destinationCards.push(
       <DestinationDeckCard
-        key={index}
+        key={card.id}
         card={card}
         cities={props.cities}
         faceUp={true}
@@ -56,7 +54,6 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
         onClick={handleCardClick}
         extraProps={{ height: '12vh' }} />
     );
-    index++;
   }
 
   return (

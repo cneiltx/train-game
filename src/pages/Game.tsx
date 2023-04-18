@@ -8,7 +8,6 @@ import tileBlack from '../images/backgrounds/tile-black.jpg';
 import { USCities } from '../model/USCities';
 import { DestinationCard } from '../model/DestinationCard';
 import { useState } from 'react';
-import { TrainCard } from '../model/TrainCard';
 
 export type GameProps = {
   game: GameController;
@@ -16,7 +15,6 @@ export type GameProps = {
 
 export const Game = (props: GameProps) => {
   const [selectedCities, setSelectedCities] = useState<USCities[]>([]);
-  const [faceUpTrainCards, setFaceUpTrainCards] = useState(props.game.faceUpTrainCards);
 
   const handleSelectedDestinationCardChange = (card: DestinationCard | null) => {
     if (card) {
@@ -24,19 +22,6 @@ export const Game = (props: GameProps) => {
     } else {
       setSelectedCities([]);
     }
-  }
-
-  const handleDrawTrainCardFromDeck = () => {
-    const card = props.game.drawTrainCardFromDeck();
-  }
-
-  const handleDrawFaceUpTrainCard = (card: TrainCard) => {
-    props.game.drawFaceUpTrainCard(card);
-    setFaceUpTrainCards(props.game.faceUpTrainCards);
-  }
-
-  const handleDrawDestinationCards = () => {
-
   }
 
   return (
@@ -50,16 +35,7 @@ export const Game = (props: GameProps) => {
           map={props.game.map}
           highlightCities={selectedCities}
           extraProps={{ height: '80vh', width: '100%' }} />
-        <DrawCardArea
-          trainCardDeck={props.game.trainCardDeck}
-          faceUpTrainCards={props.game.faceUpTrainCards}
-          destinationCardDeck={props.game.destinationCardDeck}
-          cities={props.game.map.cities}
-          canDrawTrainCards={props.game.activePlayer.name === props.game.localPlayer.name}
-          canDrawDestinationCards={props.game.activePlayer.name === props.game.localPlayer.name}
-          onDrawTrainCardFromDeck={handleDrawTrainCardFromDeck}
-          onDrawFaceUpTrainCard={handleDrawFaceUpTrainCard}
-          onDrawDestinationCards={handleDrawDestinationCards} />
+        <DrawCardArea game={props.game} extraProps={{ width: '23vh' }} />
       </Stack>
       <LocalPlayerArea
         player={props.game.players[0]}

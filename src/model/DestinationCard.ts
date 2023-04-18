@@ -1,10 +1,10 @@
 import { USCities } from "./USCities";
 
 export class DestinationCard {
-  id: number;
-  city1: USCities;
-  city2: USCities;
-  points: number;
+  readonly id: number;
+  readonly city1: USCities;
+  readonly city2: USCities;
+  readonly points: number;
   complete: boolean;
 
   constructor(id: number, city1: USCities, city2: USCities, points: number, complete: boolean = false) {

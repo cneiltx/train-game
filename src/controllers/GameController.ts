@@ -7,32 +7,73 @@ import { TrainCardColor } from "../model/TrainCardColor";
 import { EnumFunctions } from "../model/EnumFunctions";
 import { USMap } from "../model/GameMap";
 
-export class GameController {
-  gameID: string;
-  status = GameStatus.Initializing;
-  players: Player[] = [];
-  localPlayer: Player;
-  activePlayer: Player;
-  trainCardDeck: TrainCard[] = [];
-  faceUpTrainCards: (TrainCard | null)[] = [];
-  discardedTrainCards: TrainCard[] = [];
-  destinationCardDeck: DestinationCard[] = [];
-  map: USMap;
+/*
+ * Raises events onStatusChange, onActivePlayerChange, onPlayerJoin, onFaceUpTrainCardsChange, onActivePlayerTrainCardsChange, onTrainCardDeckChange
+ */
+export class GameController extends EventTarget {
+  readonly gameID: string;
+  readonly players: Player[] = [];
+  readonly localPlayer: Player;
+  readonly trainCardDeck: TrainCard[] = [];
+  readonly faceUpTrainCards: (TrainCard | null)[] = [];
+  readonly discardedTrainCards: TrainCard[] = [];
+  readonly destinationCardDeck: DestinationCard[] = [];
+  readonly map: USMap;
+  private _status = GameStatus.Initializing;
+  private _activePlayer: Player;
 
   constructor(gameID: string, localPlayer: Player) {
+    super();
     this.gameID = gameID;
     this.localPlayer = localPlayer;
-    this.activePlayer = localPlayer;
     this.players.push(localPlayer);
     this.map = new USMap();
+    this._activePlayer = localPlayer;
+  }
+
+  get status() {
+    return this._status;
+  }
+
+  private set status(status: GameStatus) {
+    if (this.status !== status) {
+      this._status = status;
+      this.dispatchEvent(new CustomEvent('onStatusChange', { detail: { status: status } }));
+    }
+  }
+
+  get activePlayer() {
+    return this._activePlayer;
+  }
+
+  private set activePlayer(player: Player) {
+    if (this.activePlayer.name !== player.name) {
+      this._activePlayer = player;
+      this.dispatchEvent(new CustomEvent('onActivePlayerChange', { detail: { player: player } }));
+    }
+  }
+
+  join(player: Player) {
+    if (this.status !== GameStatus.Initializing) {
+      throw new Error('You cannot join because this game it is not in Initializing status.');
+    } else if (this.players.find((item) => item.name.toLowerCase() === player.name.toLowerCase())) {
+      throw new Error(`A player named ${player.name} already exists in this game. Please use a different name.`);
+    } else {
+      this.players.push(player);
+      this.dispatchEvent(new CustomEvent('onPlayerJoin', { detail: { player: player } }));
+    }
   }
 
   startGame() {
-    this.status = GameStatus.Playing;
-    this.initializeTrainCards();
-    this.initializeDestinationCards();
-    this.dealTrainCards();
-    this.dealDestinationCards();
+    if (this.status !== GameStatus.Initializing) {
+      throw new Error('This game cannot be started because it is not in Initializing status.');
+    } else {
+      this.status = GameStatus.Playing;
+      this.initializeTrainCards();
+      this.initializeDestinationCards();
+      this.dealTrainCards();
+      this.dealDestinationCards();
+    }
   }
 
   drawTrainCardFromDeck() {
@@ -52,6 +93,8 @@ export class GameController {
       this.activePlayer.trainCards.push(card);
       const newCard = this.drawTrainCard();
       this.faceUpTrainCards[index] = newCard;
+      this.dispatchEvent(new CustomEvent('onFaceUpTrainCardsChange', { detail: { cards: this.faceUpTrainCards } }));
+      this.dispatchEvent(new CustomEvent('onActivePlayerTrainCardsChange', { detail: { cards: this.activePlayer.trainCards } }));
       return card;
     } else {
       return undefined;
@@ -145,6 +188,7 @@ export class GameController {
     const card = this.trainCardDeck.pop();
 
     if (card) {
+      this.dispatchEvent(new CustomEvent('onTrainCardDeckChange', { detail: { cards: this.trainCardDeck } }));
       return card;
     } else {
       return null;

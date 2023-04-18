@@ -5,8 +5,8 @@ import { USCities } from "./USCities";
 import { USCity } from "./USCity";
 
 export class USMap {
-  cities: USCity[] = [];
-  routes: Route[] = [];
+  readonly cities: USCity[] = [];
+  readonly routes: Route[] = [];
 
   constructor() {
     this.populateCities();
