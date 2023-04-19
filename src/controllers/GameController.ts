@@ -7,8 +7,64 @@ import { TrainCardColor } from "../model/TrainCardColor";
 import { EnumFunctions } from "../model/EnumFunctions";
 import { USMap } from "../model/GameMap";
 
+export class GameStatusChangeEventArgs {
+  readonly status: GameStatus;
+
+  constructor(status: GameStatus) {
+    this.status = status;
+  }
+}
+
+export class ActivePlayerChangeEventArgs {
+  readonly player: Player;
+
+  constructor(player: Player) {
+    this.player = player;
+  }
+}
+
+export class PlayerJoinEventArgs {
+  readonly player: Player;
+
+  constructor(player: Player) {
+    this.player = player;
+  }
+}
+
+export class TrainCardDeckChange {
+  readonly cards: TrainCard[];
+
+  constructor(cards: TrainCard[]) {
+    this.cards = cards;
+  }
+}
+
+export class FaceUpTrainCardsChangeEventArgs {
+  readonly cards: (TrainCard | null)[];
+
+  constructor(cards: (TrainCard | null)[]) {
+    this.cards = cards;
+  }
+}
+
+export class PlayerTrainCardsChangeEventArgs {
+  readonly player: Player;
+  readonly cards: TrainCard[];
+
+  constructor(player: Player, cards: TrainCard[]) {
+    this.player = player;
+    this.cards = cards;
+  }
+}
+
 /*
- * Raises events onStatusChange, onActivePlayerChange, onPlayerJoin, onFaceUpTrainCardsChange, onActivePlayerTrainCardsChange, onTrainCardDeckChange
+ * Raises events:
+ *   onGameStatusChange
+ *   onPlayerJoin
+ *   onActivePlayerChange
+ *   onTrainCardDeckChange
+ *   onFaceUpTrainCardsChange
+ *   onPlayerTrainCardsChange
  */
 export class GameController extends EventTarget {
   readonly gameID: string;
@@ -38,7 +94,7 @@ export class GameController extends EventTarget {
   private set status(status: GameStatus) {
     if (this.status !== status) {
       this._status = status;
-      this.dispatchEvent(new CustomEvent('onStatusChange', { detail: { status: status } }));
+      this.dispatchEvent(new CustomEvent('onGameStatusChange', { detail: new GameStatusChangeEventArgs(status) }));
     }
   }
 
@@ -49,7 +105,7 @@ export class GameController extends EventTarget {
   private set activePlayer(player: Player) {
     if (this.activePlayer.name !== player.name) {
       this._activePlayer = player;
-      this.dispatchEvent(new CustomEvent('onActivePlayerChange', { detail: { player: player } }));
+      this.dispatchEvent(new CustomEvent('onActivePlayerChange', { detail: new ActivePlayerChangeEventArgs(player) }));
     }
   }
 
@@ -60,7 +116,7 @@ export class GameController extends EventTarget {
       throw new Error(`A player named ${player.name} already exists in this game. Please use a different name.`);
     } else {
       this.players.push(player);
-      this.dispatchEvent(new CustomEvent('onPlayerJoin', { detail: { player: player } }));
+      this.dispatchEvent(new CustomEvent('onPlayerJoin', { detail: new PlayerJoinEventArgs(player) }));
     }
   }
 
@@ -81,6 +137,7 @@ export class GameController extends EventTarget {
 
     if (card) {
       this.activePlayer.trainCards.push(card);
+      this.dispatchEvent(new CustomEvent('onPlayerTrainCardsChange', { detail: new PlayerTrainCardsChangeEventArgs(this.activePlayer, this.activePlayer.trainCards) }));
     }
 
     return card;
@@ -93,8 +150,8 @@ export class GameController extends EventTarget {
       this.activePlayer.trainCards.push(card);
       const newCard = this.drawTrainCard();
       this.faceUpTrainCards[index] = newCard;
-      this.dispatchEvent(new CustomEvent('onFaceUpTrainCardsChange', { detail: { cards: this.faceUpTrainCards } }));
-      this.dispatchEvent(new CustomEvent('onActivePlayerTrainCardsChange', { detail: { cards: this.activePlayer.trainCards } }));
+      this.dispatchEvent(new CustomEvent('onFaceUpTrainCardsChange', { detail: new FaceUpTrainCardsChangeEventArgs(this.faceUpTrainCards) }));
+      this.dispatchEvent(new CustomEvent('onPlayerTrainCardsChange', { detail: new PlayerTrainCardsChangeEventArgs(this.activePlayer, this.activePlayer.trainCards) }));
       return card;
     } else {
       return undefined;
@@ -188,7 +245,7 @@ export class GameController extends EventTarget {
     const card = this.trainCardDeck.pop();
 
     if (card) {
-      this.dispatchEvent(new CustomEvent('onTrainCardDeckChange', { detail: { cards: this.trainCardDeck } }));
+      this.dispatchEvent(new CustomEvent('onTrainCardDeckChange', { detail: new TrainCardDeckChange(this.trainCardDeck) }));
       return card;
     } else {
       return null;

@@ -9,7 +9,7 @@ import { USCities } from '../model/USCities';
 import { DestinationCard } from '../model/DestinationCard';
 import { useState } from 'react';
 
-export type GameProps = {
+export interface GameProps {
   game: GameController;
 }
 
@@ -27,19 +27,15 @@ export const Game = (props: GameProps) => {
   return (
     <Stack style={{ backgroundImage: `url(${tileBlack})`, backgroundRepeat: 'repeat' }} >
       <Stack direction='row' justifyContent='space-between'>
-        <PlayersArea
-          players={props.game.players}
-          activePlayer={props.game.activePlayer}
-          localPlayer={props.game.localPlayer} />
+        <PlayersArea game={props.game} extraProps={{ width: '39vh' }} />
         <Gameboard
-          map={props.game.map}
+          game={props.game}
           highlightCities={selectedCities}
           extraProps={{ height: '80vh', width: '100%' }} />
         <DrawCardArea game={props.game} extraProps={{ width: '23vh' }} />
       </Stack>
       <LocalPlayerArea
-        player={props.game.players[0]}
-        cities={props.game.map.cities}
+        game={props.game}
         onSelectedDestinationCardChange={handleSelectedDestinationCardChange}
         extraProps={{ height: '20vh' }} />
     </Stack>

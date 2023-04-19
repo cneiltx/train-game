@@ -1,24 +1,22 @@
 import { Box } from "@mui/material";
 import { TrainCard } from "../model/TrainCard";
 import { TrainDeckCard } from "./TrainDeckCard";
+import { GameController } from "../controllers/GameController";
 
 export type TrainCardStackProps = {
   cards: TrainCard[];
-  faceUp: boolean;
-  canClick?: boolean;
-  onClick?: (card: TrainCard) => void;
+  game: GameController;
   extraProps?: any;
 }
 
 export const TrainCardStack = (props: TrainCardStackProps) => {
   if (props.cards.length === 0) {
-    return <Box {...props.extraProps} />;
+    return <Box {...props.extraProps} style={{ background: 'rgba(255, 255, 255, 0.2)', borderRadius: '10%' }} />;
   } else if (props.cards.length === 1) {
     return <TrainDeckCard
       card={props.cards[0]}
-      faceUp={props.faceUp}
-      canClick={props.canClick}
-      onClick={props.onClick}
+      game={props.game}
+      mode='drawDeck'
       extraProps={props.extraProps} />;
   } else {
     const newProps = { ...props.extraProps };
@@ -26,9 +24,8 @@ export const TrainCardStack = (props: TrainCardStackProps) => {
     return (
       <TrainDeckCard
         card={props.cards[0]}
-        faceUp={props.faceUp}
-        canClick={props.canClick}
-        onClick={props.onClick}
+        game={props.game}
+        mode='drawDeck'
         extraProps={newProps} />
     );
   }

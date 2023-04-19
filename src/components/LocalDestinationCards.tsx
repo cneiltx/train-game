@@ -1,20 +1,31 @@
 import { Box } from '@mui/material';
 import { DestinationDeckCard } from './DestinationDeckCard';
 import { DestinationCard } from '../model/DestinationCard';
-import { USCity } from '../model/USCity';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { GameController } from '../controllers/GameController';
 
 export type LocalDestinationCardsProps = {
-  cards: DestinationCard[];
-  cities: USCity[];
+  game: GameController;
   onSelectedCardChange?: (card: DestinationCard | null) => void;
   extraProps?: any;
 }
 
 export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
   const destinationCards = [];
-  const cardsCopy = [...props.cards];
+  const cardsCopy = [...props.game.localPlayer.destinationCards];
   const [selectedCard, setSelectedCard] = useState<DestinationCard | null>(null);
+  const [localPlayerDestinationCards, setLocalPlayerDestinationCards] = useState(props.game.localPlayer.destinationCards);
+
+  useEffect(() => {
+    props.game.addEventListener('onActivePlayerDestinationCardsChange', (e) => handleActivePlayerDestinationCardsChange(e));
+    return props.game.removeEventListener('onActivePlayerDestinationCardsChange', handleActivePlayerDestinationCardsChange);
+  }, [props.game]);
+
+  const handleActivePlayerDestinationCardsChange = (event: CustomEventInit<{ cards: DestinationCard[] }>) => {
+    if (props.game.localPlayer === props.game.activePlayer) {
+      setLocalPlayerDestinationCards([...event.detail!.cards]);
+    }
+  }
 
   const handleCardClick = (card: DestinationCard) => {
     let newSelection: DestinationCard | null;
@@ -47,7 +58,7 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
       <DestinationDeckCard
         key={card.id}
         card={card}
-        cities={props.cities}
+        cities={props.game.map.cities}
         faceUp={true}
         selected={card.id === selectedCard?.id}
         canClick={true}

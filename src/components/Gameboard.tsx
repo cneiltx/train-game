@@ -5,15 +5,15 @@ import blueCar from '../images/train-cars/car-blue.png';
 import greenCar from '../images/train-cars/car-green.png';
 import redCar from '../images/train-cars/car-red.png';
 import yellowCar from '../images/train-cars/car-yellow.png';
-import { USMap } from '../model/GameMap';
 import { Route } from '../model/Route';
 import { RouteColor } from '../model/RouteColor';
 import { TrainColor } from '../model/TrainColor';
 import { Box } from '@mui/material';
 import { USCities } from '../model/USCities';
+import { GameController } from '../controllers/GameController';
 
 export type GameboardProps = {
-  map: USMap;
+  game: GameController;
   onCityClick?: (city: USCities) => void;
   highlightCities?: USCities[];
   extraProps?: any;
@@ -61,7 +61,7 @@ export const Gameboard = (props: GameboardProps) => {
   }
 
   const drawRoutes = (context: CanvasRenderingContext2D) => {
-    for (const route of props.map.routes) {
+    for (const route of props.game.map.routes) {
       for (const segment of route.segments) {
         drawRouteSegment(context, segment.x, segment.y, segment.angle, route.color, route.segmentLength);
       }
@@ -69,7 +69,7 @@ export const Gameboard = (props: GameboardProps) => {
   }
 
   const drawCities = (context: CanvasRenderingContext2D) => {
-    for (const city of props.map.cities) {
+    for (const city of props.game.map.cities) {
       context.save();
       const cityRadius = 7.5;
       const lineWidth = 4;
@@ -198,7 +198,7 @@ export const Gameboard = (props: GameboardProps) => {
 
   const handleClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (props.onCityClick) {
-      for (const city of props.map.cities) {
+      for (const city of props.game.map.cities) {
         const canvasCoords = toCanvasCoords(event.pageX, event.pageY);
         const xDelta = city.mapX - canvasCoords.x;
         const yDelta = city.mapY - canvasCoords.y;

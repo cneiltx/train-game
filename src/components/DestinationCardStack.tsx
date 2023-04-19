@@ -3,7 +3,7 @@ import { DestinationCard } from "../model/DestinationCard";
 import { DestinationDeckCard } from "./DestinationDeckCard";
 import { USCity } from "../model/USCity";
 
-export type DestinationCardStackProps = {
+export interface DestinationCardStackProps {
   cards: DestinationCard[];
   faceUp: boolean;
   cities: USCity[];

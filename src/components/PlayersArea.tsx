@@ -1,19 +1,18 @@
 import { Stack } from "@mui/material";
 import { Player } from "../model/Player";
 import { PlayerSummary } from "./PlayerSummary";
+import { GameController } from "../controllers/GameController";
 
 export type PlayersAreaProps = {
-  players: Player[];
-  activePlayer: Player;
-  localPlayer: Player;
+  game: GameController;
   extraProps?: any;
 }
 
 export const PlayersArea = (props: PlayersAreaProps) => {
   const players = [];
 
-  for (const player of props.players) {
-    players.push(<PlayerSummary key={player.name} player={player} active={player.name === props.activePlayer.name} extraProps={{ height: '13vh' }} />);
+  for (const player of props.game.players) {
+    players.push(<PlayerSummary key={player.name} player={player} active={player.name === props.game.activePlayer.name} extraProps={{ height: '13vh', width: '26vh' }} />);
   }
 
   return (

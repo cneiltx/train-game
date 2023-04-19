@@ -6,7 +6,7 @@ import { GameController } from '../controllers/GameController';
 import { useEffect, useState } from 'react';
 import { TrainCard } from '../model/TrainCard';
 
-export type DrawCardAreaProps = {
+export interface DrawCardAreaProps {
   game: GameController;
   extraProps?: any;
 }
@@ -18,26 +18,27 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
   useEffect(() => {
     props.game.addEventListener('onFaceUpTrainCardsChange', (e) => handleFaceUpTrainCardsChange(e));
     return props.game.removeEventListener('onFaceUpTrainCardsChange', handleFaceUpTrainCardsChange);
-  }, []);
+  }, [props.game]);
 
   const handleFaceUpTrainCardsChange = (event: CustomEventInit<{ cards: TrainCard[] }>) => {
     setFaceUpTrainCards([...event.detail!.cards]);
   }
 
+  let index = 0;
   for (const card of faceUpTrainCards) {
     if (card) {
       cards.push(
         <TrainDeckCard
           key={card.id}
           card={card}
-          faceUp={true}
-          canClick={props.game.activePlayer.name === props.game.localPlayer.name}
-          onClick={(card) => props.game.drawFaceUpTrainCard(card)}
+          game={props.game}
+          mode='drawFaceUp'
           extraProps={{ height: '9vh', width: '14vh' }} />
       );
     } else {
-      cards.push(<Box key={-1} height='9vh' />);
+      cards.push(<Box key={`empty-${index}`} height='9vh' width='14vh' style={{ background: 'rgba(255, 255, 255, 0.2)', borderRadius: '10%' }} />);
     }
+    index++;
   }
 
   return (
@@ -45,9 +46,7 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
       <TrainCardStack
         key='trainDeck'
         cards={props.game.trainCardDeck}
-        faceUp={false}
-        canClick={props.game.activePlayer.name === props.game.localPlayer.name}
-        onClick={() => props.game.drawTrainCardFromDeck()}
+        game={props.game}
         extraProps={{ height: '9vh', width: '14vh' }} />
       {cards}
       <DestinationCardStack
@@ -57,7 +56,7 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
         faceUp={false}
         canClick={props.game.activePlayer.name === props.game.localPlayer.name}
         onClick={() => { }}
-        extraProps={{ height: '9vh' }} />
+        extraProps={{ height: '9vh', width: '14vh' }} />
     </Stack>
   );
 }

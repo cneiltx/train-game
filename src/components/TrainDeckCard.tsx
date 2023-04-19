@@ -12,12 +12,12 @@ import { TrainCardColor } from "../model/TrainCardColor";
 import { Box, Fade } from "@mui/material";
 import { useEffect, useRef, useState } from 'react';
 import { TrainCard } from '../model/TrainCard';
+import { GameController } from '../controllers/GameController';
 
-export type TrainDeckCardProps = {
+export interface TrainDeckCardProps {
   card: TrainCard;
-  faceUp: boolean;
-  canClick?: boolean;
-  onClick?: (card: TrainCard) => void;
+  game: GameController;
+  mode: 'drawDeck' | 'drawFaceUp' | 'playerHand';
   extraProps?: any;
 }
 
@@ -31,7 +31,7 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   }, []);
 
   useEffect(() => {
-    if (props.faceUp) {
+    if (props.mode === 'drawFaceUp' || props.mode === 'playerHand') {
       switch (props.card.color) {
         case TrainCardColor.Black:
           image.src = blackCard;
@@ -77,7 +77,7 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
       }
     }
     return () => window.removeEventListener('resize', onResize);
-  }, [props.canClick, props.card]);
+  }, [props.mode, props.card]);
 
   const onResize = () => {
     const canvas = canvasRef.current!;
@@ -94,13 +94,19 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   }
 
   const handleClick = () => {
-    if (props.onClick) {
-      props.onClick(props.card);
+    switch (props.mode) {
+      case 'drawDeck':
+        props.game.drawTrainCardFromDeck();
+        break;
+      case 'drawFaceUp':
+        props.game.drawFaceUpTrainCard(props.card);
+        break;
     }
   }
 
   const style = { ...props.extraProps?.style };
-  if (props.canClick) {
+  if (props.mode === 'drawFaceUp' && props.game.activePlayer.name === props.game.localPlayer.name ||
+    props.mode === 'drawDeck' && props.game.activePlayer.name === props.game.localPlayer.name) {
     style['cursor'] = 'pointer';
   }
 
@@ -108,7 +114,7 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   newProps['style'] = style;
 
   return (
-    <Fade in={true} timeout={750}>
+    <Fade in={fade} timeout={750}>
       <Box {...newProps} component='canvas' ref={canvasRef} onClick={handleClick} />
     </Fade>
   );

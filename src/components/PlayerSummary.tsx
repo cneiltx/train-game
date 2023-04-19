@@ -11,7 +11,7 @@ import redCar from '../images/train-cars/car-red.png';
 import yellowCar from '../images/train-cars/car-yellow.png';
 import { ColorFunctions } from "../model/ColorFunctions";
 
-export type PlayerSummaryProps = {
+export interface PlayerSummaryProps {
   player: Player;
   active?: boolean;
   extraProps?: any;
@@ -179,8 +179,6 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   return (
-    <Box {...props.extraProps} {...glow} >
-      <Box component='canvas' ref={canvasRef} sx={{ height: '100%' }} />
-    </Box>
+    <Box {...props.extraProps} {...glow} component='canvas' ref={canvasRef} />
   );
 }
