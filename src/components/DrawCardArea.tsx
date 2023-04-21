@@ -42,7 +42,7 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
   }
 
   return (
-    <Stack boxShadow='inset 0 0 0 3px darkblue' padding='1.5vh' spacing='1.5vh' alignItems='center' {...props.extraProps}>
+    <Stack padding='1.5vh' spacing='1.5vh' alignItems='center' {...props.extraProps}>
       <TrainCardStack
         key='trainDeck'
         cards={props.game.trainCardDeck}

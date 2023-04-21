@@ -8,6 +8,7 @@ import tileBlack from '../images/backgrounds/tile-black.jpg';
 import { USCities } from '../model/USCities';
 import { DestinationCard } from '../model/DestinationCard';
 import { useState } from 'react';
+import { GameControls } from '../components/GameControls';
 
 export interface GameProps {
   game: GameController;
@@ -25,19 +26,24 @@ export const Game = (props: GameProps) => {
   }
 
   return (
-    <Stack style={{ backgroundImage: `url(${tileBlack})`, backgroundRepeat: 'repeat' }} >
-      <Stack direction='row' justifyContent='space-between'>
-        <PlayersArea game={props.game} extraProps={{ width: '39vh' }} />
+    <Stack boxShadow='inset 0 0 0 3px darkgoldenrod' style={{ backgroundImage: `url(${tileBlack})`, backgroundRepeat: 'repeat' }}>
+      <Stack boxShadow='inset 0 -3px 0 0 darkgoldenrod' key='topRow' direction='row' justifyContent='space-between'>
+        <PlayersArea key='playerArea' game={props.game} extraProps={{ width: '29vh', boxShadow: 'inset -3px 0 0 0 darkgoldenrod' }} />
         <Gameboard
+          key='gameboard'
           game={props.game}
           highlightCities={selectedCities}
-          extraProps={{ height: '80vh', width: '100%' }} />
-        <DrawCardArea game={props.game} extraProps={{ width: '23vh' }} />
+          extraProps={{ height: '80vh', flexGrow: 1 }} />
+        <DrawCardArea key='drawCardArea' game={props.game} extraProps={{ width: '18vh', boxShadow: 'inset 3px 0 0 0px darkgoldenrod' }} />
       </Stack>
-      <LocalPlayerArea
-        game={props.game}
-        onSelectedDestinationCardChange={handleSelectedDestinationCardChange}
-        extraProps={{ height: '20vh' }} />
+      <Stack key='bottomRow' direction='row' height='20vh' >
+        <GameControls key='gameControls' extraProps={{ width: '29vh', boxShadow: 'inset -3px 0 0 0 darkgoldenrod' }} />
+        <LocalPlayerArea
+          key='localPlayerArea'
+          game={props.game}
+          onSelectedDestinationCardChange={handleSelectedDestinationCardChange}
+          extraProps={{ flexGrow: 1, width: 'calc(100vw - 29vh)' }} />
+      </Stack>
     </Stack>
   );
 }

@@ -1,5 +1,4 @@
-import { Box } from "@mui/material";
-import { useEffect, useRef } from "react";
+import { Box, Typography } from "@mui/material";
 
 export interface GameControlsProps {
   extraProps?: any;
@@ -7,7 +6,8 @@ export interface GameControlsProps {
 
 export const GameControls = (props: GameControlsProps) => {
   return (
-    <Box boxShadow='inset 0 0 0 3px darkblue' padding='1.5vh' {...props.extraProps} textAlign='center' >
+    <Box padding='1.5vh' {...props.extraProps} textAlign='center' flexShrink={0} >
+      <Typography variant='body1'>Hello World</Typography>
     </Box>
   );
 }

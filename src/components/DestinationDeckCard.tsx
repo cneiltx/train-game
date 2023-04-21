@@ -101,10 +101,9 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   }
 
   const drawTitle = (context: CanvasRenderingContext2D, city1: USCity, city2: USCity) => {
-    const fontSize = 19;
     let [x, y] = [125, 27];
     context.save();
-    context.font = `bold ${fontSize}px system-ui`;
+    context.font = `bold 18px roboto`;
     context.fillStyle = 'black';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
@@ -115,10 +114,9 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   }
 
   const drawValue = (context: CanvasRenderingContext2D) => {
-    const fontSize = 30;
     let [x, y] = [211, 125];
     context.save();
-    context.font = `bold ${fontSize}px system-ui`;
+    context.font = `bold 28px roboto`;
     context.fillStyle = 'black';
     context.textAlign = 'center';
     context.textBaseline = 'middle';

@@ -20,7 +20,7 @@ export class USMap {
     this.cities.push(new USCity(USCities.Calgary, 330, 25, 66, 40, 'Calgary', 10, -14, 'left'));
     this.cities.push(new USCity(USCities.Charleston, 1210, 608, 173, 108, 'Charleston', 15, 3, 'left'));
     this.cities.push(new USCity(USCities.Chicago, 936, 347, 139, 78, 'Chicago', 2, 26, 'left'));
-    this.cities.push(new USCity(USCities.Dallas, 720, 682, 112, 188, 'Dallas', -27, -10, 'right'));
+    this.cities.push(new USCity(USCities.Dallas, 720, 682, 112, 118, 'Dallas', -27, -10, 'right'));
     this.cities.push(new USCity(USCities.Denver, 498, 437, 87, 88, 'Denver', -38, 22, 'right'));
     this.cities.push(new USCity(USCities.ElPaso, 450, 708, 81, 120, 'El Paso', 5, 25, 'right'));
     this.cities.push(new USCity(USCities.Houston, 762, 769, 115, 128, 'Houston', 0, 25, 'center'));

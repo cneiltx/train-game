@@ -1,5 +1,4 @@
 import { Stack } from "@mui/material";
-import { Player } from "../model/Player";
 import { PlayerSummary } from "./PlayerSummary";
 import { GameController } from "../controllers/GameController";
 
@@ -16,7 +15,7 @@ export const PlayersArea = (props: PlayersAreaProps) => {
   }
 
   return (
-    <Stack boxShadow='inset 0 0 0 3px darkblue' padding='1.5vh' spacing='1.5vh' {...props.extraProps} >
+    <Stack padding='1.5vh' spacing='1.5vh' {...props.extraProps} >
       {players}
     </Stack>
   );

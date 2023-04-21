@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import { GameControls } from './GameControls';
 import { LocalDestinationCards } from './LocalDestinationCards';
 import { LocalTrainCards } from './LocalTrainCards';
 import { DestinationCard } from '../model/DestinationCard';
@@ -20,7 +19,6 @@ export const LocalPlayerArea = (props: LocalPlayerAreaProps) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row' }} {...props.extraProps}>
-      <GameControls key='gameControls' extraProps={{ height: '100%', width: '39vh' }} />
       <LocalTrainCards key='trainCards' game={props.game} />
       <LocalDestinationCards key='destinationCards' game={props.game} onSelectedCardChange={handleSelectedDestinationCardChange} />
     </Box >

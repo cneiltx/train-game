@@ -1,4 +1,3 @@
-import { GameStatus } from "../model/GameStatus";
 import { Player } from "../model/Player";
 import { GameControllerMock } from "../test/GameControllerMock";
 import { GameController } from "./GameController";

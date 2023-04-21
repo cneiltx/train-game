@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Player } from "../model/Player";
 import { TrainColor } from "../model/TrainColor";
 import destinationCardBack from '../images/destination-cards/card-back.png';
@@ -106,7 +106,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   const DrawName = (context: CanvasRenderingContext2D) => {
-    context.font = '1.5em system-ui';
+    context.font = '1.5em roboto';
     context.fillStyle = 'white';
     context.textAlign = 'left';
     context.textBaseline = 'middle';
@@ -133,7 +133,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
     context.roundRect(referenceHeight * 0.25, referenceHeight * 0.75, referenceHeight * 0.5, referenceHeight * 0.25, referenceHeight * 0.08);
     context.fill();
     context.fillStyle = 'white';
-    context.font = 'bold 1.5em system-ui';
+    context.font = 'bold 1.5em roboto';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.fillText(props.player.points.toString(), referenceHeight * 0.5, referenceHeight * 0.89);
@@ -149,7 +149,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
     context.stroke();
     context.drawImage(trainCar, referenceHeight * 0.85, referenceHeight * 0.63);
     context.fillStyle = 'black';
-    context.font = 'bold 1.2em system-ui';
+    context.font = 'bold 1.2em roboto';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.fillText(props.player.trains.toString(), referenceHeight, referenceHeight * 0.84);
@@ -158,7 +158,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   const DrawTrainCardCount = (context: CanvasRenderingContext2D) => {
     context.drawImage(trainCardImage, referenceHeight * 1.35, referenceHeight * 0.475, referenceHeight * 0.2 * trainCardImage.width / trainCardImage.height, referenceHeight * 0.2);
     context.fillStyle = 'white';
-    context.font = 'bold 1.2em system-ui';
+    context.font = 'bold 1.2em roboto';
     context.textAlign = 'left';
     context.textBaseline = 'middle';
     context.fillText(props.player.trainCards.length.toString(), referenceHeight * 1.72, referenceHeight * 0.58);
@@ -167,7 +167,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   const DrawDestinationCardCount = (context: CanvasRenderingContext2D) => {
     context.drawImage(destinationCardImage, referenceHeight * 1.35, referenceHeight * 0.725, referenceHeight * 0.2 * destinationCardImage.width / destinationCardImage.height, referenceHeight * 0.2);
     context.fillStyle = 'white';
-    context.font = 'bold 1.2em system-ui';
+    context.font = 'bold 1.2em roboto';
     context.textAlign = 'left';
     context.textBaseline = 'middle';
     context.fillText(props.player.destinationCards.length.toString(), referenceHeight * 1.72, referenceHeight * 0.835);

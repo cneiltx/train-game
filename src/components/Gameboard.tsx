@@ -96,7 +96,7 @@ export const Gameboard = (props: GameboardProps) => {
 
       const fontSize = 19;
       context.strokeStyle = 'white';
-      context.font = `bold ${fontSize}px system-ui`;
+      context.font = `bold ${fontSize}px roboto`;
       context.lineWidth = 3;
       context.fillStyle = 'black';
       context.textAlign = city.printAlign;
@@ -225,7 +225,7 @@ export const Gameboard = (props: GameboardProps) => {
   }
 
   return (
-    <Box boxShadow='inset 0 0 0 3px darkblue' padding='1.5vh' {...props.extraProps} textAlign='center' >
+    <Box padding='1.5vh' {...props.extraProps} textAlign='center' >
       <Box component='canvas' ref={canvasRef} onClick={handleClick} sx={{ maxHeight: '100%', maxWidth: '100%' }} />
     </Box>
   );

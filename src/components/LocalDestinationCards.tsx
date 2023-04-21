@@ -68,8 +68,8 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
   }
 
   return (
-    <Box boxShadow='inset 0 0 0 3px darkblue' padding='1.5vh' height='100%' width='100%' {...props.extraProps} sx={{ overflow: 'clip' }}>
-      <Box sx={{ display: 'grid', gridAutoColumns: 'max-content', columnGap: '1vh', gridAutoFlow: 'column', overflow: 'auto' }} height='100%' width='100%'>
+    <Box display='flex' boxShadow='inset 3px 0 0 0 darkgoldenrod' padding='1.5vh' height='100%' flexGrow={1} {...props.extraProps} sx={{ overflow: 'hidden' }}>
+      <Box sx={{ display: 'grid', gridAutoColumns: 'max-content', columnGap: '1vh', gridAutoFlow: 'column', overflowX: 'auto' }} height='100%'>
         {destinationCards}
       </Box>
     </Box>

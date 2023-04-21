@@ -1,6 +1,4 @@
 import { Stack } from '@mui/material';
-import { EnumFunctions } from '../model/EnumFunctions';
-import { TrainCardColor } from '../model/TrainCardColor';
 import { LocalTrainCardStack } from './LocalTrainCardStack';
 import { GameController, PlayerTrainCardsChangeEventArgs } from '../controllers/GameController';
 import { useEffect, useState } from 'react';
@@ -36,7 +34,7 @@ export const LocalTrainCards = (props: LocalTrainCardsProps) => {
   }
 
   return (
-    <Stack boxShadow='inset 0 0 0 3px darkblue' direction='row' padding='1.5vh' spacing='3vh' {...props.extraProps}>
+    <Stack direction='row' padding='1.5vh' spacing='3vh' {...props.extraProps}>
       <Stack key={1} direction='column' spacing='1vh'>
         {trainCardsByColor.length > 0 && <LocalTrainCardStack key={trainCardsByColor[0][0].color} cards={trainCardsByColor[0]} game={props.game} />}
         {trainCardsByColor.length > 1 && <LocalTrainCardStack key={trainCardsByColor[1][0].color} cards={trainCardsByColor[1]} game={props.game} />}
