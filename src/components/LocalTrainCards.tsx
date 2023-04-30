@@ -11,7 +11,7 @@ export type LocalTrainCardsProps = {
 
 export const LocalTrainCards = (props: LocalTrainCardsProps) => {
   const trainCardsByColor: TrainCard[][] = [];
-  const [localPlayerTrainCards, setLocalPlayerTrainCards] = useState(props.game.localPlayer.trainCards);
+  const [localPlayerTrainCards, setLocalPlayerTrainCards] = useState(props.game.localPlayer?.trainCards);
 
   useEffect(() => {
     props.game.addEventListener('onPlayerTrainCardsChange', (e) => handlePlayerTrainCardsChange(e));
@@ -24,7 +24,7 @@ export const LocalTrainCards = (props: LocalTrainCardsProps) => {
     }
   }
 
-  for (const card of localPlayerTrainCards) {
+  for (const card of localPlayerTrainCards ?? []) {
     const index = trainCardsByColor.findIndex((value) => value[0].color === card.color);
     if (index === -1) {
       trainCardsByColor.push([card]);

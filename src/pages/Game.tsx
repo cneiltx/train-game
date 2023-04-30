@@ -37,7 +37,7 @@ export const Game = (props: GameProps) => {
         <DrawCardArea key='drawCardArea' game={props.game} extraProps={{ width: '18vh', boxShadow: 'inset 3px 0 0 0px darkgoldenrod' }} />
       </Stack>
       <Stack key='bottomRow' direction='row' height='20vh' >
-        <GameControls key='gameControls' extraProps={{ width: '29vh', boxShadow: 'inset -3px 0 0 0 darkgoldenrod' }} />
+        <GameControls key='gameControls' game={props.game} extraProps={{ width: '29vh', boxShadow: 'inset -3px 0 0 0 darkgoldenrod' }} />
         <LocalPlayerArea
           key='localPlayerArea'
           game={props.game}

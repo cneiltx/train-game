@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react';
-import usMap from '../images/ttr-us-map.png';
+import React, { useEffect, useRef } from 'react';
 import blackCar from '../images/train-cars/car-black.png';
 import blueCar from '../images/train-cars/car-blue.png';
 import greenCar from '../images/train-cars/car-green.png';
@@ -9,13 +8,12 @@ import { Route } from '../model/Route';
 import { RouteColor } from '../model/RouteColor';
 import { TrainColor } from '../model/TrainColor';
 import { Box } from '@mui/material';
-import { USCities } from '../model/USCities';
+import { Cities } from '../model/Cities';
 import { GameController } from '../controllers/GameController';
 
 export type GameboardProps = {
   game: GameController;
-  onCityClick?: (city: USCities) => void;
-  highlightCities?: USCities[];
+  highlightCities?: Cities[];
   extraProps?: any;
 }
 
@@ -23,10 +21,11 @@ export const Gameboard = (props: GameboardProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const image = new Image();
   const cityOuterRadius = 25;
+  const carWidth = 15;
 
   useEffect(() => {
     window.addEventListener('resize', onResize);
-    image.src = usMap;
+    image.src = props.game.map.mapSource;
     image.onload = () => {
       const canvas = canvasRef.current;
 
@@ -101,7 +100,7 @@ export const Gameboard = (props: GameboardProps) => {
       context.fillStyle = 'black';
       context.textAlign = city.printAlign;
       context.textBaseline = 'middle';
-      const lines = city.printName.split('\n');
+      const lines = city.mapName.split('\n');
 
       lines.forEach((line, index) => {
         context.strokeText(line, city.mapX + city.printXOffset, city.mapY + city.printYOffset + fontSize * index);
@@ -114,7 +113,6 @@ export const Gameboard = (props: GameboardProps) => {
 
   const drawRouteSegment = (context: CanvasRenderingContext2D, x: number, y: number, angle: number, color: RouteColor, carLength: number) => {
     context.save();
-    const carWidth = 15;
 
     switch (color) {
       case RouteColor.Grey:
@@ -165,8 +163,6 @@ export const Gameboard = (props: GameboardProps) => {
   }
 
   const drawTrain = (context: CanvasRenderingContext2D, route: Route) => {
-    const carWidth = 15;
-
     for (const segment of route.segments) {
       const image = new Image();
 
@@ -196,32 +192,36 @@ export const Gameboard = (props: GameboardProps) => {
     }
   }
 
-  const handleClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    if (props.onCityClick) {
-      for (const city of props.game.map.cities) {
-        const canvasCoords = toCanvasCoords(event.pageX, event.pageY);
-        const xDelta = city.mapX - canvasCoords.x;
-        const yDelta = city.mapY - canvasCoords.y;
-        if (Math.sqrt(xDelta ** 2 + yDelta ** 2) <= cityOuterRadius) {
-          props.onCityClick(city.city);
+  const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+
+    if (canvas) {
+      const context = canvas.getContext('2d')!;
+      const canvasCoords = toCanvasCoords(canvas, e.pageX, e.pageY);
+
+      for (const route of props.game.map.routes.filter((value) => value.train === null)) {
+        for (const segment of route.segments) {
+          context.save();
+          context.translate(segment.x, segment.y);
+          context.rotate(segment.angle * Math.PI / 180);
+          context.beginPath();
+          context.rect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
+          if (context.isPointInPath(canvasCoords.x, canvasCoords.y)) {
+
+          }
+          context.restore();
         }
       }
     }
   }
 
-  const toCanvasCoords = (pageX: number, pageY: number) => {
-    var canvas = canvasRef.current;
-
-    if (canvas) {
-      const xScale = canvas.clientWidth / canvas.width;
-      const yScale = canvas.clientHeight / canvas.height;
-      const rect = canvas.getBoundingClientRect();
-      let x = (pageX - rect.left) / xScale;
-      let y = (pageY - rect.top) / yScale;
-      return { x: x, y: y };
-    } else {
-      return { x: 0, y: 0 };
-    }
+  const toCanvasCoords = (canvas: HTMLCanvasElement, pageX: number, pageY: number) => {
+    const xScale = canvas.clientWidth / canvas.width;
+    const yScale = canvas.clientHeight / canvas.height;
+    const rect = canvas.getBoundingClientRect();
+    let x = (pageX - rect.left) / xScale;
+    let y = (pageY - rect.top) / yScale;
+    return { x: x, y: y };
   }
 
   return (

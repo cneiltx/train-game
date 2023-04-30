@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
 import { DestinationCard } from "../model/DestinationCard";
 import { DestinationDeckCard } from "./DestinationDeckCard";
-import { USCity } from "../model/USCity";
+import { City } from "../model/City";
 
 export interface DestinationCardStackProps {
   cards: DestinationCard[];
   faceUp: boolean;
-  cities: USCity[];
+  cities: City[];
   canClick?: boolean;
   onClick?: (card: DestinationCard[]) => void;
   extraProps?: any;

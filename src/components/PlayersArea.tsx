@@ -1,6 +1,7 @@
 import { Stack } from "@mui/material";
 import { PlayerSummary } from "./PlayerSummary";
-import { GameController } from "../controllers/GameController";
+import { GameController, PlayersChangeEventArgs } from "../controllers/GameController";
+import { useEffect, useState } from "react";
 
 export type PlayersAreaProps = {
   game: GameController;
@@ -8,15 +9,26 @@ export type PlayersAreaProps = {
 }
 
 export const PlayersArea = (props: PlayersAreaProps) => {
-  const players = [];
+  const [players, setPlayers] = useState(props.game.players);
 
-  for (const player of props.game.players) {
-    players.push(<PlayerSummary key={player.name} player={player} active={player.name === props.game.activePlayer.name} extraProps={{ height: '13vh', width: '26vh' }} />);
+  useEffect(() => {
+    props.game.addEventListener('onPlayersChange', (e) => handlePlayersChange(e));
+    return props.game.removeEventListener('onPlayersChange', handlePlayersChange);
+  }, [props.game]);
+
+  const handlePlayersChange = (e: CustomEventInit<PlayersChangeEventArgs>) => {
+    setPlayers([...e.detail!.players]);
+  }
+
+  const playerList = [];
+
+  for (const player of players) {
+    playerList.push(<PlayerSummary key={player.name} game={props.game} player={player} extraProps={{ height: '13vh', width: '26vh' }} />);
   }
 
   return (
     <Stack padding='1.5vh' spacing='1.5vh' {...props.extraProps} >
-      {players}
+      {playerList}
     </Stack>
   );
 }

@@ -1,4 +1,4 @@
-export enum GameStatus {
+export enum GameState {
   Initializing,
   Playing,
   Completed,

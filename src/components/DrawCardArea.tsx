@@ -2,9 +2,10 @@ import { TrainDeckCard } from './TrainDeckCard';
 import { Box, Stack } from '@mui/material';
 import { TrainCardStack } from './TrainCardStack';
 import { DestinationCardStack } from './DestinationCardStack';
-import { GameController } from '../controllers/GameController';
+import { GameController, PlayerStateChangeEventArgs } from '../controllers/GameController';
 import { useEffect, useState } from 'react';
 import { TrainCard } from '../model/TrainCard';
+import { PlayerState } from '../model/PlayerState';
 
 export interface DrawCardAreaProps {
   game: GameController;
@@ -14,14 +15,25 @@ export interface DrawCardAreaProps {
 export const DrawCardArea = (props: DrawCardAreaProps) => {
   const cards = [];
   const [faceUpTrainCards, setFaceUpTrainCards] = useState(props.game.faceUpTrainCards);
+  const [isLocalPlayerActive, setIsLocalPlayerActive] = useState(props.game.localPlayer ? props.game.localPlayer.state !== PlayerState.NotActive : false);
 
   useEffect(() => {
     props.game.addEventListener('onFaceUpTrainCardsChange', (e) => handleFaceUpTrainCardsChange(e));
     return props.game.removeEventListener('onFaceUpTrainCardsChange', handleFaceUpTrainCardsChange);
   }, [props.game]);
 
-  const handleFaceUpTrainCardsChange = (event: CustomEventInit<{ cards: TrainCard[] }>) => {
-    setFaceUpTrainCards([...event.detail!.cards]);
+  useEffect(() => {
+    props.game.addEventListener('onPlayerStateChange', (e) => handlePlayerStateChange(e));
+    return props.game.removeEventListener('onPlayerStateChange', handlePlayerStateChange);
+  }, [props.game]);
+
+  const handleFaceUpTrainCardsChange = (e: CustomEventInit<{ cards: TrainCard[] }>) => {
+    setFaceUpTrainCards([...e.detail!.cards]);
+  }
+
+  const handlePlayerStateChange = (e: CustomEventInit<PlayerStateChangeEventArgs>) => {
+    setIsLocalPlayerActive(props.game.localPlayer ?
+      e.detail!.player.name === props.game.localPlayer.name && e.detail!.state !== PlayerState.NotActive : false);
   }
 
   let index = 0;
@@ -54,7 +66,7 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
         cards={props.game.destinationCardDeck}
         cities={props.game.map.cities}
         faceUp={false}
-        canClick={props.game.activePlayer.name === props.game.localPlayer.name}
+        canClick={isLocalPlayerActive}
         onClick={() => { }}
         extraProps={{ height: '9vh', width: '14vh' }} />
     </Stack>

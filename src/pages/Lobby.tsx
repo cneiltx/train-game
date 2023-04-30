@@ -1,9 +1,9 @@
-import { Alert, Avatar, Button, Grid, IconButton, Stack, TextField } from '@mui/material';
+import { Alert, Avatar, Box, Button, Grid, IconButton, Stack, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { GameController } from '../controllers/GameController';
 import { LobbyController } from '../controllers/LobbyController';
 import bwTrain from '../images/backgrounds/bw-train-building.jpeg';
-import { Player } from '../model/Player';
+import { GameMaps } from '../model/GameMaps';
 
 export type LobbyProps = {
   lobby: LobbyController;
@@ -17,23 +17,23 @@ export const Lobby = (props: LobbyProps) => {
   const [gameID, setGameID] = useState('');
   const [joinError, setJoinError] = useState('');
 
-  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setAvatar(URL.createObjectURL(event.target.files[0]));
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setAvatar(URL.createObjectURL(e.target.files[0]));
     }
   }
 
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value.trim());
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value.trim());
   }
 
-  const handleGameIDChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGameID(event.target.value.toUpperCase().trim());
+  const handleGameIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGameID(e.target.value.toUpperCase().trim());
   }
 
   const handleJoinGame = () => {
     try {
-      const game = props.lobby.joinGame(gameID, createPlayer());
+      const game = props.lobby.joinGame(gameID, name, avatar);
       setJoinError('');
       props.onJoinGame(game);
     } catch (e) {
@@ -44,11 +44,15 @@ export const Lobby = (props: LobbyProps) => {
   }
 
   const handleCreateGame = () => {
-    props.onCreateGame(props.lobby.createGame(createPlayer()));
-  }
-
-  const createPlayer = () => {
-    return new Player(name, avatar);
+    try {
+      const game = props.lobby.createGame(name, avatar, GameMaps.US);
+      setJoinError('');
+      props.onCreateGame(game);
+    } catch (e) {
+      if (e instanceof Error) {
+        setJoinError(e.message);
+      }
+    }
   }
 
   return (
@@ -115,7 +119,7 @@ export const Lobby = (props: LobbyProps) => {
             </Button>
           </Grid>
           <Grid item xs={12} sx={{ textAlign: 'left' }}>
-            {joinError === '' || <Alert severity='error'>{joinError}</Alert>}
+            {joinError !== '' && <Alert severity='error'>{joinError}</Alert>}
           </Grid>
           <Grid item xs={12} height='1rem' />
           <Grid item xs={7} />

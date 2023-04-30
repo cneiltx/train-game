@@ -12,7 +12,8 @@ import { TrainCardColor } from "../model/TrainCardColor";
 import { Box, Fade } from "@mui/material";
 import { useEffect, useRef, useState } from 'react';
 import { TrainCard } from '../model/TrainCard';
-import { GameController } from '../controllers/GameController';
+import { GameController, PlayerStateChangeEventArgs } from '../controllers/GameController';
+import { PlayerState } from '../model/PlayerState';
 
 export interface TrainDeckCardProps {
   card: TrainCard;
@@ -25,10 +26,22 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const image = new Image();
   const [fade, setFade] = useState(false);
+  const [localPlayerState, setLocalPlayerState] = useState(props.game.localPlayer?.state);
 
   useEffect(() => {
     setFade(true);
   }, []);
+
+  useEffect(() => {
+    props.game.addEventListener('onPlayerStateChange', (e) => handlePlayerStateChange(e));
+    return props.game.removeEventListener('onPlayerStateChange', handlePlayerStateChange);
+  }, [props.game]);
+
+  const handlePlayerStateChange = (e: CustomEventInit<PlayerStateChangeEventArgs>) => {
+    if (props.game.localPlayer && props.game.localPlayer.name === e.detail!.player.name) {
+      setLocalPlayerState(e.detail!.state);
+    }
+  }
 
   useEffect(() => {
     if (props.mode === 'drawFaceUp' || props.mode === 'playerHand') {
@@ -105,8 +118,7 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   }
 
   const style = { ...props.extraProps?.style };
-  if (props.mode === 'drawFaceUp' && props.game.activePlayer.name === props.game.localPlayer.name ||
-    props.mode === 'drawDeck' && props.game.activePlayer.name === props.game.localPlayer.name) {
+  if (localPlayerState !== PlayerState.NotActive && (props.mode === 'drawFaceUp' || props.mode === 'drawDeck')) {
     style['cursor'] = 'pointer';
   }
 

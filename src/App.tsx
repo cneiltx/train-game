@@ -10,7 +10,7 @@ import { Lobby } from './pages/Lobby';
 import { LobbyController } from './controllers/LobbyController';
 
 export function App() {
-  const [lobby, setLobby] = useState(new LobbyController());
+  const lobby = new LobbyController();
   const [game, setGame] = useState<GameController>();
 
   const onCreateGame = (game: GameController) => {

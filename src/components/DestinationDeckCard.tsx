@@ -3,12 +3,12 @@ import cardFront from '../images/destination-cards/card-front.png';
 import { Box, Fade } from "@mui/material";
 import { useEffect, useRef, useState } from 'react';
 import { DestinationCard } from '../model/DestinationCard';
-import { USCity } from '../model/USCity';
+import { City } from '../model/City';
 
 export type DestinationDeckCardProps = {
   card: DestinationCard;
   faceUp: boolean;
-  cities: USCity[];
+  cities: City[];
   canClick?: boolean;
   onClick?: (card: DestinationCard) => void;
   selected?: boolean;
@@ -100,14 +100,14 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     })
   }
 
-  const drawTitle = (context: CanvasRenderingContext2D, city1: USCity, city2: USCity) => {
+  const drawTitle = (context: CanvasRenderingContext2D, city1: City, city2: City) => {
     let [x, y] = [125, 27];
     context.save();
     context.font = `bold 18px roboto`;
     context.fillStyle = 'black';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    const text = `${city1.printName.replaceAll('\n', ' ')} - ${city2.printName.replaceAll('\n', ' ')}`;
+    const text = `${city1.name} - ${city2.name}`;
     context.lineWidth = 1;
     context.fillText(text, x, y, 180);
     context.restore();
@@ -125,7 +125,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     context.restore();
   }
 
-  const drawRoute = (context: CanvasRenderingContext2D, city1: USCity, city2: USCity) => {
+  const drawRoute = (context: CanvasRenderingContext2D, city1: City, city2: City) => {
     let [x1, y1] = [city1.cardX, city1.cardY];
     let [x2, y2] = [city2.cardX, city2.cardY];
     context.beginPath();
@@ -138,7 +138,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     drawCityRing(context, city2);
   }
 
-  const drawCityRing = (context: CanvasRenderingContext2D, city: USCity) => {
+  const drawCityRing = (context: CanvasRenderingContext2D, city: City) => {
     context.fillStyle = 'navy';
     context.beginPath();
     let [x, y] = [city.cardX, city.cardY];

@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import { DestinationDeckCard } from './DestinationDeckCard';
 import { DestinationCard } from '../model/DestinationCard';
 import { useEffect, useState } from 'react';
-import { GameController } from '../controllers/GameController';
+import { GameController, PlayerDestinationCardsChangeEventArgs } from '../controllers/GameController';
 
 export type LocalDestinationCardsProps = {
   game: GameController;
@@ -12,18 +12,17 @@ export type LocalDestinationCardsProps = {
 
 export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
   const destinationCards = [];
-  const cardsCopy = [...props.game.localPlayer.destinationCards];
   const [selectedCard, setSelectedCard] = useState<DestinationCard | null>(null);
-  const [localPlayerDestinationCards, setLocalPlayerDestinationCards] = useState(props.game.localPlayer.destinationCards);
+  const [localPlayerDestinationCards, setLocalPlayerDestinationCards] = useState(props.game.localPlayer?.destinationCards);
 
   useEffect(() => {
-    props.game.addEventListener('onActivePlayerDestinationCardsChange', (e) => handleActivePlayerDestinationCardsChange(e));
-    return props.game.removeEventListener('onActivePlayerDestinationCardsChange', handleActivePlayerDestinationCardsChange);
+    props.game.addEventListener('onPlayerDestinationCardsChange', (e) => handlePlayerDestinationCardsChange(e));
+    return props.game.removeEventListener('onPlayerDestinationCardsChange', handlePlayerDestinationCardsChange);
   }, [props.game]);
 
-  const handleActivePlayerDestinationCardsChange = (event: CustomEventInit<{ cards: DestinationCard[] }>) => {
-    if (props.game.localPlayer === props.game.activePlayer) {
-      setLocalPlayerDestinationCards([...event.detail!.cards]);
+  const handlePlayerDestinationCardsChange = (e: CustomEventInit<PlayerDestinationCardsChangeEventArgs>) => {
+    if (props.game.localPlayer && props.game.localPlayer.name === e.detail!.player.name) {
+      setLocalPlayerDestinationCards([...e.detail!.cards]);
     }
   }
 
@@ -43,6 +42,7 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
     }
   }
 
+  const cardsCopy = localPlayerDestinationCards ?? [];
   cardsCopy.sort((card1, card2) => {
     if (card1.complete && !card2.complete) {
       return 1;

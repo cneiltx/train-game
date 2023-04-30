@@ -1,39 +1,32 @@
-import { Player } from "../model/Player";
-import { GameControllerMock } from "../test/GameControllerMock";
 import { GameController } from "./GameController";
+import daphne from '../test/images/daphne.png'
+import fred from '../test/images/fred.png';
+import shaggy from '../test/images/shaggy.png';
+import velma from '../test/images/velma.png';
+import { RemoteLobbyController } from "./RemoteLobbyController";
+import { GameMaps } from "../model/GameMaps";
 
 export class LobbyController {
-  readonly games: GameController[] = [];
+  createGame(playerName: string, avatar: string, map: GameMaps) {
+    const gameID = RemoteLobbyController.createGame(map);
+    const game = new GameController(gameID);
+    const player = game.join(playerName, avatar);
+    game.localPlayer = player;
 
-  createGame(player: Player) {
-    // const game = new GameController(this.generateGameID(), player);
-    const game = GameControllerMock.LargeGame();
-    this.games.push(game);
+    game.join('Daphne', daphne);
+    game.join('Fred', fred);
+    game.join('Shaggy', shaggy);
+    game.join('Velma', velma);
+
+    game.startGame();
+
     return game;
   }
 
-  joinGame(gameID: string, player: Player) {
-    const game = this.games.find(game => game.gameID === gameID);
-
-    if (!game) {
-      throw new Error(`No game with ID ${gameID} exists. Please check the game ID and try again.`);
-    }
-
-    game.join(player);
+  joinGame(gameID: string, playerName: string, avatar: string) {
+    const player = RemoteLobbyController.joinGame(gameID, playerName, avatar);
+    const game = new GameController(gameID);
+    game.localPlayer = player;
     return game;
-  }
-
-  private generateGameID() {
-    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let id: string;
-
-    do {
-      id = '';
-      for (let i = 0; i < 6; i++) {
-        id.concat(chars[Math.floor(Math.random() * chars.length)]);
-      }
-    } while (this.games.find(game => game.gameID === id));
-
-    return id;
   }
 }

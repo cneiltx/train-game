@@ -1,37 +1,30 @@
 import { Player } from "../model/Player";
-import { DestinationCard } from "../model/DestinationCard";
 import { TrainCard } from "../model/TrainCard";
-import { USCities } from "../model/USCities";
-import { GameStatus } from "../model/GameStatus";
-import { TrainCardColor } from "../model/TrainCardColor";
-import { EnumFunctions } from "../model/EnumFunctions";
-import { USMap } from "../model/GameMap";
+import { GameState } from "../model/GameState";
+import { Route } from "../model/Route";
+import { PlayerState } from "../model/PlayerState";
+import { RemoteGameController } from "./RemoteGameController";
+import { RemoteLobbyController } from "./RemoteLobbyController";
+import { GameMap } from "../model/GameMap";
+import { DestinationCard } from "../model/DestinationCard";
 
-export class GameStatusChangeEventArgs {
-  readonly status: GameStatus;
+export class GameStateChangeEventArgs {
+  readonly state: GameState;
 
-  constructor(status: GameStatus) {
-    this.status = status;
+  constructor(state: GameState) {
+    this.state = state;
   }
 }
 
-export class ActivePlayerChangeEventArgs {
-  readonly player: Player;
+export class PlayersChangeEventArgs {
+  readonly players: Player[];
 
-  constructor(player: Player) {
-    this.player = player;
+  constructor(players: Player[]) {
+    this.players = players;
   }
 }
 
-export class PlayerJoinEventArgs {
-  readonly player: Player;
-
-  constructor(player: Player) {
-    this.player = player;
-  }
-}
-
-export class TrainCardDeckChange {
+export class TrainCardDeckChangeEventArgs {
   readonly cards: TrainCard[];
 
   constructor(cards: TrainCard[]) {
@@ -47,6 +40,16 @@ export class FaceUpTrainCardsChangeEventArgs {
   }
 }
 
+export class PlayerStateChangeEventArgs {
+  readonly player: Player;
+  readonly state: PlayerState;
+
+  constructor(player: Player, state: PlayerState) {
+    this.player = player;
+    this.state = state;
+  }
+}
+
 export class PlayerTrainCardsChangeEventArgs {
   readonly player: Player;
   readonly cards: TrainCard[];
@@ -57,212 +60,166 @@ export class PlayerTrainCardsChangeEventArgs {
   }
 }
 
+export class PlayerDestinationCardsChangeEventArgs {
+  readonly player: Player;
+  readonly cards: DestinationCard[];
+
+  constructor(player: Player, cards: DestinationCard[]) {
+    this.player = player;
+    this.cards = cards;
+  }
+}
+
+export class MessagesChangeEventArgs {
+  readonly messages: string[];
+
+  constructor(messages: string[]) {
+    this.messages = messages;
+  }
+}
+
 /*
  * Raises events:
- *   onGameStatusChange
- *   onPlayerJoin
- *   onActivePlayerChange
+ *   onGameStateChange
+ *   onPlayersChange
  *   onTrainCardDeckChange
  *   onFaceUpTrainCardsChange
+ *   onPlayerStateChange
  *   onPlayerTrainCardsChange
+ *   onPlayerDestinationCardsChange
+ *   onMessagesChange
  */
 export class GameController extends EventTarget {
+  localPlayer: Player | undefined;
   readonly gameID: string;
-  readonly players: Player[] = [];
-  readonly localPlayer: Player;
-  readonly trainCardDeck: TrainCard[] = [];
-  readonly faceUpTrainCards: (TrainCard | null)[] = [];
-  readonly discardedTrainCards: TrainCard[] = [];
-  readonly destinationCardDeck: DestinationCard[] = [];
-  readonly map: USMap;
-  private _status = GameStatus.Initializing;
-  private _activePlayer: Player;
+  private _players: Player[];
+  private _trainCardDeck: TrainCard[];
+  private _faceUpTrainCards: (TrainCard | null)[];
+  private _destinationCardDeck: DestinationCard[];
+  private _map: GameMap;
+  private _messages: string[];
+  private _remoteGame: RemoteGameController;
 
-  constructor(gameID: string, localPlayer: Player) {
+  constructor(gameID: string) {
     super();
-    this.gameID = gameID;
-    this.localPlayer = localPlayer;
-    this.players.push(localPlayer);
-    this.map = new USMap();
-    this._activePlayer = localPlayer;
-  }
+    const remoteGame = RemoteLobbyController.games.find(value => value.gameID === gameID);
 
-  get status() {
-    return this._status;
-  }
-
-  private set status(status: GameStatus) {
-    if (this.status !== status) {
-      this._status = status;
-      this.dispatchEvent(new CustomEvent('onGameStatusChange', { detail: new GameStatusChangeEventArgs(status) }));
-    }
-  }
-
-  get activePlayer() {
-    return this._activePlayer;
-  }
-
-  private set activePlayer(player: Player) {
-    if (this.activePlayer.name !== player.name) {
-      this._activePlayer = player;
-      this.dispatchEvent(new CustomEvent('onActivePlayerChange', { detail: new ActivePlayerChangeEventArgs(player) }));
-    }
-  }
-
-  join(player: Player) {
-    if (this.status !== GameStatus.Initializing) {
-      throw new Error('You cannot join because this game it is not in Initializing status.');
-    } else if (this.players.find((item) => item.name.toLowerCase() === player.name.toLowerCase())) {
-      throw new Error(`A player named ${player.name} already exists in this game. Please use a different name.`);
+    if (remoteGame) {
+      this._remoteGame = remoteGame;
+      this.gameID = gameID;
+      this._players = [...this._remoteGame.players];
+      this._trainCardDeck = [...this._remoteGame.trainCardDeck];
+      this._faceUpTrainCards = [...this._remoteGame.faceUpTrainCards];
+      this._destinationCardDeck = [...this._remoteGame.destinationCardDeck];
+      this._map = { ...this._remoteGame.map };
+      this._messages = [...this._remoteGame.messages];
+      this._remoteGame.addEventListener('onPlayersChange', (e) => this.handlePlayersChange(e));
+      this._remoteGame.addEventListener('onTrainCardDeckChange', (e) => this.handleTrainCardDeckChange(e));
+      this._remoteGame.addEventListener('onFaceUpTrainCardsChange', (e) => this.handleFaceUpTrainCardsChange(e));
+      this._remoteGame.addEventListener('onPlayerStateChange', (e) => this.handlePlayerStateChange(e));
+      this._remoteGame.addEventListener('onPlayerTrainCardsChange', (e) => this.handlePlayerTrainCardsChange(e));
+      this._remoteGame.addEventListener('onPlayerDestinationCardsChange', (e) => this.handlePlayerDestinationCardsChange(e));
+      this._remoteGame.addEventListener('onMessagesChange', (e) => this.handleMessagesChange(e));
     } else {
-      this.players.push(player);
-      this.dispatchEvent(new CustomEvent('onPlayerJoin', { detail: new PlayerJoinEventArgs(player) }));
+      throw new Error(`No remote game with ID '${gameID}' exists.`);
     }
+  }
+
+  private dispatch(event: string, eventArgs: any) {
+    this.dispatchEvent(new CustomEvent(event, { detail: eventArgs }));
+  }
+
+  get players() {
+    return this._players;
+  }
+
+  get trainCardDeck() {
+    return this._trainCardDeck;
+  }
+
+  get faceUpTrainCards() {
+    return this._faceUpTrainCards;
+  }
+
+  get destinationCardDeck() {
+    return this._destinationCardDeck;
+  }
+
+  get map() {
+    return this._map;
+  }
+
+  get messages() {
+    return this._messages;
+  }
+
+  private handlePlayersChange(e: CustomEventInit<PlayersChangeEventArgs>) {
+    this._players = [...e.detail!.players];
+    this.dispatch('onPlayersChange', new PlayersChangeEventArgs(this._players));
+  }
+
+  private handleTrainCardDeckChange(e: CustomEventInit<TrainCardDeckChangeEventArgs>) {
+    this._trainCardDeck = [...e.detail!.cards];
+    this.dispatch('onTrainCardDeckChange', new TrainCardDeckChangeEventArgs(this._trainCardDeck));
+  }
+
+  private handleFaceUpTrainCardsChange(e: CustomEventInit<FaceUpTrainCardsChangeEventArgs>) {
+    this._faceUpTrainCards = [...e.detail!.cards];
+    this.dispatch('onFaceUpTrainCardsChange', new FaceUpTrainCardsChangeEventArgs(this._faceUpTrainCards));
+  }
+
+  private handlePlayerStateChange(e: CustomEventInit<PlayerStateChangeEventArgs>) {
+    const player = this._players.find((value) => value.name === e.detail!.player.name);
+
+    if (player) {
+      player.state = e.detail!.state;
+      this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(player, player.state));
+    }
+  }
+
+  private handlePlayerTrainCardsChange(e: CustomEventInit<PlayerTrainCardsChangeEventArgs>) {
+    const player = this._players.find((value) => value.name === e.detail!.player.name);
+
+    if (player) {
+      player.trainCards = [...e.detail!.cards];
+      this.dispatch('onPlayerTrainCardsChange', new PlayerTrainCardsChangeEventArgs(player, player.trainCards));
+    }
+  }
+
+  private handlePlayerDestinationCardsChange(e: CustomEventInit<PlayerDestinationCardsChangeEventArgs>) {
+    const player = this._players.find((value) => value.name === e.detail!.player.name);
+
+    if (player) {
+      player.destinationCards = [...e.detail!.cards];
+      this.dispatch('onPlayerDestinationCardsChange', new PlayerDestinationCardsChangeEventArgs(player, player.destinationCards));
+    }
+  }
+
+  private handleMessagesChange(e: CustomEventInit<MessagesChangeEventArgs>) {
+    this._messages = [...e.detail!.messages];
+    this.dispatch('onMessagesChange', new MessagesChangeEventArgs(this._messages));
+  }
+
+  join(name: string, avatar: string): Player | undefined {
+    const player = this._remoteGame.join(name, avatar);
+    return player;
   }
 
   startGame() {
-    if (this.status !== GameStatus.Initializing) {
-      throw new Error('This game cannot be started because it is not in Initializing status.');
-    } else {
-      this.status = GameStatus.Playing;
-      this.initializeTrainCards();
-      this.initializeDestinationCards();
-      this.dealTrainCards();
-      this.dealDestinationCards();
-    }
+    this._remoteGame.startGame();
   }
 
   drawTrainCardFromDeck() {
-    const card = this.drawTrainCard();
-
-    if (card) {
-      this.activePlayer.trainCards.push(card);
-      this.dispatchEvent(new CustomEvent('onPlayerTrainCardsChange', { detail: new PlayerTrainCardsChangeEventArgs(this.activePlayer, this.activePlayer.trainCards) }));
-    }
-
+    const card = this._remoteGame.drawTrainCardFromDeck();
     return card;
   }
 
   drawFaceUpTrainCard(card: TrainCard) {
-    const index = this.faceUpTrainCards.findIndex((item) => card.id === item?.id);
-
-    if (index >= 0) {
-      this.activePlayer.trainCards.push(card);
-      const newCard = this.drawTrainCard();
-      this.faceUpTrainCards[index] = newCard;
-      this.dispatchEvent(new CustomEvent('onFaceUpTrainCardsChange', { detail: new FaceUpTrainCardsChangeEventArgs(this.faceUpTrainCards) }));
-      this.dispatchEvent(new CustomEvent('onPlayerTrainCardsChange', { detail: new PlayerTrainCardsChangeEventArgs(this.activePlayer, this.activePlayer.trainCards) }));
-      return card;
-    } else {
-      return undefined;
-    }
+    const drawnCard = this._remoteGame.drawFaceUpTrainCard(card);
+    return drawnCard;
   }
 
-  private initializeTrainCards() {
-    let id = 0;
-    for (const color of EnumFunctions.getEnumValues<TrainCardColor>(TrainCardColor)) {
-      for (let i = 0; i < 12; i++) {
-        this.trainCardDeck.push(new TrainCard(id++, color));
-      }
-    }
-
-    this.trainCardDeck.push(new TrainCard(id++, TrainCardColor.Rainbow));
-    this.trainCardDeck.push(new TrainCard(id++, TrainCardColor.Rainbow));
-    this.shuffle(this.trainCardDeck);
-  }
-
-  private initializeDestinationCards() {
-    let id = 0;
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Billings, USCities.LosAngeles, 8));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Boston, USCities.Miami, 12));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Calgary, USCities.Phoenix, 13));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Calgary, USCities.SaltLakeCity, 7));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Chicago, USCities.NewOrleans, 7));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Chicago, USCities.SantaFe, 9));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Dallas, USCities.NewYork, 11));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Denver, USCities.ElPaso, 4));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Denver, USCities.Pittsburgh, 11));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.KansasCity, USCities.Houston, 5));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.LosAngeles, USCities.Chicago, 16));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.LosAngeles, USCities.Miami, 20));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.LosAngeles, USCities.NewYork, 21));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Minneapolis, USCities.ElPaso, 10));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Minneapolis, USCities.Houston, 8));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Montreal, USCities.Atlanta, 9));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Montreal, USCities.NewOrleans, 13));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.NewYork, USCities.Atlanta, 6));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Portland, USCities.Nashville, 17));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Portland, USCities.Phoenix, 11));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.SanFrancisco, USCities.Atlanta, 17));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.SaultSteMarie, USCities.Nashville, 8));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.SaultSteMarie, USCities.OklahomaCity, 9));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Seattle, USCities.LosAngeles, 9));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Seattle, USCities.NewYork, 22));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Toronto, USCities.Miami, 10));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Vancouver, USCities.SantaFe, 13));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Winnipeg, USCities.Houston, 12));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Winnipeg, USCities.LittleRock, 11));
-    this.destinationCardDeck.push(new DestinationCard(id++, USCities.Vancouver, USCities.Montreal, 20));
-    this.shuffle(this.destinationCardDeck);
-  }
-
-  private dealTrainCards() {
-    for (let i = 0; i < 4; i++) {
-      for (const player of this.players) {
-        const card = this.drawTrainCard();
-        if (card) {
-          player.trainCards.push(card);
-        }
-      }
-    }
-
-    for (let i = 0; i < 5; i++) {
-      const card = this.drawTrainCard();
-      if (card) {
-        this.faceUpTrainCards.push(card);
-      }
-    }
-  }
-
-  private dealDestinationCards() {
-    for (let i = 0; i < 3; i++) {
-      for (const player of this.players) {
-        const card = this.drawDestinationCard();
-        if (card) {
-          player.destinationCards.push(card);
-        }
-      }
-    }
-  }
-
-  private drawTrainCard() {
-    if (this.trainCardDeck.length === 0 && this.discardedTrainCards.length > 0) {
-      this.trainCardDeck.push(...this.discardedTrainCards);
-      this.discardedTrainCards.length = 0;
-      this.shuffle(this.trainCardDeck);
-    }
-
-    const card = this.trainCardDeck.pop();
-
-    if (card) {
-      this.dispatchEvent(new CustomEvent('onTrainCardDeckChange', { detail: new TrainCardDeckChange(this.trainCardDeck) }));
-      return card;
-    } else {
-      return null;
-    }
-  }
-
-  private drawDestinationCard() {
-    return this.destinationCardDeck.pop();
-  }
-
-  private shuffle(array: Array<any>) {
-    let currentIndex = array.length;
-
-    while (currentIndex !== 0) {
-      const randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
+  claimRoute(route: Route, cards: TrainCard[]) {
+    this._remoteGame.claimRoute(route, cards);
   }
 }
