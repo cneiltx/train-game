@@ -15,7 +15,7 @@ export interface DrawCardAreaProps {
 export const DrawCardArea = (props: DrawCardAreaProps) => {
   const cards = [];
   const [faceUpTrainCards, setFaceUpTrainCards] = useState(props.game.faceUpTrainCards);
-  const [isLocalPlayerActive, setIsLocalPlayerActive] = useState(props.game.localPlayer ? props.game.localPlayer.state !== PlayerState.NotActive : false);
+  const [isLocalPlayerActive, setIsLocalPlayerActive] = useState(props.game.localPlayer ? props.game.localPlayer.state !== PlayerState.Waiting : false);
 
   useEffect(() => {
     props.game.addEventListener('onFaceUpTrainCardsChange', (e) => handleFaceUpTrainCardsChange(e));
@@ -33,7 +33,7 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
 
   const handlePlayerStateChange = (e: CustomEventInit<PlayerStateChangeEventArgs>) => {
     setIsLocalPlayerActive(props.game.localPlayer ?
-      e.detail!.player.name === props.game.localPlayer.name && e.detail!.state !== PlayerState.NotActive : false);
+      e.detail!.player.name === props.game.localPlayer.name && e.detail!.state !== PlayerState.Waiting : false);
   }
 
   let index = 0;

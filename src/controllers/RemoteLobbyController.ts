@@ -23,7 +23,7 @@ export class RemoteLobbyController {
   }
 
   private static generateGameID() {
-    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const chars = '0123456789';
     let id: string;
 
     do {

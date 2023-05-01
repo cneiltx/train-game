@@ -92,6 +92,7 @@ export class MessagesChangeEventArgs {
 export class GameController extends EventTarget {
   localPlayer: Player | undefined;
   readonly gameID: string;
+  private _state: GameState;
   private _players: Player[];
   private _trainCardDeck: TrainCard[];
   private _faceUpTrainCards: (TrainCard | null)[];
@@ -107,12 +108,14 @@ export class GameController extends EventTarget {
     if (remoteGame) {
       this._remoteGame = remoteGame;
       this.gameID = gameID;
+      this._state = this._remoteGame.state;
       this._players = [...this._remoteGame.players];
       this._trainCardDeck = [...this._remoteGame.trainCardDeck];
       this._faceUpTrainCards = [...this._remoteGame.faceUpTrainCards];
       this._destinationCardDeck = [...this._remoteGame.destinationCardDeck];
       this._map = { ...this._remoteGame.map };
       this._messages = [...this._remoteGame.messages];
+      this._remoteGame.addEventListener('onGameStateChange', (e) => this.handleGameStateChange(e));
       this._remoteGame.addEventListener('onPlayersChange', (e) => this.handlePlayersChange(e));
       this._remoteGame.addEventListener('onTrainCardDeckChange', (e) => this.handleTrainCardDeckChange(e));
       this._remoteGame.addEventListener('onFaceUpTrainCardsChange', (e) => this.handleFaceUpTrainCardsChange(e));
@@ -127,6 +130,10 @@ export class GameController extends EventTarget {
 
   private dispatch(event: string, eventArgs: any) {
     this.dispatchEvent(new CustomEvent(event, { detail: eventArgs }));
+  }
+
+  get state() {
+    return this._state;
   }
 
   get players() {
@@ -151,6 +158,15 @@ export class GameController extends EventTarget {
 
   get messages() {
     return this._messages;
+  }
+
+  get host() {
+    return this._players[0];
+  }
+
+  private handleGameStateChange(e: CustomEventInit<GameStateChangeEventArgs>) {
+    this._state = e.detail!.state;
+    this.dispatch('onGameStateChange', new GameStateChangeEventArgs(this._state));
   }
 
   private handlePlayersChange(e: CustomEventInit<PlayersChangeEventArgs>) {

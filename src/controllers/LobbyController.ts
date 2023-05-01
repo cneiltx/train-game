@@ -18,8 +18,6 @@ export class LobbyController {
     game.join('Shaggy', shaggy);
     game.join('Velma', velma);
 
-    game.startGame();
-
     return game;
   }
 

@@ -27,7 +27,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   const trainCar = new Image();
   const referenceWidth = 300;
   const referenceHeight = 150;
-  const [active, setActive] = useState(props.player.state !== PlayerState.NotActive);
+  const [active, setActive] = useState(props.player.state !== PlayerState.Waiting);
   const [trainCards, setTrainCards] = useState(props.player.trainCards);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }, [props.game]);
 
   const handlePlayerStateChange = (e: CustomEventInit<PlayerStateChangeEventArgs>) => {
-    setActive(e.detail!.player.name === props.player.name && e.detail!.state !== PlayerState.NotActive);
+    setActive(e.detail!.player.name === props.player.name && e.detail!.state !== PlayerState.Waiting);
   }
 
   useEffect(() => {

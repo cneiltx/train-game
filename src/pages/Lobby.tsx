@@ -1,4 +1,4 @@
-import { Alert, Avatar, Box, Button, Grid, IconButton, Stack, TextField } from '@mui/material';
+import { Alert, Avatar, Button, Grid, IconButton, Stack, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { GameController } from '../controllers/GameController';
 import { LobbyController } from '../controllers/LobbyController';
@@ -111,7 +111,7 @@ export const Lobby = (props: LobbyProps) => {
           </Grid>
           <Grid item xs={5}>
             <Button
-              variant='contained'
+              variant='outlined'
               disabled={name === '' || avatar === '' || gameID === ''}
               onClick={handleJoinGame}
             >
@@ -125,7 +125,7 @@ export const Lobby = (props: LobbyProps) => {
           <Grid item xs={7} />
           <Grid item xs={5}>
             <Button
-              variant='contained'
+              variant='outlined'
               disabled={name === '' || avatar === ''}
               onClick={handleCreateGame}
             >

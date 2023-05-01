@@ -9,7 +9,7 @@ export class Player {
   readonly color: TrainColor;
   trainCards: TrainCard[] = [];
   destinationCards: DestinationCard[] = [];
-  state = PlayerState.NotActive;
+  state = PlayerState.Waiting;
   score = 0;
   trains = 45;
 

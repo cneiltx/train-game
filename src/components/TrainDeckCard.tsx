@@ -38,7 +38,7 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   }, [props.game]);
 
   const handlePlayerStateChange = (e: CustomEventInit<PlayerStateChangeEventArgs>) => {
-    if (props.game.localPlayer && props.game.localPlayer.name === e.detail!.player.name) {
+    if (e.detail!.player.name === props.game.localPlayer?.name) {
       setLocalPlayerState(e.detail!.state);
     }
   }
@@ -118,7 +118,8 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   }
 
   const style = { ...props.extraProps?.style };
-  if (localPlayerState !== PlayerState.NotActive && (props.mode === 'drawFaceUp' || props.mode === 'drawDeck')) {
+  if ((localPlayerState === PlayerState.StartingTurn || localPlayerState === PlayerState.DrawingTrainCards)
+    && (props.mode === 'drawFaceUp' || props.mode === 'drawDeck')) {
     style['cursor'] = 'pointer';
   }
 

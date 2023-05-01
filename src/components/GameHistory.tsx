@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemText, Typography } from "@mui/material";
+import { Box, List, ListItem, ListItemText } from "@mui/material";
 import { GameController, MessagesChangeEventArgs } from "../controllers/GameController";
 import { useEffect, useState } from "react";
 
@@ -31,8 +31,10 @@ export const GameHistory = (props: GameHistoryProps) => {
   }
 
   return (
-    <List disablePadding={true} dense={true} sx={{ height: '100%', overflowY: 'auto', userSelect: 'none' }} >
-      {messageList}
-    </List>
+    <Box padding='1.5vh' {...props.extraProps} flexShrink={0} >
+      <List disablePadding={true} dense={true} sx={{ height: '100%', overflowY: 'auto', userSelect: 'none' }} >
+        {messageList}
+      </List>
+    </Box>
   );
 }

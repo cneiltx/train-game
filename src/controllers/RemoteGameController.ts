@@ -115,23 +115,27 @@ export class RemoteGameController extends EventTarget {
     }
   }
 
-  get state() {
-    return this._state;
-  }
-
   private dispatch(event: string, eventArgs: any) {
     this.dispatchEvent(new CustomEvent(event, { detail: eventArgs }));
   }
 
+  get state() {
+    return this._state;
+  }
+
   private set state(state: GameState) {
     if (this.state !== state) {
+      if (this._state === GameState.Initializing && state === GameState.Playing) {
+        this.addMessage('The game is now starting.');
+      }
+
       this._state = state;
       this.dispatch('onGameStateChange', new GameStateChangeEventArgs(state));
     }
   }
 
   private get activePlayer() {
-    return this.players.find(value => value.state !== PlayerState.NotActive);
+    return this.players.find(value => value.state !== PlayerState.Waiting);
   }
 
   private nextPlayer() {
@@ -150,7 +154,7 @@ export class RemoteGameController extends EventTarget {
       nextPlayer = this.players[0];
     }
 
-    if (prevPlayer) prevPlayer.state = PlayerState.NotActive;
+    if (prevPlayer) prevPlayer.state = PlayerState.Waiting;
     nextPlayer.state = PlayerState.StartingTurn;
     this.addMessage(`It is now ${nextPlayer.name}'s turn.`);
     if (prevPlayer) this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(prevPlayer, prevPlayer.state));
