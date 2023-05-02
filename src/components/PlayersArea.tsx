@@ -14,7 +14,8 @@ export const PlayersArea = (props: PlayersAreaProps) => {
   useEffect(() => {
     props.game.addEventListener('onPlayersChange', (e) => handlePlayersChange(e));
     return props.game.removeEventListener('onPlayersChange', handlePlayersChange);
-  }, [props.game]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePlayersChange = (e: CustomEventInit<PlayersChangeEventArgs>) => {
     setPlayers([...e.detail!.players]);

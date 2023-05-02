@@ -42,7 +42,8 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
       }
     }
     return () => window.removeEventListener('resize', onResize);
-  }, [props.selected, props.canClick]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props]);
 
   const onResize = () => {
     const canvas = canvasRef.current;
@@ -163,7 +164,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   newProps['style'] = style;
 
   return (
-    <Fade in={true} timeout={750}>
+    <Fade in={fade} timeout={750}>
       <Box component='canvas' {...newProps} ref={canvasRef} onClick={handleClick} sx={{ maxHeight: '100%', maxWidth: '100%' }} />
     </Fade>
   );

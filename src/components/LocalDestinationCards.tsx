@@ -18,7 +18,8 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
   useEffect(() => {
     props.game.addEventListener('onPlayerDestinationCardsChange', (e) => handlePlayerDestinationCardsChange(e));
     return props.game.removeEventListener('onPlayerDestinationCardsChange', handlePlayerDestinationCardsChange);
-  }, [props.game]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePlayerDestinationCardsChange = (e: CustomEventInit<PlayerDestinationCardsChangeEventArgs>) => {
     if (props.game.localPlayer && props.game.localPlayer.name === e.detail!.player.name) {

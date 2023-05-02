@@ -16,10 +16,11 @@ export const LocalTrainCards = (props: LocalTrainCardsProps) => {
   useEffect(() => {
     props.game.addEventListener('onPlayerTrainCardsChange', (e) => handlePlayerTrainCardsChange(e));
     return props.game.removeEventListener('onPlayerTrainCardsChange', handlePlayerTrainCardsChange);
-  }, [props.game]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePlayerTrainCardsChange = (e: CustomEventInit<PlayerTrainCardsChangeEventArgs>) => {
-    if (props.game.localPlayer === e.detail?.player) {
+    if (props.game.localPlayer?.name === e.detail?.player.name) {
       setLocalPlayerTrainCards([...e.detail!.cards]);
     }
   }

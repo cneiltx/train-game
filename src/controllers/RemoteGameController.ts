@@ -44,6 +44,14 @@ export class FaceUpTrainCardsChangeEventArgs {
   }
 }
 
+export class DestinationCardDeckChangeEventArgs {
+  readonly cards: DestinationCard[];
+
+  constructor(cards: DestinationCard[]) {
+    this.cards = cards;
+  }
+}
+
 export class PlayerStateChangeEventArgs {
   readonly player: Player;
   readonly state: PlayerState;
@@ -74,6 +82,26 @@ export class PlayerDestinationCardsChangeEventArgs {
   }
 }
 
+export class PlayerTrainsChangeEventArgs {
+  readonly player: Player;
+  readonly trains: number;
+
+  constructor(player: Player, trains: number) {
+    this.player = player;
+    this.trains = trains;
+  }
+}
+
+export class PlayerScoreChangeEventArgs {
+  readonly player: Player;
+  readonly score: number;
+
+  constructor(player: Player, score: number) {
+    this.player = player;
+    this.score = score;
+  }
+}
+
 export class MessagesChangeEventArgs {
   readonly messages: string[];
 
@@ -88,16 +116,19 @@ export class MessagesChangeEventArgs {
  *   onPlayersChange
  *   onTrainCardDeckChange
  *   onFaceUpTrainCardsChange
+ *   onDestinationCardDeckChange
  *   onPlayerStateChange
  *   onPlayerTrainCardsChange
  *   onPlayerDestinationCardsChange
+ *   onPlayerTrainsChange
+ *   onPlayerScoreChange
  *   onMessagesChange
  */
 export class RemoteGameController extends EventTarget {
   readonly gameID: string;
   readonly players: Player[] = [];
   readonly trainCardDeck: TrainCard[] = [];
-  readonly faceUpTrainCards: (TrainCard | null)[] = [];
+  readonly faceUpTrainCards: (TrainCard | null)[] = [null, null, null, null, null];
   readonly discardedTrainCards: TrainCard[] = [];
   readonly destinationCardDeck: DestinationCard[] = [];
   readonly map: GameMap;
@@ -276,6 +307,9 @@ export class RemoteGameController extends EventTarget {
       this.activePlayer.score += points;
       const city1 = this.map.cities.find(value => value.city === route.city1);
       const city2 = this.map.cities.find(value => value.city === route.city2);
+      this.dispatch('onPlayerTrainsChange', new PlayerTrainsChangeEventArgs(this.activePlayer, this.activePlayer.trains));
+      this.dispatch('onPlayerTrainCardsChange', new PlayerTrainCardsChangeEventArgs(this.activePlayer, this.activePlayer.trainCards));
+      this.dispatch('onPlayerScoreChange', new PlayerScoreChangeEventArgs(this.activePlayer, this.activePlayer.score));
 
       if (city1 && city2) {
         this.addMessage(`${this.activePlayer.name} claimed route ${city1.name} - ${city2.name}`);
@@ -345,12 +379,14 @@ export class RemoteGameController extends EventTarget {
 
     for (let i = 0; i < 5; i++) {
       const card = this.drawTrainCard();
-      if (card) {
-        this.faceUpTrainCards.push(card);
-      }
+      this.faceUpTrainCards[i] = card;
     }
 
     this.dispatch('onFaceUpTrainCardsChange', new FaceUpTrainCardsChangeEventArgs(this.faceUpTrainCards));
+
+    for (const player of this.players) {
+      this.dispatch('onPlayerTrainCardsChange', new PlayerTrainCardsChangeEventArgs(player, player.trainCards));
+    }
   }
 
   private dealDestinationCards() {
@@ -361,6 +397,12 @@ export class RemoteGameController extends EventTarget {
           player.destinationCards.push(card);
         }
       }
+    }
+
+    this.dispatch('onDestinationCardDeckChange', new DestinationCardDeckChangeEventArgs(this.destinationCardDeck));
+
+    for (const player of this.players) {
+      this.dispatch('onPlayerDestinationCardsChange', new PlayerDestinationCardsChangeEventArgs(player, player.destinationCards));
     }
   }
 
@@ -382,7 +424,9 @@ export class RemoteGameController extends EventTarget {
   }
 
   private drawDestinationCard() {
-    return this.destinationCardDeck.pop();
+    const card = this.destinationCardDeck.pop();
+    this.dispatch('onDestinationCardDeckChange', new DestinationCardDeckChangeEventArgs(this.destinationCardDeck));
+    return card;
   }
 
   private shuffle(array: Array<any>) {

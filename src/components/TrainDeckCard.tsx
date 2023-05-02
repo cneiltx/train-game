@@ -35,7 +35,8 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   useEffect(() => {
     props.game.addEventListener('onPlayerStateChange', (e) => handlePlayerStateChange(e));
     return props.game.removeEventListener('onPlayerStateChange', handlePlayerStateChange);
-  }, [props.game]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePlayerStateChange = (e: CustomEventInit<PlayerStateChangeEventArgs>) => {
     if (e.detail!.player.name === props.game.localPlayer?.name) {
@@ -90,7 +91,8 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
       }
     }
     return () => window.removeEventListener('resize', onResize);
-  }, [props.mode, props.card]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onResize = () => {
     const canvas = canvasRef.current!;

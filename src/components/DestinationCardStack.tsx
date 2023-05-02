@@ -20,7 +20,7 @@ export const DestinationCardStack = (props: DestinationCardStackProps) => {
   }
 
   if (props.cards.length === 0) {
-    return <Box {...props.extraProps} />;
+    return <Box {...props.extraProps} style={{ background: 'rgba(255, 255, 255, 0.2)', borderRadius: '10%' }} />;
   } else if (props.cards.length === 1) {
     return (
       <DestinationDeckCard

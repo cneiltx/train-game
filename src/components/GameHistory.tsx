@@ -13,7 +13,8 @@ export const GameHistory = (props: GameHistoryProps) => {
   useEffect(() => {
     props.game.addEventListener('onMessagesChange', (e) => handleMessagesChange(e));
     return props.game.removeEventListener('onMessagesChange', handleMessagesChange);
-  }, [props.game]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleMessagesChange = (e: CustomEventInit<MessagesChangeEventArgs>) => {
     setMessages([...e.detail!.messages].reverse());

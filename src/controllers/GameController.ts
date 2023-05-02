@@ -40,6 +40,14 @@ export class FaceUpTrainCardsChangeEventArgs {
   }
 }
 
+export class DestinationCardDeckChangeEventArgs {
+  readonly cards: DestinationCard[];
+
+  constructor(cards: DestinationCard[]) {
+    this.cards = cards;
+  }
+}
+
 export class PlayerStateChangeEventArgs {
   readonly player: Player;
   readonly state: PlayerState;
@@ -70,6 +78,26 @@ export class PlayerDestinationCardsChangeEventArgs {
   }
 }
 
+export class PlayerTrainsChangeEventArgs {
+  readonly player: Player;
+  readonly trains: number;
+
+  constructor(player: Player, trains: number) {
+    this.player = player;
+    this.trains = trains;
+  }
+}
+
+export class PlayerScoreChangeEventArgs {
+  readonly player: Player;
+  readonly score: number;
+
+  constructor(player: Player, score: number) {
+    this.player = player;
+    this.score = score;
+  }
+}
+
 export class MessagesChangeEventArgs {
   readonly messages: string[];
 
@@ -84,9 +112,12 @@ export class MessagesChangeEventArgs {
  *   onPlayersChange
  *   onTrainCardDeckChange
  *   onFaceUpTrainCardsChange
+ *   onDestinationCardDeckChange
  *   onPlayerStateChange
  *   onPlayerTrainCardsChange
  *   onPlayerDestinationCardsChange
+ *   onPlayerTrainsChange
+ *   onPlayerScoreChange
  *   onMessagesChange
  */
 export class GameController extends EventTarget {
@@ -119,8 +150,11 @@ export class GameController extends EventTarget {
       this._remoteGame.addEventListener('onPlayersChange', (e) => this.handlePlayersChange(e));
       this._remoteGame.addEventListener('onTrainCardDeckChange', (e) => this.handleTrainCardDeckChange(e));
       this._remoteGame.addEventListener('onFaceUpTrainCardsChange', (e) => this.handleFaceUpTrainCardsChange(e));
+      this._remoteGame.addEventListener('onDestinationCardDeckChange', (e) => this.handleDestinationCardDeckChange(e));
       this._remoteGame.addEventListener('onPlayerStateChange', (e) => this.handlePlayerStateChange(e));
       this._remoteGame.addEventListener('onPlayerTrainCardsChange', (e) => this.handlePlayerTrainCardsChange(e));
+      this._remoteGame.addEventListener('onPlayerTrainsChange', (e) => this.handlePlayerTrainsChange(e));
+      this._remoteGame.addEventListener('onPlayerScoreChange', (e) => this.handlePlayerScoreChange(e));
       this._remoteGame.addEventListener('onPlayerDestinationCardsChange', (e) => this.handlePlayerDestinationCardsChange(e));
       this._remoteGame.addEventListener('onMessagesChange', (e) => this.handleMessagesChange(e));
     } else {
@@ -184,6 +218,11 @@ export class GameController extends EventTarget {
     this.dispatch('onFaceUpTrainCardsChange', new FaceUpTrainCardsChangeEventArgs(this._faceUpTrainCards));
   }
 
+  private handleDestinationCardDeckChange(e: CustomEventInit<DestinationCardDeckChangeEventArgs>) {
+    this._destinationCardDeck = [...e.detail!.cards];
+    this.dispatch('onDestinationCardDeckChange', new DestinationCardDeckChangeEventArgs(this._destinationCardDeck));
+  }
+
   private handlePlayerStateChange(e: CustomEventInit<PlayerStateChangeEventArgs>) {
     const player = this._players.find((value) => value.name === e.detail!.player.name);
 
@@ -208,6 +247,24 @@ export class GameController extends EventTarget {
     if (player) {
       player.destinationCards = [...e.detail!.cards];
       this.dispatch('onPlayerDestinationCardsChange', new PlayerDestinationCardsChangeEventArgs(player, player.destinationCards));
+    }
+  }
+
+  private handlePlayerTrainsChange(e: CustomEventInit<PlayerTrainsChangeEventArgs>) {
+    const player = this._players.find((value) => value.name === e.detail!.player.name);
+
+    if (player) {
+      player.trains = e.detail!.trains;
+      this.dispatch('onPlayerTrainsChange', new PlayerTrainsChangeEventArgs(player, player.trains));
+    }
+  }
+
+  private handlePlayerScoreChange(e: CustomEventInit<PlayerScoreChangeEventArgs>) {
+    const player = this._players.find((value) => value.name === e.detail!.player.name);
+
+    if (player) {
+      player.score = e.detail!.score;
+      this.dispatch('onPlayerScoreChange', new PlayerScoreChangeEventArgs(player, player.score));
     }
   }
 

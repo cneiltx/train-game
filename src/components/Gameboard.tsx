@@ -36,7 +36,8 @@ export const Gameboard = (props: GameboardProps) => {
       }
     }
     return () => window.removeEventListener('resize', onResize);
-  }, [props.highlightCities]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onResize = () => {
     const canvas = canvasRef.current;

@@ -10,7 +10,7 @@ import greenCar from '../images/train-cars/car-green.png';
 import redCar from '../images/train-cars/car-red.png';
 import yellowCar from '../images/train-cars/car-yellow.png';
 import { EnumFunctions } from "../model/EnumFunctions";
-import { PlayerStateChangeEventArgs, GameController, PlayerTrainCardsChangeEventArgs } from "../controllers/GameController";
+import { PlayerStateChangeEventArgs, GameController, PlayerTrainCardsChangeEventArgs, PlayerDestinationCardsChangeEventArgs, PlayerTrainsChangeEventArgs, PlayerScoreChangeEventArgs } from "../controllers/GameController";
 import { PlayerState } from "../model/PlayerState";
 
 export interface PlayerSummaryProps {
@@ -27,27 +27,73 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   const trainCar = new Image();
   const referenceWidth = 300;
   const referenceHeight = 150;
-  const [active, setActive] = useState(props.player.state !== PlayerState.Waiting);
+  const [state, setState] = useState(props.player.state);
   const [trainCards, setTrainCards] = useState(props.player.trainCards);
+  const [destinationCards, setDestinationCards] = useState(props.player.destinationCards);
+  const [trains, setTrains] = useState(props.player.trains);
+  const [score, setScore] = useState(props.player.score);
 
   useEffect(() => {
     props.game.addEventListener('onPlayerStateChange', (e) => handlePlayerStateChange(e));
     return props.game.removeEventListener('onPlayerStateChange', handlePlayerStateChange);
-  }, [props.game]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePlayerStateChange = (e: CustomEventInit<PlayerStateChangeEventArgs>) => {
-    setActive(e.detail!.player.name === props.player.name && e.detail!.state !== PlayerState.Waiting);
+    if (e.detail!.player.name === props.player.name) {
+      setState(e.detail!.state);
+    }
   }
 
   useEffect(() => {
     props.game.addEventListener('onPlayerTrainCardsChange', (e) => handlePlayerTrainCardsChange(e));
     return props.game.removeEventListener('onPlayerTrainCardsChange', handlePlayerTrainCardsChange);
-  }, [props.game]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePlayerTrainCardsChange = (e: CustomEventInit<PlayerTrainCardsChangeEventArgs>) => {
     if (e.detail!.player.name === props.player.name) {
       setTrainCards([...e.detail!.cards]);
-      onResize();
+      drawPlayerSummary();
+    }
+  }
+
+  useEffect(() => {
+    props.game.addEventListener('onPlayerDestinationCardsChange', (e) => handlePlayerDestinationCardsChange(e));
+    return props.game.removeEventListener('onPlayerDestinationCardsChange', handlePlayerDestinationCardsChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handlePlayerDestinationCardsChange = (e: CustomEventInit<PlayerDestinationCardsChangeEventArgs>) => {
+    if (e.detail!.player.name === props.player.name) {
+      setDestinationCards([...e.detail!.cards]);
+      drawPlayerSummary();
+    }
+  }
+
+  useEffect(() => {
+    props.game.addEventListener('onPlayerTrainsChange', (e) => handlePlayerTrainsChange(e));
+    return props.game.removeEventListener('onPlayerTrainsChange', handlePlayerTrainsChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handlePlayerTrainsChange = (e: CustomEventInit<PlayerTrainsChangeEventArgs>) => {
+    if (e.detail!.player.name === props.player.name) {
+      setTrains(e.detail!.trains);
+      drawPlayerSummary();
+    }
+  }
+
+  useEffect(() => {
+    props.game.addEventListener('onPlayerScoreChange', (e) => handlePlayerScoreChange(e));
+    return props.game.removeEventListener('onPlayerScoreChange', handlePlayerScoreChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handlePlayerScoreChange = (e: CustomEventInit<PlayerScoreChangeEventArgs>) => {
+    if (e.detail!.player.name === props.player.name) {
+      setScore(e.detail!.score);
+      drawPlayerSummary();
     }
   }
 
@@ -80,47 +126,48 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
       canvas.height = referenceHeight;
     }
 
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', drawPlayerSummary);
 
     avatarImage.onload = () => {
-      onResize();
+      drawPlayerSummary();
     }
     trainCardImage.onload = () => {
-      onResize();
+      drawPlayerSummary();
     }
     destinationCardImage.onload = () => {
-      onResize();
+      drawPlayerSummary();
     }
     trainCar.onload = () => {
-      onResize();
+      drawPlayerSummary();
     }
 
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
+    return () => window.removeEventListener('resize', drawPlayerSummary);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trainCards, destinationCards, trains, score]);
 
-  const onResize = () => {
+  const drawPlayerSummary = () => {
     const canvas = canvasRef.current;
 
     if (canvas) {
       const context = canvas.getContext('2d')!;
-      DrawBackground(context);
-      DrawAvatar(context);
-      DrawName(context);
-      DrawScore(context);
-      DrawTrainCount(context);
-      DrawTrainCardCount(context);
-      DrawDestinationCardCount(context);
+      drawBackground(context);
+      drawAvatar(context);
+      drawName(context);
+      drawScore(context);
+      drawTrainCount(context);
+      drawTrainCardCount(context);
+      drawDestinationCardCount(context);
     }
   }
 
-  const DrawBackground = (context: CanvasRenderingContext2D) => {
+  const drawBackground = (context: CanvasRenderingContext2D) => {
     context.fillStyle = '#203030';
     context.fillRect(0, 0, referenceWidth, referenceHeight);
     context.fillStyle = EnumFunctions.getHtmlColor(props.player.color);
     context.fillRect(0, 0, referenceWidth, referenceHeight * 0.4);
   }
 
-  const DrawAvatar = (context: CanvasRenderingContext2D) => {
+  const drawAvatar = (context: CanvasRenderingContext2D) => {
     context.save();
     context.beginPath();
     context.arc(referenceHeight * 0.5, referenceHeight * 0.5, referenceHeight * 0.4, 0, Math.PI * 2, true);
@@ -130,7 +177,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
     context.restore();
   }
 
-  const DrawName = (context: CanvasRenderingContext2D) => {
+  const drawName = (context: CanvasRenderingContext2D) => {
     context.font = '1.5em roboto';
     context.fillStyle = 'white';
     context.textAlign = 'left';
@@ -152,7 +199,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
     }
   }
 
-  const DrawScore = (context: CanvasRenderingContext2D) => {
+  const drawScore = (context: CanvasRenderingContext2D) => {
     context.fillStyle = EnumFunctions.getHtmlColor(props.player.color);
     context.beginPath();
     context.roundRect(referenceHeight * 0.25, referenceHeight * 0.75, referenceHeight * 0.5, referenceHeight * 0.25, referenceHeight * 0.08);
@@ -161,10 +208,10 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
     context.font = 'bold 1.5em roboto';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    context.fillText(props.player.score.toString(), referenceHeight * 0.5, referenceHeight * 0.89);
+    context.fillText(score.toString(), referenceHeight * 0.5, referenceHeight * 0.89);
   }
 
-  const DrawTrainCount = (context: CanvasRenderingContext2D) => {
+  const drawTrainCount = (context: CanvasRenderingContext2D) => {
     context.strokeStyle = EnumFunctions.getHtmlColor(props.player.color);
     context.fillStyle = 'white';
     context.lineWidth = 4;
@@ -177,10 +224,10 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
     context.font = 'bold 1.2em roboto';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    context.fillText(props.player.trains.toString(), referenceHeight, referenceHeight * 0.84);
+    context.fillText(trains.toString(), referenceHeight, referenceHeight * 0.84);
   }
 
-  const DrawTrainCardCount = (context: CanvasRenderingContext2D) => {
+  const drawTrainCardCount = (context: CanvasRenderingContext2D) => {
     context.drawImage(trainCardImage, referenceHeight * 1.35, referenceHeight * 0.475, referenceHeight * 0.2 * trainCardImage.width / trainCardImage.height, referenceHeight * 0.2);
     context.fillStyle = 'white';
     context.font = 'bold 1.2em roboto';
@@ -189,17 +236,17 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
     context.fillText(trainCards.length.toString(), referenceHeight * 1.72, referenceHeight * 0.58);
   }
 
-  const DrawDestinationCardCount = (context: CanvasRenderingContext2D) => {
+  const drawDestinationCardCount = (context: CanvasRenderingContext2D) => {
     context.drawImage(destinationCardImage, referenceHeight * 1.35, referenceHeight * 0.725, referenceHeight * 0.2 * destinationCardImage.width / destinationCardImage.height, referenceHeight * 0.2);
     context.fillStyle = 'white';
     context.font = 'bold 1.2em roboto';
     context.textAlign = 'left';
     context.textBaseline = 'middle';
-    context.fillText(props.player.destinationCards.length.toString(), referenceHeight * 1.72, referenceHeight * 0.835);
+    context.fillText(destinationCards.length.toString(), referenceHeight * 1.72, referenceHeight * 0.835);
   }
 
   const glow: any = {};
-  if (active) {
+  if (state !== PlayerState.Waiting) {
     glow['boxShadow'] = '0 0 4px 3px gold';
   }
 

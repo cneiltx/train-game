@@ -15,7 +15,8 @@ export const PlayerControls = (props: PlayerControlsProps) => {
   useEffect(() => {
     props.game.addEventListener('onGameStateChange', (e) => handleGameStateChange(e));
     return props.game.removeEventListener('onGameStateChange', handleGameStateChange);
-  }, [props.game]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleGameStateChange = (e: CustomEventInit<GameStateChangeEventArgs>) => {
     setGameState(e.detail!.state);
@@ -24,7 +25,8 @@ export const PlayerControls = (props: PlayerControlsProps) => {
   useEffect(() => {
     props.game.addEventListener('onPlayerStateChange', (e) => handlePlayerStateChange(e));
     return props.game.removeEventListener('onPlayerStateChange', handlePlayerStateChange);
-  }, [props.game]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePlayerStateChange = (e: CustomEventInit<PlayerStateChangeEventArgs>) => {
     if (e.detail!.player.name === props.game.localPlayer?.name) {
