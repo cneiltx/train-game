@@ -1,7 +1,8 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { GameController, GameStateChangeEventArgs, PlayerStateChangeEventArgs } from "../controllers/GameController";
+import { GameController, GameStateChangeEventArgs, PlayerStateChangeEventArgs, PlayersChangeEventArgs } from "../controllers/GameController";
 import { useEffect, useState } from "react";
 import { PlayerState } from "../model/PlayerState";
+import { GameState } from "../model/GameState";
 
 export interface PlayerControlsProps {
   game: GameController;
@@ -11,6 +12,7 @@ export interface PlayerControlsProps {
 export const PlayerControls = (props: PlayerControlsProps) => {
   const [gameState, setGameState] = useState(props.game.state);
   const [localPlayerState, setLocalPlayerState] = useState(props.game.localPlayer ? props.game.localPlayer.state : PlayerState.Waiting);
+  const [playerCount, setPlayerCount] = useState(props.game.players.length);
 
   useEffect(() => {
     props.game.addEventListener('onGameStateChange', (e) => handleGameStateChange(e));
@@ -34,16 +36,44 @@ export const PlayerControls = (props: PlayerControlsProps) => {
     }
   }
 
+  useEffect(() => {
+    props.game.addEventListener('onPlayersChange', (e) => handlePlayersChange(e));
+    return props.game.removeEventListener('onPlayersChange', handlePlayersChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handlePlayersChange = (e: CustomEventInit<PlayersChangeEventArgs>) => {
+    setPlayerCount(e.detail!.players.length);
+  }
+
+  const handleSelectDestinationCards = () => {
+
+  }
+
   return (
     <Box padding='1.5vh' {...props.extraProps} flexShrink={0} >
       <Typography variant='body2' sx={{ height: '100%', overflowY: 'auto', userSelect: 'none' }} >
-        <Stack spacing='1.5vh'>
+        {gameState === GameState.Initializing && <Stack spacing='1.5vh'>
           <Box>{`Game ID: ${props.game.gameID}`}</Box>
-          <Box>Waiting for players to join.</Box>
+          {playerCount < 5 ? <Box>Waiting for players to join.</Box> :
+            <Box>No more players can join.</Box>}
           <Box display='flex' justifyContent='center'>
-            <Button variant='outlined' size='small' onClick={() => props.game.startGame()}>Start Game</Button>
+            <Button variant='outlined' size='small' disabled={playerCount < 2} onClick={() => props.game.startGame()}>Start Game</Button>
           </Box>
-        </Stack>
+        </Stack>}
+        {gameState === GameState.Playing && localPlayerState === PlayerState.StartingTurn && <Stack spacing='1.5vh'>
+          <Box>Your turn!</Box>
+          <Box>Draw a train card, draw destination cards, or claim a route.</Box>
+        </Stack>}
+        {gameState === GameState.Playing && localPlayerState === PlayerState.DrawingTrainCards && <Stack spacing='1.5vh'>
+          <Box>Draw another train card.</Box>
+        </Stack>}
+        {gameState === GameState.Playing && localPlayerState === PlayerState.DrawingDestinationCards && <Stack spacing='1.5vh'>
+          <Box>Select 1 or more cards to keep.</Box>
+          <Box display='flex' justifyContent='center'>
+            <Button variant='outlined' size='small' disabled={false} onClick={handleSelectDestinationCards}>Keep Selected Cards</Button>
+          </Box>
+        </Stack>}
       </Typography>
     </Box>
   );

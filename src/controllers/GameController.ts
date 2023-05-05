@@ -292,6 +292,15 @@ export class GameController extends EventTarget {
     return drawnCard;
   }
 
+  drawDestinationCards() {
+    const cards = this._remoteGame.drawDestinationCards();
+    return cards;
+  }
+
+  discardDestinationCards(cards: DestinationCard[]) {
+    this._remoteGame.discardDestinationCards(cards);
+  }
+
   claimRoute(route: Route, cards: TrainCard[]) {
     this._remoteGame.claimRoute(route, cards);
   }

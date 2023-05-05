@@ -6,6 +6,8 @@ import { DestinationCardDeckChangeEventArgs, GameController, PlayerStateChangeEv
 import { useEffect, useState } from 'react';
 import { TrainCard } from '../model/TrainCard';
 import { PlayerState } from '../model/PlayerState';
+import { DestinationCard } from '../model/DestinationCard';
+import { DestinationDeckCard } from './DestinationDeckCard';
 
 export interface DrawCardAreaProps {
   game: GameController;
@@ -13,11 +15,14 @@ export interface DrawCardAreaProps {
 }
 
 export const DrawCardArea = (props: DrawCardAreaProps) => {
-  const cards = [];
+  const trainCards: JSX.Element[] = [];
+  const destinationCards: JSX.Element[] = [];
   const [trainCardDeck, setTrainCardDeck] = useState(props.game.trainCardDeck);
   const [faceUpTrainCards, setFaceUpTrainCards] = useState(props.game.faceUpTrainCards);
   const [destinationCardDeck, setDestinationCardDeck] = useState(props.game.destinationCardDeck);
   const [localPlayerState, setLocalPlayerState] = useState(props.game.localPlayer?.state);
+  const [drawnDestinationCards, setDrawnDestinationCards] = useState<DestinationCard[]>([]);
+  const [selectedDestinationCards, setSelectedDestinationCards] = useState<DestinationCard[]>([]);
 
   useEffect(() => {
     props.game.addEventListener('onTrainCardDeckChange', (e) => handleTrainCardDeckChange(e));
@@ -61,10 +66,27 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
     }
   }
 
+  const handleDestinationDeckClick = (cards: DestinationCard[]) => {
+    const drawnCards = props.game.drawDestinationCards();
+    setDrawnDestinationCards(drawnCards);
+  }
+
+  const handleDrawnDestinationCardClick = (card: DestinationCard) => {
+    const selectedIndex = selectedDestinationCards.findIndex(value => value.id === card.id);
+
+    if (selectedIndex >= 0) {
+      selectedDestinationCards.splice(selectedIndex, 1);
+    } else {
+      selectedDestinationCards.push(card);
+    }
+
+    setSelectedDestinationCards([...selectedDestinationCards]);
+  }
+
   let index = 0;
   for (const card of faceUpTrainCards) {
     if (card) {
-      cards.push(
+      trainCards.push(
         <TrainDeckCard
           key={card.id}
           card={card}
@@ -73,27 +95,45 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
           extraProps={{ height: '9vh', width: '14vh' }} />
       );
     } else {
-      cards.push(<Box key={`empty-${index}`} height='9vh' width='14vh' style={{ background: 'rgba(255, 255, 255, 0.2)', borderRadius: '10%' }} />);
+      trainCards.push(<Box key={`empty-${index}`} height='9vh' width='14vh' style={{ background: 'rgba(255, 255, 255, 0.2)', borderRadius: '10%' }} />);
     }
     index++;
   }
 
-  return (
-    <Stack padding='1.5vh' spacing='1.5vh' alignItems='center' {...props.extraProps}>
-      <TrainCardStack
-        key='trainDeck'
-        cards={trainCardDeck}
-        game={props.game}
-        extraProps={{ height: '9vh', width: '14vh' }} />
-      {cards}
-      <DestinationCardStack
-        key='destinationDeck'
-        cards={destinationCardDeck}
+  for (const card of drawnDestinationCards) {
+    destinationCards.push(
+      <DestinationDeckCard
+        key={card.id}
+        card={card}
+        faceUp={true}
         cities={props.game.map.cities}
-        faceUp={false}
-        canClick={localPlayerState !== PlayerState.Waiting}
-        onClick={() => { }}
+        canClick={true}
+        onClick={(card) => handleDrawnDestinationCardClick(card)}
+        selected={selectedDestinationCards.findIndex(value => value.id === card.id) >= 0}
         extraProps={{ height: '9vh', width: '14vh' }} />
-    </Stack>
+    );
+  }
+
+  return (
+    localPlayerState === PlayerState.DrawingDestinationCards ?
+      <Stack padding='1.5vh' spacing='1.5vh' alignItems='center' {...props.extraProps}>
+        {destinationCards}
+      </Stack> :
+      <Stack padding='1.5vh' spacing='1.5vh' alignItems='center' {...props.extraProps}>
+        <TrainCardStack
+          key='trainDeck'
+          cards={trainCardDeck}
+          game={props.game}
+          extraProps={{ height: '9vh', width: '14vh' }} />
+        {trainCards}
+        <DestinationCardStack
+          key='destinationDeck'
+          cards={destinationCardDeck}
+          cities={props.game.map.cities}
+          faceUp={false}
+          canClick={localPlayerState === PlayerState.StartingTurn}
+          onClick={handleDestinationDeckClick}
+          extraProps={{ height: '9vh', width: '14vh' }} />
+      </Stack>
   );
 }

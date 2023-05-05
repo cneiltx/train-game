@@ -21,7 +21,7 @@ export const PlayersArea = (props: PlayersAreaProps) => {
     setPlayers([...e.detail!.players]);
   }
 
-  const playerList = [];
+  const playerList: JSX.Element[] = [];
 
   for (const player of players) {
     playerList.push(<PlayerSummary key={player.name} game={props.game} player={player} extraProps={{ height: '13vh', width: '26vh' }} />);

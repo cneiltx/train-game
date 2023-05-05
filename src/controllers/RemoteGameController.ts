@@ -134,6 +134,7 @@ export class RemoteGameController extends EventTarget {
   readonly map: GameMap;
   readonly messages: string[] = [];
   private _state = GameState.Initializing;
+  private _drawnDestinationCards: DestinationCard[] = [];
 
   constructor(gameID: string, map: GameMaps) {
     super();
@@ -176,6 +177,16 @@ export class RemoteGameController extends EventTarget {
     if (prevPlayer) {
       const prevIndex = this.players.findIndex(value => value.name === prevPlayer.name);
 
+      if (prevPlayer.state === PlayerState.DrawingDestinationCards) {
+        prevPlayer.destinationCards.push(...this._drawnDestinationCards);
+        this.dispatch('onPlayerDestinationCardsChange', new PlayerDestinationCardsChangeEventArgs(prevPlayer, prevPlayer.destinationCards));
+        this.addMessage(`${this.activePlayer?.name} took ${this._drawnDestinationCards.length} destination cards.`);
+        this._drawnDestinationCards = [];
+      }
+
+      prevPlayer.state = PlayerState.Waiting;
+      this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(prevPlayer, prevPlayer.state));
+
       if (prevIndex >= 0 && prevIndex < this.players.length - 1) {
         nextPlayer = this.players[prevIndex + 1];
       } else {
@@ -185,10 +196,9 @@ export class RemoteGameController extends EventTarget {
       nextPlayer = this.players[0];
     }
 
-    if (prevPlayer) prevPlayer.state = PlayerState.Waiting;
+    this._drawnDestinationCards = [];
     nextPlayer.state = PlayerState.StartingTurn;
     this.addMessage(`It is now ${nextPlayer.name}'s turn.`);
-    if (prevPlayer) this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(prevPlayer, prevPlayer.state));
     this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(nextPlayer, nextPlayer.state));
   }
 
@@ -200,6 +210,10 @@ export class RemoteGameController extends EventTarget {
     }
 
     this.dispatch('onMessagesChange', new MessagesChangeEventArgs(this.messages));
+  }
+
+  availableTrainCardCount() {
+    return this.trainCardDeck.length + this.faceUpTrainCards.filter(value => value).length + this.discardedTrainCards.length;
   }
 
   join(name: string, avatar: string) {
@@ -245,6 +259,13 @@ export class RemoteGameController extends EventTarget {
         this.activePlayer.trainCards.push(card);
         this.addMessage(`${this.activePlayer.name} drew a train card from the deck.`);
         this.dispatch('onPlayerTrainCardsChange', new PlayerTrainCardsChangeEventArgs(this.activePlayer, this.activePlayer.trainCards));
+
+        if (this.activePlayer.state === PlayerState.StartingTurn && this.availableTrainCardCount() > 0) {
+          this.activePlayer.state = PlayerState.DrawingTrainCards;
+          this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(this.activePlayer, this.activePlayer.state));
+        } else {
+          this.nextPlayer();
+        }
       }
 
       return card;
@@ -259,15 +280,65 @@ export class RemoteGameController extends EventTarget {
         this.activePlayer.trainCards.push(card);
         const newCard = this.drawTrainCard();
         this.faceUpTrainCards[index] = newCard;
+
+        let shuffleAttempts = 20;
+        while (shuffleAttempts > 0 && this.faceUpTrainCards.filter(value => value?.color === TrainCardColor.Rainbow).length > 2) {
+          for (let i = 0; i < 5; i++) {
+            const card = this.drawTrainCard();
+            this.faceUpTrainCards[i] = card;
+          }
+          shuffleAttempts--;
+        }
+
         this.addMessage(`${this.activePlayer.name} drew a${'aeiou'.includes(EnumFunctions.getName(card.color)[0]) ? 'n' : ''} `.concat(
           `${EnumFunctions.getName(card.color)} face up train card.`));
         this.dispatch('onFaceUpTrainCardsChange', new FaceUpTrainCardsChangeEventArgs(this.faceUpTrainCards));
         this.dispatch('onPlayerTrainCardsChange', new PlayerTrainCardsChangeEventArgs(this.activePlayer, this.activePlayer.trainCards));
+
+        if (this.activePlayer.state === PlayerState.StartingTurn && card.color !== TrainCardColor.Rainbow && this.availableTrainCardCount() > 0) {
+          this.activePlayer.state = PlayerState.DrawingTrainCards;
+          this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(this.activePlayer, this.activePlayer.state));
+        } else {
+          this.nextPlayer();
+        }
+
         return card;
       } else {
         return undefined;
       }
     }
+  }
+
+  drawDestinationCards() {
+    this._drawnDestinationCards = [];
+
+    if (this.activePlayer) {
+      this.activePlayer.state = PlayerState.DrawingDestinationCards;
+      this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(this.activePlayer, this.activePlayer.state));
+
+      for (let draws = 0; draws < 3; draws++) {
+        const card = this.drawDestinationCard();
+
+        if (card) {
+          this._drawnDestinationCards.push(card);
+        }
+      }
+    }
+
+    return this._drawnDestinationCards;
+  }
+
+  discardDestinationCards(cards: DestinationCard[]) {
+    for (let index = this._drawnDestinationCards.length - 1; index >= 0; index--) {
+      const card = this._drawnDestinationCards[index];
+
+      if (cards.find(value => value.id === card.id)) {
+        this.destinationCardDeck.unshift(card);
+        this._drawnDestinationCards.splice(index, 1);
+      }
+    }
+
+    this.nextPlayer();
   }
 
   claimRoute(route: Route, cards: TrainCard[]) {

@@ -11,7 +11,7 @@ export type LocalDestinationCardsProps = {
 }
 
 export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
-  const destinationCards = [];
+  const destinationCards: JSX.Element[] = [];
   const [selectedCard, setSelectedCard] = useState<DestinationCard | null>(null);
   const [localPlayerDestinationCards, setLocalPlayerDestinationCards] = useState(props.game.localPlayer?.destinationCards);
 

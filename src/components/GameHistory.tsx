@@ -20,7 +20,7 @@ export const GameHistory = (props: GameHistoryProps) => {
     setMessages([...e.detail!.messages].reverse());
   }
 
-  const messageList = [];
+  const messageList: JSX.Element[] = [];
   let index = messages.length - 1;
   for (const message of messages) {
     messageList.push(
