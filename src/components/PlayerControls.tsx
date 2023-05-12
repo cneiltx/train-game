@@ -46,10 +46,6 @@ export const PlayerControls = (props: PlayerControlsProps) => {
     setPlayerCount(e.detail!.players.length);
   }
 
-  const handleSelectDestinationCards = () => {
-
-  }
-
   return (
     <Box padding='1.5vh' {...props.extraProps} flexShrink={0} >
       <Typography variant='body2' sx={{ height: '100%', overflowY: 'auto', userSelect: 'none' }} >
@@ -67,12 +63,6 @@ export const PlayerControls = (props: PlayerControlsProps) => {
         </Stack>}
         {gameState === GameState.Playing && localPlayerState === PlayerState.DrawingTrainCards && <Stack spacing='1.5vh'>
           <Box>Draw another train card.</Box>
-        </Stack>}
-        {gameState === GameState.Playing && localPlayerState === PlayerState.DrawingDestinationCards && <Stack spacing='1.5vh'>
-          <Box>Select 1 or more cards to keep.</Box>
-          <Box display='flex' justifyContent='center'>
-            <Button variant='outlined' size='small' disabled={false} onClick={handleSelectDestinationCards}>Keep Selected Cards</Button>
-          </Box>
         </Stack>}
       </Typography>
     </Box>

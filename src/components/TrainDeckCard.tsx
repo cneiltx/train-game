@@ -109,19 +109,26 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   }
 
   const handleClick = () => {
-    switch (props.mode) {
-      case 'drawDeck':
-        props.game.drawTrainCardFromDeck();
-        break;
-      case 'drawFaceUp':
-        props.game.drawFaceUpTrainCard(props.card);
-        break;
+    if (canClick()) {
+      switch (props.mode) {
+        case 'drawDeck':
+          props.game.drawTrainCardFromDeck();
+          break;
+        case 'drawFaceUp':
+          props.game.drawFaceUpTrainCard(props.card);
+          break;
+      }
     }
   }
 
+  const canClick = () => {
+    return props.mode === 'drawDeck' && (localPlayerState === PlayerState.StartingTurn || localPlayerState === PlayerState.DrawingTrainCards)
+      || props.mode === 'drawFaceUp' && (localPlayerState === PlayerState.StartingTurn
+        || (localPlayerState === PlayerState.DrawingTrainCards && props.card.color !== TrainCardColor.Rainbow))
+  }
+
   const style = { ...props.extraProps?.style };
-  if ((localPlayerState === PlayerState.StartingTurn || localPlayerState === PlayerState.DrawingTrainCards)
-    && (props.mode === 'drawFaceUp' || props.mode === 'drawDeck')) {
+  if (canClick()) {
     style['cursor'] = 'pointer';
   }
 

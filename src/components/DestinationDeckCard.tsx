@@ -4,12 +4,13 @@ import { Box, Fade } from "@mui/material";
 import { useEffect, useRef, useState } from 'react';
 import { DestinationCard } from '../model/DestinationCard';
 import { City } from '../model/City';
+import { GameController, PlayerStateChangeEventArgs } from '../controllers/GameController';
+import { PlayerState } from '../model/PlayerState';
 
 export type DestinationDeckCardProps = {
   card: DestinationCard;
-  faceUp: boolean;
-  cities: City[];
-  canClick?: boolean;
+  game: GameController;
+  mode: 'drawDeck' | 'drawFaceUp' | 'playerHand';
   onClick?: (card: DestinationCard) => void;
   selected?: boolean;
   extraProps?: any;
@@ -19,16 +20,29 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const image = new Image();
   const [fade, setFade] = useState(false);
+  const [localPlayerState, setLocalPlayerState] = useState(props.game.localPlayer?.state);
 
   useEffect(() => {
     setFade(true);
   }, []);
 
   useEffect(() => {
-    if (props.faceUp) {
-      image.src = cardFront;
-    } else {
+    props.game.addEventListener('onPlayerStateChange', (e) => handlePlayerStateChange(e));
+    return props.game.removeEventListener('onPlayerStateChange', handlePlayerStateChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handlePlayerStateChange = (e: CustomEventInit<PlayerStateChangeEventArgs>) => {
+    if (e.detail!.player.name === props.game.localPlayer?.name) {
+      setLocalPlayerState(e.detail!.state);
+    }
+  }
+
+  useEffect(() => {
+    if (props.mode === 'drawDeck') {
       image.src = cardBack;
+    } else {
+      image.src = cardFront;
     }
 
     window.addEventListener('resize', onResize);
@@ -57,9 +71,9 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   const drawCard = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
     drawBackground(canvas, context);
 
-    if (props.faceUp) {
-      const city1 = props.cities.find((item) => item.city === props.card.city1);
-      const city2 = props.cities.find((item) => item.city === props.card.city2);
+    if (props.mode !== 'drawDeck') {
+      const city1 = props.game.map.cities.find((item) => item.city === props.card.city1);
+      const city2 = props.game.map.cities.find((item) => item.city === props.card.city2);
 
       if (city1 && city2) {
         drawTitle(context, city1, city2);
@@ -93,7 +107,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   const drawCities = (context: CanvasRenderingContext2D) => {
     const cityRadius = 1.1;
     context.fillStyle = 'indianred';
-    props.cities.forEach((city) => {
+    props.game.map.cities.forEach((city) => {
       context.beginPath();
       let [x, y] = [city.cardX, city.cardY];
       context.arc(x, y, cityRadius, 0, 2 * Math.PI);
@@ -150,13 +164,27 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   }
 
   const handleClick = () => {
-    if (props.onClick) {
+    if (canClick() && props.onClick) {
       props.onClick(props.card);
     }
   }
 
+  const handleMouseEnter = () => {
+    if (props.mode === 'drawFaceUp') {
+    }
+  }
+
+  const handleMouseLeave = () => {
+    if (props.mode === 'drawFaceUp') {
+    }
+  }
+
+  const canClick = () => {
+    return props.mode === 'drawFaceUp' || props.mode === 'playerHand' || props.mode === 'drawDeck' && localPlayerState === PlayerState.StartingTurn;
+  }
+
   const style = { ...props.extraProps?.style };
-  if (props.canClick) {
+  if (canClick()) {
     style['cursor'] = 'pointer';
   }
 
@@ -165,7 +193,14 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
 
   return (
     <Fade in={fade} timeout={750}>
-      <Box component='canvas' {...newProps} ref={canvasRef} onClick={handleClick} sx={{ maxHeight: '100%', maxWidth: '100%' }} />
+      <Box
+        component='canvas'
+        {...newProps}
+        ref={canvasRef}
+        onClick={handleClick}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        sx={{ maxHeight: '100%', maxWidth: '100%' }} />
     </Fade>
   );
 }

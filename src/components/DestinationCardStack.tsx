@@ -2,12 +2,11 @@ import { Box } from "@mui/material";
 import { DestinationCard } from "../model/DestinationCard";
 import { DestinationDeckCard } from "./DestinationDeckCard";
 import { City } from "../model/City";
+import { GameController } from "../controllers/GameController";
 
 export interface DestinationCardStackProps {
   cards: DestinationCard[];
-  faceUp: boolean;
-  cities: City[];
-  canClick?: boolean;
+  game: GameController;
   onClick?: (card: DestinationCard[]) => void;
   extraProps?: any;
 }
@@ -25,9 +24,8 @@ export const DestinationCardStack = (props: DestinationCardStackProps) => {
     return (
       <DestinationDeckCard
         card={props.cards[0]}
-        cities={props.cities}
-        faceUp={props.faceUp}
-        canClick={props.canClick}
+        game={props.game}
+        mode='drawDeck'
         onClick={handleClick}
         extraProps={props.extraProps} />
     );
@@ -37,9 +35,8 @@ export const DestinationCardStack = (props: DestinationCardStackProps) => {
     return (
       <DestinationDeckCard
         card={props.cards[0]}
-        cities={props.cities}
-        faceUp={props.faceUp}
-        canClick={props.canClick}
+        game={props.game}
+        mode='drawDeck'
         onClick={handleClick}
         extraProps={newProps} />
     );

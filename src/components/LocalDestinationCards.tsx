@@ -59,10 +59,9 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
       <DestinationDeckCard
         key={card.id}
         card={card}
-        cities={props.game.map.cities}
-        faceUp={true}
+        game={props.game}
+        mode='playerHand'
         selected={card.id === selectedCard?.id}
-        canClick={true}
         onClick={handleCardClick}
         extraProps={{ height: '12vh' }} />
     );

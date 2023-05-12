@@ -1,5 +1,5 @@
 import { TrainDeckCard } from './TrainDeckCard';
-import { Box, Stack } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import { TrainCardStack } from './TrainCardStack';
 import { DestinationCardStack } from './DestinationCardStack';
 import { DestinationCardDeckChangeEventArgs, GameController, PlayerStateChangeEventArgs, TrainCardDeckChangeEventArgs } from '../controllers/GameController';
@@ -105,19 +105,27 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
       <DestinationDeckCard
         key={card.id}
         card={card}
-        faceUp={true}
-        cities={props.game.map.cities}
-        canClick={true}
+        game={props.game}
+        mode='drawFaceUp'
         onClick={(card) => handleDrawnDestinationCardClick(card)}
         selected={selectedDestinationCards.findIndex(value => value.id === card.id) >= 0}
         extraProps={{ height: '9vh', width: '14vh' }} />
     );
   }
 
+  const handleSelectDestinationCards = () => {
+    const discards = drawnDestinationCards.filter(drawnCard => !selectedDestinationCards.find(selectedCard => selectedCard.id === drawnCard.id));
+    props.game.discardDestinationCards(discards);
+  }
+
   return (
     localPlayerState === PlayerState.DrawingDestinationCards ?
       <Stack padding='1.5vh' spacing='1.5vh' alignItems='center' {...props.extraProps}>
         {destinationCards}
+        <Box>Select 1 or more cards.</Box>
+        <Box display='flex' justifyContent='center'>
+          <Button variant='outlined' size='small' disabled={selectedDestinationCards.length === 0} onClick={handleSelectDestinationCards}>Select</Button>
+        </Box>
       </Stack> :
       <Stack padding='1.5vh' spacing='1.5vh' alignItems='center' {...props.extraProps}>
         <TrainCardStack
@@ -129,9 +137,7 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
         <DestinationCardStack
           key='destinationDeck'
           cards={destinationCardDeck}
-          cities={props.game.map.cities}
-          faceUp={false}
-          canClick={localPlayerState === PlayerState.StartingTurn}
+          game={props.game}
           onClick={handleDestinationDeckClick}
           extraProps={{ height: '9vh', width: '14vh' }} />
       </Stack>
