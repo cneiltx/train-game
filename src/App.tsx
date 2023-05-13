@@ -27,6 +27,15 @@ export function App() {
     },
   });
 
+  const roboto300 = new FontFace('roboto', '@fontsource/roboto/300.css');
+  document.fonts.add(roboto300);
+  const roboto400 = new FontFace('roboto', '@fontsource/roboto/400.css');
+  document.fonts.add(roboto400);
+  const roboto500 = new FontFace('roboto', '@fontsource/roboto/500.css');
+  document.fonts.add(roboto500);
+  const roboto700 = new FontFace('roboto', '@fontsource/roboto/700.css');
+  document.fonts.add(roboto700);
+
   return (
     <ThemeProvider theme={darkTheme}>
       <GlobalStyles styles={{ ...darkScrollbar() }} />
