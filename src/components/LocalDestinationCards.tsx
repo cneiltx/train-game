@@ -4,9 +4,10 @@ import { DestinationCard } from '../model/DestinationCard';
 import { useEffect, useState } from 'react';
 import { GameController, PlayerDestinationCardsChangeEventArgs } from '../controllers/GameController';
 
-export type LocalDestinationCardsProps = {
+export interface LocalDestinationCardsProps {
   game: GameController;
-  onSelectedCardChange?: (card: DestinationCard | null) => void;
+  onCardMouseEnter?: (card: DestinationCard) => void;
+  onCardMouseLeave?: (card: DestinationCard) => void;
   extraProps?: any;
 }
 
@@ -27,19 +28,15 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
     }
   }
 
-  const handleCardClick = (card: DestinationCard) => {
-    let newSelection: DestinationCard | null;
-
-    if (card.id === selectedCard?.id) {
-      newSelection = null;
-    } else {
-      newSelection = card;
+  const handleMouseEnter = (card: DestinationCard) => {
+    if (props.onCardMouseEnter) {
+      props.onCardMouseEnter(card);
     }
+  }
 
-    setSelectedCard(newSelection);
-
-    if (props.onSelectedCardChange) {
-      props.onSelectedCardChange(newSelection);
+  const handleMouseLeave = (card: DestinationCard) => {
+    if (props.onCardMouseLeave) {
+      props.onCardMouseLeave(card);
     }
   }
 
@@ -61,8 +58,8 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
         card={card}
         game={props.game}
         mode='playerHand'
-        selected={card.id === selectedCard?.id}
-        onClick={handleCardClick}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         extraProps={{ height: '12vh' }} />
     );
   }

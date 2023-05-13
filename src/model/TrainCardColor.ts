@@ -4,7 +4,7 @@ export enum TrainCardColor {
   Green,
   Orange,
   Purple,
-  Rainbow,
+  Wild,
   Red,
   White,
   Yellow,

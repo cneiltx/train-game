@@ -4,7 +4,7 @@ import { GameController, PlayerTrainCardsChangeEventArgs } from '../controllers/
 import { useEffect, useState } from 'react';
 import { TrainCard } from '../model/TrainCard';
 
-export type LocalTrainCardsProps = {
+export interface LocalTrainCardsProps {
   game: GameController;
   extraProps?: any;
 }

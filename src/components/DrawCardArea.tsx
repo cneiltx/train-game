@@ -1,5 +1,5 @@
 import { TrainDeckCard } from './TrainDeckCard';
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { TrainCardStack } from './TrainCardStack';
 import { DestinationCardStack } from './DestinationCardStack';
 import { DestinationCardDeckChangeEventArgs, GameController, PlayerStateChangeEventArgs, TrainCardDeckChangeEventArgs } from '../controllers/GameController';
@@ -11,6 +11,8 @@ import { DestinationDeckCard } from './DestinationDeckCard';
 
 export interface DrawCardAreaProps {
   game: GameController;
+  onDrawnDestinationCardMouseEnter?: (card: DestinationCard) => void;
+  onDrawnDestinationCardMouseLeave?: (card: DestinationCard) => void;
   extraProps?: any;
 }
 
@@ -83,6 +85,18 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
     setSelectedDestinationCards([...selectedDestinationCards]);
   }
 
+  const handleDrawnDestinationCardMouseEnter = (card: DestinationCard) => {
+    if (props.onDrawnDestinationCardMouseEnter) {
+      props.onDrawnDestinationCardMouseEnter(card);
+    }
+  }
+
+  const handleDrawnDestinationCardMouseLeave = (card: DestinationCard) => {
+    if (props.onDrawnDestinationCardMouseLeave) {
+      props.onDrawnDestinationCardMouseLeave(card);
+    }
+  }
+
   let index = 0;
   for (const card of faceUpTrainCards) {
     if (card) {
@@ -107,7 +121,9 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
         card={card}
         game={props.game}
         mode='drawFaceUp'
-        onClick={(card) => handleDrawnDestinationCardClick(card)}
+        onClick={handleDrawnDestinationCardClick}
+        onMouseEnter={handleDrawnDestinationCardMouseEnter}
+        onMouseLeave={handleDrawnDestinationCardMouseLeave}
         selected={selectedDestinationCards.findIndex(value => value.id === card.id) >= 0}
         extraProps={{ height: '9vh', width: '14vh' }} />
     );
@@ -120,13 +136,15 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
 
   return (
     localPlayerState === PlayerState.DrawingDestinationCards ?
-      <Stack padding='1.5vh' spacing='1.5vh' alignItems='center' {...props.extraProps}>
-        {destinationCards}
-        <Box>Select 1 or more cards.</Box>
-        <Box display='flex' justifyContent='center'>
-          <Button variant='outlined' size='small' disabled={selectedDestinationCards.length === 0} onClick={handleSelectDestinationCards}>Select</Button>
-        </Box>
-      </Stack> :
+      <Typography variant='body2' sx={{ userSelect: 'none' }} {...props.extraProps}>
+        <Stack padding='1.5vh' spacing='1.5vh' alignItems='center' >
+          {destinationCards}
+          <Box>Select 1 or more cards.</Box>
+          <Box display='flex' justifyContent='center'>
+            <Button variant='outlined' size='small' disabled={selectedDestinationCards.length === 0} onClick={handleSelectDestinationCards}>Select</Button>
+          </Box>
+        </Stack>
+      </Typography> :
       <Stack padding='1.5vh' spacing='1.5vh' alignItems='center' {...props.extraProps}>
         <TrainCardStack
           key='trainDeck'

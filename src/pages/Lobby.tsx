@@ -5,7 +5,7 @@ import { LobbyController } from '../controllers/LobbyController';
 import bwTrain from '../images/backgrounds/bw-train-building.jpeg';
 import { GameMaps } from '../model/GameMaps';
 
-export type LobbyProps = {
+export interface LobbyProps {
   lobby: LobbyController;
   onCreateGame: (game: GameController) => void;
   onJoinGame: (game: GameController) => void;

@@ -33,7 +33,7 @@ export class EnumFunctions {
         return 'orange';
       case TrainCardColor.Purple:
         return 'purple';
-      case TrainCardColor.Rainbow:
+      case TrainCardColor.Wild:
         return 'rainbow';
       case TrainCardColor.Red:
         return 'red';

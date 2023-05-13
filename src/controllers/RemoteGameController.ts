@@ -282,7 +282,7 @@ export class RemoteGameController extends EventTarget {
         this.faceUpTrainCards[index] = newCard;
 
         let shuffleAttempts = 20;
-        while (shuffleAttempts > 0 && this.faceUpTrainCards.filter(value => value?.color === TrainCardColor.Rainbow).length > 2) {
+        while (shuffleAttempts > 0 && this.faceUpTrainCards.filter(value => value?.color === TrainCardColor.Wild).length > 2) {
           for (let i = 0; i < 5; i++) {
             const card = this.drawTrainCard();
             this.faceUpTrainCards[i] = card;
@@ -295,7 +295,7 @@ export class RemoteGameController extends EventTarget {
         this.dispatch('onFaceUpTrainCardsChange', new FaceUpTrainCardsChangeEventArgs(this.faceUpTrainCards));
         this.dispatch('onPlayerTrainCardsChange', new PlayerTrainCardsChangeEventArgs(this.activePlayer, this.activePlayer.trainCards));
 
-        if (this.activePlayer.state === PlayerState.StartingTurn && card.color !== TrainCardColor.Rainbow && this.availableTrainCardCount() > 0) {
+        if (this.activePlayer.state === PlayerState.StartingTurn && card.color !== TrainCardColor.Wild && this.availableTrainCardCount() > 0) {
           this.activePlayer.state = PlayerState.DrawingTrainCards;
           this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(this.activePlayer, this.activePlayer.state));
         } else {
@@ -398,8 +398,8 @@ export class RemoteGameController extends EventTarget {
       }
     }
 
-    this.trainCardDeck.push(new TrainCard(id++, TrainCardColor.Rainbow));
-    this.trainCardDeck.push(new TrainCard(id++, TrainCardColor.Rainbow));
+    this.trainCardDeck.push(new TrainCard(id++, TrainCardColor.Wild));
+    this.trainCardDeck.push(new TrainCard(id++, TrainCardColor.Wild));
     this.shuffle(this.trainCardDeck);
   }
 

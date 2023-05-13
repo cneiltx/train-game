@@ -5,15 +5,19 @@ import greenCar from '../images/train-cars/car-green.png';
 import redCar from '../images/train-cars/car-red.png';
 import yellowCar from '../images/train-cars/car-yellow.png';
 import { Route } from '../model/Route';
-import { RouteColor } from '../model/RouteColor';
 import { TrainColor } from '../model/TrainColor';
 import { Box } from '@mui/material';
 import { Cities } from '../model/Cities';
 import { GameController } from '../controllers/GameController';
+import { RouteSegment } from '../model/RouteSegment';
+import { PlayerState } from '../model/PlayerState';
+import { TrainCardColor } from '../model/TrainCardColor';
 
-export type GameboardProps = {
+export interface GameboardProps {
   game: GameController;
   highlightCities?: Cities[];
+  highlightRoute?: Route | null;
+  onRouteSelected?: (route: Route) => void;
   extraProps?: any;
 }
 
@@ -37,7 +41,7 @@ export const Gameboard = (props: GameboardProps) => {
     }
     return () => window.removeEventListener('resize', onResize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.highlightCities]);
+  }, [props.highlightCities, props.highlightRoute]);
 
   const onResize = () => {
     const canvas = canvasRef.current;
@@ -51,9 +55,6 @@ export const Gameboard = (props: GameboardProps) => {
   const drawMap = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.save();
-    context.fillStyle = 'white';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.globalAlpha = 0.7;
     context.drawImage(image, 0, 0, canvas.width, canvas.height);
     context.restore();
     drawRoutes(context);
@@ -63,7 +64,7 @@ export const Gameboard = (props: GameboardProps) => {
   const drawRoutes = (context: CanvasRenderingContext2D) => {
     for (const route of props.game.map.routes) {
       for (const segment of route.segments) {
-        drawRouteSegment(context, segment.x, segment.y, segment.angle, route.color, route.segmentLength);
+        drawRouteSegment(context, segment, route);
       }
     }
   }
@@ -95,10 +96,10 @@ export const Gameboard = (props: GameboardProps) => {
       }
 
       const fontSize = 19;
-      context.strokeStyle = 'white';
+      context.strokeStyle = 'black';
       context.font = `bold ${fontSize}px roboto`;
-      context.lineWidth = 3;
-      context.fillStyle = 'black';
+      context.lineWidth = 5;
+      context.fillStyle = 'white';
       context.textAlign = city.printAlign;
       context.textBaseline = 'middle';
       const lines = city.mapName.split('\n');
@@ -112,54 +113,55 @@ export const Gameboard = (props: GameboardProps) => {
     }
   }
 
-  const drawRouteSegment = (context: CanvasRenderingContext2D, x: number, y: number, angle: number, color: RouteColor, carLength: number) => {
+  const drawRouteSegment = (context: CanvasRenderingContext2D, segment: RouteSegment, route: Route) => {
     context.save();
 
-    switch (color) {
-      case RouteColor.Grey:
-        context.strokeStyle = 'floralwhite';
+    switch (route.color) {
+      case TrainCardColor.Wild:
+        context.strokeStyle = route.id === props.highlightRoute?.id ? 'yellow' : 'gainsboro';
         context.fillStyle = 'dimgrey';
         break;
-      case RouteColor.Black:
-        context.strokeStyle = 'floralwhite';
+      case TrainCardColor.Black:
+        context.strokeStyle = route.id === props.highlightRoute?.id ? 'yellow' : 'gainsboro';
         context.fillStyle = 'black';
         break;
-      case RouteColor.White:
-        context.strokeStyle = 'dimgrey';
+      case TrainCardColor.White:
+        context.strokeStyle = route.id === props.highlightRoute?.id ? 'blue' : 'dimgrey';
         context.fillStyle = 'floralwhite';
         break;
-      case RouteColor.Red:
-        context.strokeStyle = 'floralwhite';
+      case TrainCardColor.Red:
+        context.strokeStyle = route.id === props.highlightRoute?.id ? 'yellow' : 'gainsboro';
         context.fillStyle = 'firebrick';
         break;
-      case RouteColor.Yellow:
-        context.strokeStyle = 'dimgrey';
+      case TrainCardColor.Yellow:
+        context.strokeStyle = route.id === props.highlightRoute?.id ? 'blue' : 'dimgrey';
         context.fillStyle = 'gold';
         break;
-      case RouteColor.Blue:
-        context.strokeStyle = 'floralwhite';
+      case TrainCardColor.Blue:
+        context.strokeStyle = route.id === props.highlightRoute?.id ? 'yellow' : 'gainsboro';
         context.fillStyle = 'royalblue';
         break;
-      case RouteColor.Orange:
-        context.strokeStyle = 'dimgrey';
+      case TrainCardColor.Orange:
+        context.strokeStyle = route.id === props.highlightRoute?.id ? 'blue' : 'gainsboro';
         context.fillStyle = 'orange';
         break;
-      case RouteColor.Green:
-        context.strokeStyle = 'floralwhite';
+      case TrainCardColor.Green:
+        context.strokeStyle = route.id === props.highlightRoute?.id ? 'yellow' : 'gainsboro';
         context.fillStyle = 'mediumseagreen';
         break;
-      case RouteColor.Pink:
-        context.strokeStyle = 'floralwhite';
+      case TrainCardColor.Purple:
+        context.strokeStyle = route.id === props.highlightRoute?.id ? 'yellow' : 'gainsboro';
         context.fillStyle = 'palevioletred';
         break;
     }
 
-    context.lineWidth = 4
-    context.translate(x, y);
-    context.rotate(angle * Math.PI / 180);
+    context.lineWidth = route.id === props.highlightRoute?.id ? 8 : 4;
+    context.translate(segment.x, segment.y);
+    context.rotate(segment.angle * Math.PI / 180);
+    context.globalAlpha = 1;
+    context.strokeRect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
     context.globalAlpha = 0.55;
-    context.strokeRect(-carLength / 2, -carWidth / 2, carLength, carWidth);
-    context.fillRect(-carLength / 2, -carWidth / 2, carLength, carWidth);
+    context.fillRect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
     context.restore();
   }
 
@@ -194,23 +196,27 @@ export const Gameboard = (props: GameboardProps) => {
   }
 
   const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
+    if (canClick()) {
+      const canvas = canvasRef.current;
 
-    if (canvas) {
-      const context = canvas.getContext('2d')!;
-      const canvasCoords = toCanvasCoords(canvas, e.pageX, e.pageY);
+      if (canvas) {
+        const context = canvas.getContext('2d')!;
+        const canvasCoords = toCanvasCoords(canvas, e.pageX, e.pageY);
 
-      for (const route of props.game.map.routes.filter((value) => value.train === null)) {
-        for (const segment of route.segments) {
-          context.save();
-          context.translate(segment.x, segment.y);
-          context.rotate(segment.angle * Math.PI / 180);
-          context.beginPath();
-          context.rect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
-          if (context.isPointInPath(canvasCoords.x, canvasCoords.y)) {
-
+        for (const route of props.game.map.routes.filter((value) => value.train === null)) {
+          for (const segment of route.segments) {
+            context.save();
+            context.translate(segment.x, segment.y);
+            context.rotate(segment.angle * Math.PI / 180);
+            context.beginPath();
+            context.rect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
+            if (context.isPointInPath(canvasCoords.x, canvasCoords.y)) {
+              if (props.onRouteSelected) {
+                props.onRouteSelected(route);
+              }
+            }
+            context.restore();
           }
-          context.restore();
         }
       }
     }
@@ -225,9 +231,18 @@ export const Gameboard = (props: GameboardProps) => {
     return { x: x, y: y };
   }
 
+  const canClick = () => {
+    return props.game.localPlayer?.state === PlayerState.StartingTurn;
+  }
+
+  const style: any = {};
+  if (canClick()) {
+    style['cursor'] = 'pointer';
+  }
+
   return (
     <Box padding='1.5vh' {...props.extraProps} textAlign='center' >
-      <Box component='canvas' ref={canvasRef} onClick={handleClick} sx={{ maxHeight: '100%', maxWidth: '100%' }} />
+      <Box component='canvas' ref={canvasRef} onClick={handleClick} style={style} sx={{ maxHeight: '100%', maxWidth: '100%' }} />
     </Box>
   );
 }

@@ -7,11 +7,13 @@ import { City } from '../model/City';
 import { GameController, PlayerStateChangeEventArgs } from '../controllers/GameController';
 import { PlayerState } from '../model/PlayerState';
 
-export type DestinationDeckCardProps = {
+export interface DestinationDeckCardProps {
   card: DestinationCard;
   game: GameController;
   mode: 'drawDeck' | 'drawFaceUp' | 'playerHand';
   onClick?: (card: DestinationCard) => void;
+  onMouseEnter?: (card: DestinationCard) => void;
+  onMouseLeave?: (card: DestinationCard) => void;
   selected?: boolean;
   extraProps?: any;
 }
@@ -170,22 +172,28 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   }
 
   const handleMouseEnter = () => {
-    if (props.mode === 'drawFaceUp') {
+    if (props.onMouseEnter) {
+      props.onMouseEnter(props.card);
     }
   }
 
   const handleMouseLeave = () => {
-    if (props.mode === 'drawFaceUp') {
+    if (props.onMouseLeave) {
+      props.onMouseLeave(props.card);
     }
   }
 
   const canClick = () => {
-    return props.mode === 'drawFaceUp' || props.mode === 'playerHand' || props.mode === 'drawDeck' && localPlayerState === PlayerState.StartingTurn;
+    return props.mode === 'drawFaceUp' || props.mode === 'drawDeck' && localPlayerState === PlayerState.StartingTurn;
   }
 
   const style = { ...props.extraProps?.style };
   if (canClick()) {
     style['cursor'] = 'pointer';
+  } else {
+    if (props.mode !== 'playerHand' && localPlayerState !== PlayerState.Waiting) {
+      style['filter'] = 'brightness(0.4)';
+    }
   }
 
   const newProps = { ...props.extraProps };

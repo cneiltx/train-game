@@ -3,7 +3,7 @@ import { TrainCard } from "../model/TrainCard";
 import { TrainDeckCard } from "./TrainDeckCard";
 import { GameController } from "../controllers/GameController";
 
-export type TrainCardStackProps = {
+export interface TrainCardStackProps {
   cards: TrainCard[];
   game: GameController;
   extraProps?: any;

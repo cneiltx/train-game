@@ -7,6 +7,8 @@ import { RemoteGameController } from "./RemoteGameController";
 import { RemoteLobbyController } from "./RemoteLobbyController";
 import { GameMap } from "../model/GameMap";
 import { DestinationCard } from "../model/DestinationCard";
+import { TrainCardColor } from "../model/TrainCardColor";
+import { EnumFunctions } from "../model/EnumFunctions";
 
 export class GameStateChangeEventArgs {
   readonly state: GameState;
@@ -131,6 +133,7 @@ export class GameController extends EventTarget {
   private _map: GameMap;
   private _messages: string[];
   private _remoteGame: RemoteGameController;
+  private _localSelectedTrainCards: TrainCard[] = [];
 
   constructor(gameID: string) {
     super();
@@ -194,8 +197,8 @@ export class GameController extends EventTarget {
     return this._messages;
   }
 
-  get host() {
-    return this._players[0];
+  get localSelectedTrainCards() {
+    return this._localSelectedTrainCards;
   }
 
   private handleGameStateChange(e: CustomEventInit<GameStateChangeEventArgs>) {
@@ -299,6 +302,28 @@ export class GameController extends EventTarget {
 
   discardDestinationCards(cards: DestinationCard[]) {
     this._remoteGame.discardDestinationCards(cards);
+  }
+
+  selectableTrainCardsForRoute(route: Route) {
+    const colors: TrainCardColor[] = [];
+    const wildTotal = this.localPlayer?.trainCards.filter(value => value.color === TrainCardColor.Wild).length ?? 0;
+
+    if (route.color === TrainCardColor.Wild) {
+      for (const color of EnumFunctions.getEnumValues(TrainCardColor)) {
+        if (color !== TrainCardColor.Wild) {
+          const total = this.localPlayer?.trainCards.filter(value => value.color === color).length ?? 0;
+          if (total + wildTotal >= route.segments.length) {
+            colors.push(color);
+          }
+        }
+      }
+    }
+
+    if (colors.length > 0 && wildTotal > 0) {
+      colors.push(TrainCardColor.Wild);
+    }
+
+    return colors;
   }
 
   claimRoute(route: Route, cards: TrainCard[]) {

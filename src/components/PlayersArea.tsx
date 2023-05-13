@@ -3,7 +3,7 @@ import { PlayerSummary } from "./PlayerSummary";
 import { GameController, PlayersChangeEventArgs } from "../controllers/GameController";
 import { useEffect, useState } from "react";
 
-export type PlayersAreaProps = {
+export interface PlayersAreaProps {
   game: GameController;
   extraProps?: any;
 }

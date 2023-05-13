@@ -62,7 +62,7 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
         case TrainCardColor.Purple:
           image.src = purpleCard;
           break;
-        case TrainCardColor.Rainbow:
+        case TrainCardColor.Wild:
           image.src = rainbowCard;
           break;
         case TrainCardColor.Red:
@@ -124,12 +124,16 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   const canClick = () => {
     return props.mode === 'drawDeck' && (localPlayerState === PlayerState.StartingTurn || localPlayerState === PlayerState.DrawingTrainCards)
       || props.mode === 'drawFaceUp' && (localPlayerState === PlayerState.StartingTurn
-        || (localPlayerState === PlayerState.DrawingTrainCards && props.card.color !== TrainCardColor.Rainbow))
+        || (localPlayerState === PlayerState.DrawingTrainCards && props.card.color !== TrainCardColor.Wild))
   }
 
   const style = { ...props.extraProps?.style };
   if (canClick()) {
     style['cursor'] = 'pointer';
+  } else {
+    if (props.mode === 'drawFaceUp' && localPlayerState === PlayerState.DrawingTrainCards) {
+      style['filter'] = 'brightness(0.4)';
+    }
   }
 
   const newProps = { ...props.extraProps };
