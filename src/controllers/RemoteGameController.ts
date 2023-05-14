@@ -180,7 +180,7 @@ export class RemoteGameController extends EventTarget {
       if (prevPlayer.state === PlayerState.DrawingDestinationCards) {
         prevPlayer.destinationCards.push(...this._drawnDestinationCards);
         this.dispatch('onPlayerDestinationCardsChange', new PlayerDestinationCardsChangeEventArgs(prevPlayer, prevPlayer.destinationCards));
-        this.addMessage(`${this.activePlayer?.name} took ${this._drawnDestinationCards.length} destination cards.`);
+        this.addMessage(`${this.activePlayer?.name} took ${this._drawnDestinationCards.length} destination card${this._drawnDestinationCards.length > 1 ? 's' : ''}.`);
         this._drawnDestinationCards = [];
       }
 

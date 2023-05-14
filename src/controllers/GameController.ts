@@ -9,6 +9,7 @@ import { GameMap } from "../model/GameMap";
 import { DestinationCard } from "../model/DestinationCard";
 import { TrainCardColor } from "../model/TrainCardColor";
 import { EnumFunctions } from "../model/EnumFunctions";
+import { USCities } from "../model/USCities";
 
 export class GameStateChangeEventArgs {
   readonly state: GameState;
@@ -108,8 +109,32 @@ export class MessagesChangeEventArgs {
   }
 }
 
+export class LocalSelectedTrainCardsChangeEventArgs {
+  readonly cards: TrainCard[];
+
+  constructor(cards: TrainCard[]) {
+    this.cards = cards;
+  }
+}
+
+export class LocalSelectedCitiesChangeEventArgs {
+  readonly cities: USCities[];
+
+  constructor(cities: USCities[]) {
+    this.cities = cities;
+  }
+}
+
+export class LocalSelectedRouteChangeEventArgs {
+  readonly route: Route | null;
+
+  constructor(route: Route | null) {
+    this.route = route;
+  }
+}
+
 /*
- * Raises events:
+ * Raises remote events:
  *   onGameStateChange
  *   onPlayersChange
  *   onTrainCardDeckChange
@@ -121,6 +146,11 @@ export class MessagesChangeEventArgs {
  *   onPlayerTrainsChange
  *   onPlayerScoreChange
  *   onMessagesChange
+ * 
+ * Raises local events:
+ *   onLocalSelectedTrainCardsChange
+ *   onLocalSelectedCitiesChange
+ *   onLocalSelectedRouteChange
  */
 export class GameController extends EventTarget {
   localPlayer: Player | undefined;
@@ -134,6 +164,8 @@ export class GameController extends EventTarget {
   private _messages: string[];
   private _remoteGame: RemoteGameController;
   private _localSelectedTrainCards: TrainCard[] = [];
+  private _localSelectedCities: USCities[] = [];
+  private _localSelectedRoute: (Route | null) = null;
 
   constructor(gameID: string) {
     super();
@@ -199,6 +231,14 @@ export class GameController extends EventTarget {
 
   get localSelectedTrainCards() {
     return this._localSelectedTrainCards;
+  }
+
+  get localSelectedCities() {
+    return this._localSelectedCities;
+  }
+
+  get localSelectedRoute() {
+    return this._localSelectedRoute;
   }
 
   private handleGameStateChange(e: CustomEventInit<GameStateChangeEventArgs>) {
@@ -304,6 +344,16 @@ export class GameController extends EventTarget {
     this._remoteGame.discardDestinationCards(cards);
   }
 
+  selectCities(cities: USCities[]) {
+    this._localSelectedCities = cities;
+    this.dispatch('onLocalSelectedCitiesChange', new LocalSelectedCitiesChangeEventArgs(cities));
+  }
+
+  selectRoute(route: Route) {
+    this._localSelectedRoute = route;
+    this.dispatch('onLocalSelectedRouteChange', new LocalSelectedRouteChangeEventArgs(route));
+  }
+
   selectableTrainCardsForRoute(route: Route) {
     const colors: TrainCardColor[] = [];
     const wildTotal = this.localPlayer?.trainCards.filter(value => value.color === TrainCardColor.Wild).length ?? 0;
@@ -324,6 +374,38 @@ export class GameController extends EventTarget {
     }
 
     return colors;
+  }
+
+  selectTrainCard(card: TrainCard) {
+    if (this.localPlayer) {
+      const cardIndex = this.localPlayer.trainCards.findIndex(value => value.id === card.id);
+
+      if (cardIndex >= 0) {
+        const deletedCards = this.localPlayer.trainCards.splice(cardIndex, 1);
+        this.dispatch('onPlayerTrainCardsChange', new PlayerTrainCardsChangeEventArgs(this.localPlayer, this.localPlayer.trainCards));
+
+        if (deletedCards.length > 0) {
+          this._localSelectedTrainCards.push(deletedCards[0]);
+          this.dispatch('onLocalSelectedTrainCardsChange', new LocalSelectedTrainCardsChangeEventArgs(this._localSelectedTrainCards));
+        }
+      }
+    }
+  }
+
+  unselectTrainCard(card: TrainCard) {
+    if (this.localPlayer) {
+      const cardIndex = this._localSelectedTrainCards.findIndex(value => value.id === card.id);
+
+      if (cardIndex >= 0) {
+        const deletedCards = this._localSelectedTrainCards.splice(cardIndex, 1);
+        this.dispatch('onLocalSelectedTrainCardsChange', new LocalSelectedTrainCardsChangeEventArgs(this._localSelectedTrainCards));
+
+        if (deletedCards.length > 0) {
+          this.localPlayer.trainCards.push(deletedCards[0]);
+          this.dispatch('onPlayerTrainCardsChange', new PlayerTrainCardsChangeEventArgs(this.localPlayer, this.localPlayer.trainCards));
+        }
+      }
+    }
   }
 
   claimRoute(route: Route, cards: TrainCard[]) {

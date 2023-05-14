@@ -12,8 +12,6 @@ export interface DestinationDeckCardProps {
   game: GameController;
   mode: 'drawDeck' | 'drawFaceUp' | 'playerHand';
   onClick?: (card: DestinationCard) => void;
-  onMouseEnter?: (card: DestinationCard) => void;
-  onMouseLeave?: (card: DestinationCard) => void;
   selected?: boolean;
   extraProps?: any;
 }
@@ -172,19 +170,17 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   }
 
   const handleMouseEnter = () => {
-    if (props.onMouseEnter) {
-      props.onMouseEnter(props.card);
+    if (props.mode !== 'drawDeck') {
+      props.game.selectCities([props.card.city1, props.card.city2]);
     }
   }
 
   const handleMouseLeave = () => {
-    if (props.onMouseLeave) {
-      props.onMouseLeave(props.card);
-    }
+    props.game.selectCities([]);
   }
 
   const canClick = () => {
-    return props.mode === 'drawFaceUp' || props.mode === 'drawDeck' && localPlayerState === PlayerState.StartingTurn;
+    return props.mode === 'drawFaceUp' || (props.mode === 'drawDeck' && localPlayerState === PlayerState.StartingTurn);
   }
 
   const style = { ...props.extraProps?.style };

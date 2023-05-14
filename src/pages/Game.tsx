@@ -1,30 +1,33 @@
 import { DrawCardArea } from '../components/DrawCardArea';
 import { Gameboard } from '../components/Gameboard';
 import { PlayersArea } from '../components/PlayersArea';
-import { GameController, PlayerTrainCardsChangeEventArgs } from '../controllers/GameController';
+import { GameController, LocalSelectedTrainCardsChangeEventArgs, PlayerTrainCardsChangeEventArgs } from '../controllers/GameController';
 import { Stack } from '@mui/material';
 import tileBlack from '../images/backgrounds/tile-black.jpg';
-import { USCities } from '../model/USCities';
-import { DestinationCard } from '../model/DestinationCard';
 import { useEffect, useState } from 'react';
 import { GameHistory } from '../components/GameHistory';
 import { LocalTrainCards } from '../components/LocalTrainCards';
 import { LocalDestinationCards } from '../components/LocalDestinationCards';
 import { PlayerControls } from '../components/PlayerControls';
-import { Route } from '../model/Route';
+import { LocalSelectedTrainCards } from '../components/LocalSelectedTrainCards';
 
 export interface GameProps {
   game: GameController;
 }
 
 export const Game = (props: GameProps) => {
-  const [selectedCities, setSelectedCities] = useState<USCities[]>([]);
-  const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
   const [localPlayerTrainCards, setLocalPlayerTrainCards] = useState(props.game.localPlayer?.trainCards);
+  const [localSelectedTrainCards, setLocalSelectedTrainCards] = useState(props.game.localSelectedTrainCards);
 
   useEffect(() => {
     props.game.addEventListener('onPlayerTrainCardsChange', (e) => handlePlayerTrainCardsChange(e));
     return props.game.removeEventListener('onPlayerTrainCardsChange', handlePlayerTrainCardsChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    props.game.addEventListener('onLocalSelectedTrainCardsChange', (e) => handleLocalSelectedTrainCardsChange(e));
+    return props.game.removeEventListener('onLocalSelectedTrainCardsChange', handleLocalSelectedTrainCardsChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -34,16 +37,8 @@ export const Game = (props: GameProps) => {
     }
   }
 
-  const handleDestinationCardMouseEnter = (card: DestinationCard) => {
-    setSelectedCities([card.city1, card.city2]);
-  }
-
-  const handleDestinationCardMouseLeave = (card: DestinationCard) => {
-    setSelectedCities([]);
-  }
-
-  const handleRouteSelected = (route: Route) => {
-    setSelectedRoute(route);
+  const handleLocalSelectedTrainCardsChange = (e: CustomEventInit<LocalSelectedTrainCardsChangeEventArgs>) => {
+    setLocalSelectedTrainCards([...e.detail!.cards]);
   }
 
   return (
@@ -53,15 +48,10 @@ export const Game = (props: GameProps) => {
         <Gameboard
           key='gameboard'
           game={props.game}
-          highlightCities={selectedCities}
-          highlightRoute={selectedRoute}
-          onRouteSelected={handleRouteSelected}
           extraProps={{ height: '80vh', flexGrow: 1 }} />
         <DrawCardArea
           key='drawCardArea'
           game={props.game}
-          onDrawnDestinationCardMouseEnter={handleDestinationCardMouseEnter}
-          onDrawnDestinationCardMouseLeave={handleDestinationCardMouseLeave}
           extraProps={{ width: '18vh', boxShadow: 'inset 2px 0 0 0 darkgoldenrod' }} />
       </Stack>
       <Stack key='bottomRow' direction='row' height='20vh' >
@@ -69,11 +59,8 @@ export const Game = (props: GameProps) => {
         <PlayerControls key='playerControls' game={props.game} extraProps={{ width: '29vh', boxShadow: 'inset -2px 0 0 0 darkgoldenrod' }} />
         {localPlayerTrainCards && localPlayerTrainCards.length > 0 &&
           <LocalTrainCards key='trainCards' game={props.game} extraProps={{ boxShadow: 'inset -2px 0 0 0 darkgoldenrod' }} />}
-        <LocalDestinationCards
-          key='destinationCards'
-          game={props.game}
-          onCardMouseEnter={handleDestinationCardMouseEnter}
-          onCardMouseLeave={handleDestinationCardMouseLeave} />
+        {localSelectedTrainCards.length > 0 && <LocalSelectedTrainCards key='selectedCards' game={props.game} extraProps={{ boxShadow: 'inset -2px 0 0 0 darkgoldenrod' }} />}
+        <LocalDestinationCards key='destinationCards' game={props.game} />
       </Stack>
     </Stack>
   );

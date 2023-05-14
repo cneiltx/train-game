@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import blackCar from '../images/train-cars/car-black.png';
 import blueCar from '../images/train-cars/car-blue.png';
 import greenCar from '../images/train-cars/car-green.png';
@@ -7,25 +7,43 @@ import yellowCar from '../images/train-cars/car-yellow.png';
 import { Route } from '../model/Route';
 import { TrainColor } from '../model/TrainColor';
 import { Box } from '@mui/material';
-import { Cities } from '../model/Cities';
-import { GameController } from '../controllers/GameController';
+import { GameController, LocalSelectedCitiesChangeEventArgs, LocalSelectedRouteChangeEventArgs } from '../controllers/GameController';
 import { RouteSegment } from '../model/RouteSegment';
 import { PlayerState } from '../model/PlayerState';
 import { TrainCardColor } from '../model/TrainCardColor';
 
 export interface GameboardProps {
   game: GameController;
-  highlightCities?: Cities[];
-  highlightRoute?: Route | null;
-  onRouteSelected?: (route: Route) => void;
   extraProps?: any;
 }
 
 export const Gameboard = (props: GameboardProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [selectedCities, setSelectedCities] = useState(props.game.localSelectedCities);
+  const [selectedRoute, setSelectedRoute] = useState(props.game.localSelectedRoute);
   const image = new Image();
   const cityOuterRadius = 25;
   const carWidth = 15;
+
+  useEffect(() => {
+    props.game.addEventListener('onLocalSelectedRouteChange', (e) => handleLocalSelectedRouteChange(e));
+    return props.game.removeEventListener('onLocalSelectedRouteChange', handleLocalSelectedRouteChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    props.game.addEventListener('onLocalSelectedCitiesChange', (e) => handleLocalSelectedCitiesChange(e));
+    return props.game.removeEventListener('onLocalSelectedCitiesChange', handleLocalSelectedCitiesChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleLocalSelectedRouteChange = (e: CustomEventInit<LocalSelectedRouteChangeEventArgs>) => {
+    setSelectedRoute(e.detail!.route);
+  }
+
+  const handleLocalSelectedCitiesChange = (e: CustomEventInit<LocalSelectedCitiesChangeEventArgs>) => {
+    setSelectedCities(e.detail!.cities);
+  }
 
   useEffect(() => {
     window.addEventListener('resize', onResize);
@@ -41,7 +59,7 @@ export const Gameboard = (props: GameboardProps) => {
     }
     return () => window.removeEventListener('resize', onResize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.highlightCities, props.highlightRoute]);
+  }, [selectedCities, selectedRoute]);
 
   const onResize = () => {
     const canvas = canvasRef.current;
@@ -87,7 +105,7 @@ export const Gameboard = (props: GameboardProps) => {
       context.stroke();
       context.fill();
 
-      if (props.highlightCities && props.highlightCities.find((item) => item === city.city) !== undefined) {
+      if (selectedCities.find((item) => item === city.city) !== undefined) {
         context.fillStyle = 'rgba(0, 0, 128, 0.65)';
         context.beginPath();
         context.arc(city.mapX, city.mapY, cityOuterRadius, 0, Math.PI * 2, false);
@@ -118,44 +136,44 @@ export const Gameboard = (props: GameboardProps) => {
 
     switch (route.color) {
       case TrainCardColor.Wild:
-        context.strokeStyle = route.id === props.highlightRoute?.id ? 'yellow' : 'gainsboro';
+        context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
         context.fillStyle = 'dimgrey';
         break;
       case TrainCardColor.Black:
-        context.strokeStyle = route.id === props.highlightRoute?.id ? 'yellow' : 'gainsboro';
+        context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
         context.fillStyle = 'black';
         break;
       case TrainCardColor.White:
-        context.strokeStyle = route.id === props.highlightRoute?.id ? 'blue' : 'dimgrey';
+        context.strokeStyle = route.id === selectedRoute?.id ? 'blue' : 'dimgrey';
         context.fillStyle = 'floralwhite';
         break;
       case TrainCardColor.Red:
-        context.strokeStyle = route.id === props.highlightRoute?.id ? 'yellow' : 'gainsboro';
+        context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
         context.fillStyle = 'firebrick';
         break;
       case TrainCardColor.Yellow:
-        context.strokeStyle = route.id === props.highlightRoute?.id ? 'blue' : 'dimgrey';
+        context.strokeStyle = route.id === selectedRoute?.id ? 'blue' : 'dimgrey';
         context.fillStyle = 'gold';
         break;
       case TrainCardColor.Blue:
-        context.strokeStyle = route.id === props.highlightRoute?.id ? 'yellow' : 'gainsboro';
+        context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
         context.fillStyle = 'royalblue';
         break;
       case TrainCardColor.Orange:
-        context.strokeStyle = route.id === props.highlightRoute?.id ? 'blue' : 'gainsboro';
+        context.strokeStyle = route.id === selectedRoute?.id ? 'blue' : 'gainsboro';
         context.fillStyle = 'orange';
         break;
       case TrainCardColor.Green:
-        context.strokeStyle = route.id === props.highlightRoute?.id ? 'yellow' : 'gainsboro';
+        context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
         context.fillStyle = 'mediumseagreen';
         break;
       case TrainCardColor.Purple:
-        context.strokeStyle = route.id === props.highlightRoute?.id ? 'yellow' : 'gainsboro';
+        context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
         context.fillStyle = 'palevioletred';
         break;
     }
 
-    context.lineWidth = route.id === props.highlightRoute?.id ? 8 : 4;
+    context.lineWidth = route.id === selectedRoute?.id ? 8 : 4;
     context.translate(segment.x, segment.y);
     context.rotate(segment.angle * Math.PI / 180);
     context.globalAlpha = 1;
@@ -211,9 +229,7 @@ export const Gameboard = (props: GameboardProps) => {
             context.beginPath();
             context.rect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
             if (context.isPointInPath(canvasCoords.x, canvasCoords.y)) {
-              if (props.onRouteSelected) {
-                props.onRouteSelected(route);
-              }
+              props.game.selectRoute(route);
             }
             context.restore();
           }

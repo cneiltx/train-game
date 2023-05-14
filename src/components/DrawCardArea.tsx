@@ -85,18 +85,6 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
     setSelectedDestinationCards([...selectedDestinationCards]);
   }
 
-  const handleDrawnDestinationCardMouseEnter = (card: DestinationCard) => {
-    if (props.onDrawnDestinationCardMouseEnter) {
-      props.onDrawnDestinationCardMouseEnter(card);
-    }
-  }
-
-  const handleDrawnDestinationCardMouseLeave = (card: DestinationCard) => {
-    if (props.onDrawnDestinationCardMouseLeave) {
-      props.onDrawnDestinationCardMouseLeave(card);
-    }
-  }
-
   let index = 0;
   for (const card of faceUpTrainCards) {
     if (card) {
@@ -122,8 +110,6 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
         game={props.game}
         mode='drawFaceUp'
         onClick={handleDrawnDestinationCardClick}
-        onMouseEnter={handleDrawnDestinationCardMouseEnter}
-        onMouseLeave={handleDrawnDestinationCardMouseLeave}
         selected={selectedDestinationCards.findIndex(value => value.id === card.id) >= 0}
         extraProps={{ height: '9vh', width: '14vh' }} />
     );

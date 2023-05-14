@@ -1,19 +1,15 @@
 import { Box } from '@mui/material';
 import { DestinationDeckCard } from './DestinationDeckCard';
-import { DestinationCard } from '../model/DestinationCard';
 import { useEffect, useState } from 'react';
 import { GameController, PlayerDestinationCardsChangeEventArgs } from '../controllers/GameController';
 
 export interface LocalDestinationCardsProps {
   game: GameController;
-  onCardMouseEnter?: (card: DestinationCard) => void;
-  onCardMouseLeave?: (card: DestinationCard) => void;
   extraProps?: any;
 }
 
 export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
   const destinationCards: JSX.Element[] = [];
-  const [selectedCard, setSelectedCard] = useState<DestinationCard | null>(null);
   const [localPlayerDestinationCards, setLocalPlayerDestinationCards] = useState(props.game.localPlayer?.destinationCards);
 
   useEffect(() => {
@@ -25,18 +21,6 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
   const handlePlayerDestinationCardsChange = (e: CustomEventInit<PlayerDestinationCardsChangeEventArgs>) => {
     if (props.game.localPlayer && props.game.localPlayer.name === e.detail!.player.name) {
       setLocalPlayerDestinationCards([...e.detail!.cards]);
-    }
-  }
-
-  const handleMouseEnter = (card: DestinationCard) => {
-    if (props.onCardMouseEnter) {
-      props.onCardMouseEnter(card);
-    }
-  }
-
-  const handleMouseLeave = (card: DestinationCard) => {
-    if (props.onCardMouseLeave) {
-      props.onCardMouseLeave(card);
     }
   }
 
@@ -58,8 +42,6 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
         card={card}
         game={props.game}
         mode='playerHand'
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
         extraProps={{ height: '12vh' }} />
     );
   }

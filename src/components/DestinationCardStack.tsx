@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
 import { DestinationCard } from "../model/DestinationCard";
 import { DestinationDeckCard } from "./DestinationDeckCard";
-import { City } from "../model/City";
 import { GameController } from "../controllers/GameController";
 
 export interface DestinationCardStackProps {
