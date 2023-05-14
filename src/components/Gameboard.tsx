@@ -84,6 +84,10 @@ export const Gameboard = (props: GameboardProps) => {
       for (const segment of route.segments) {
         drawRouteSegment(context, segment, route);
       }
+
+      if (route.train !== null) {
+        drawTrain(context, route);
+      }
     }
   }
 

@@ -325,17 +325,34 @@ export class GameController extends EventTarget {
     this._remoteGame.startGame();
   }
 
+  private abandonClaimRoute() {
+    if (this._localSelectedRoute) {
+      this._localSelectedRoute = null;
+      this.dispatch('onLocalSelectedRouteChange', new LocalSelectedRouteChangeEventArgs(this._localSelectedRoute));
+    }
+
+    if (this.localPlayer && this._localSelectedTrainCards.length > 0) {
+      this.localPlayer.trainCards.push(...this._localSelectedTrainCards);
+      this._localSelectedTrainCards = [];
+      this.dispatch('onLocalSelectedTrainCardsChange', new LocalSelectedTrainCardsChangeEventArgs(this._localSelectedTrainCards));
+      this.dispatch('onPlayerTrainCardsChange', new PlayerTrainCardsChangeEventArgs(this.localPlayer, this.localPlayer.trainCards));
+    }
+  }
+
   drawTrainCardFromDeck() {
+    this.abandonClaimRoute();
     const card = this._remoteGame.drawTrainCardFromDeck();
     return card;
   }
 
   drawFaceUpTrainCard(card: TrainCard) {
+    this.abandonClaimRoute();
     const drawnCard = this._remoteGame.drawFaceUpTrainCard(card);
     return drawnCard;
   }
 
   drawDestinationCards() {
+    this.abandonClaimRoute();
     const cards = this._remoteGame.drawDestinationCards();
     return cards;
   }
@@ -350,27 +367,53 @@ export class GameController extends EventTarget {
   }
 
   selectRoute(route: Route) {
-    this._localSelectedRoute = route;
-    this.dispatch('onLocalSelectedRouteChange', new LocalSelectedRouteChangeEventArgs(route));
+    this.abandonClaimRoute();
+
+    if (this.localPlayer) {
+      if (this._localSelectedTrainCards.length > 0) {
+        this.localPlayer.trainCards.push(...this.localSelectedTrainCards);
+        this._localSelectedTrainCards = [];
+        this.dispatch('onLocalSelectedTrainCardsChange', new LocalSelectedTrainCardsChangeEventArgs(this._localSelectedTrainCards));
+        this.dispatch('onPlayerTrainCardsChange', new PlayerTrainCardsChangeEventArgs(this.localPlayer, this.localPlayer.trainCards));
+      }
+
+      this._localSelectedRoute = route;
+      this.dispatch('onLocalSelectedRouteChange', new LocalSelectedRouteChangeEventArgs(route));
+    }
   }
 
   selectableTrainCardsForRoute(route: Route) {
     const colors: TrainCardColor[] = [];
-    const wildTotal = this.localPlayer?.trainCards.filter(value => value.color === TrainCardColor.Wild).length ?? 0;
 
-    if (route.color === TrainCardColor.Wild) {
-      for (const color of EnumFunctions.getEnumValues(TrainCardColor)) {
-        if (color !== TrainCardColor.Wild) {
-          const total = this.localPlayer?.trainCards.filter(value => value.color === color).length ?? 0;
-          if (total + wildTotal >= route.segments.length) {
-            colors.push(color);
-          }
-        }
-      }
+    if (route.segments.length <= this._localSelectedTrainCards.length) {
+      return colors;
     }
 
-    if (colors.length > 0 && wildTotal > 0) {
-      colors.push(TrainCardColor.Wild);
+    if (this.localPlayer) {
+      const wildTotal = this.localPlayer.trainCards.filter(value => value.color === TrainCardColor.Wild).length
+        + this._localSelectedTrainCards.filter(value => value.color === TrainCardColor.Wild).length;
+
+      if (route.color === TrainCardColor.Wild) {
+        for (const color of EnumFunctions.getEnumValues(TrainCardColor)) {
+          if (color !== TrainCardColor.Wild) {
+            const total = this.localPlayer.trainCards.filter(value => value.color === color).length
+              + this._localSelectedTrainCards.filter(value => value.color === color).length;
+            if (total + wildTotal >= route.segments.length) {
+              colors.push(color);
+            }
+          }
+        }
+      } else {
+        const total = this.localPlayer.trainCards.filter(value => value.color === route.color).length
+          + this._localSelectedTrainCards.filter(value => value.color === route.color).length;
+        if (total + wildTotal >= route.segments.length) {
+          colors.push(route.color);
+        }
+      }
+
+      if (colors.length > 0 && wildTotal > 0) {
+        colors.push(TrainCardColor.Wild);
+      }
     }
 
     return colors;
@@ -409,6 +452,8 @@ export class GameController extends EventTarget {
   }
 
   claimRoute(route: Route, cards: TrainCard[]) {
-    this._remoteGame.claimRoute(route, cards);
+    const routeCards = [...this._localSelectedTrainCards];
+    this.abandonClaimRoute();
+    this._remoteGame.claimRoute(route, routeCards);
   }
 }

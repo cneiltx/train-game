@@ -12,13 +12,13 @@ import { TrainCardColor } from "../model/TrainCardColor";
 import { Box, Fade } from "@mui/material";
 import { useEffect, useRef, useState } from 'react';
 import { TrainCard } from '../model/TrainCard';
-import { GameController, PlayerStateChangeEventArgs } from '../controllers/GameController';
+import { GameController, LocalSelectedRouteChangeEventArgs, PlayerStateChangeEventArgs } from '../controllers/GameController';
 import { PlayerState } from '../model/PlayerState';
 
 export interface TrainDeckCardProps {
   card: TrainCard;
   game: GameController;
-  mode: 'drawDeck' | 'drawFaceUp' | 'playerHand';
+  mode: 'drawDeck' | 'drawFaceUp' | 'playerHand' | 'playerHandSelected';
   extraProps?: any;
 }
 
@@ -27,6 +27,7 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   const image = new Image();
   const [fade, setFade] = useState(false);
   const [localPlayerState, setLocalPlayerState] = useState(props.game.localPlayer?.state);
+  const [selectedRoute, setSelectedRoute] = useState(props.game.localSelectedRoute);
 
   useEffect(() => {
     setFade(true);
@@ -45,7 +46,17 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
   }
 
   useEffect(() => {
-    if (props.mode === 'drawFaceUp' || props.mode === 'playerHand') {
+    props.game.addEventListener('onLocalSelectedRouteChange', (e) => handleLocalSelectedRouteChange(e));
+    return props.game.removeEventListener('onLocalSelectedRouteChange', handleLocalSelectedRouteChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleLocalSelectedRouteChange = (e: CustomEventInit<LocalSelectedRouteChangeEventArgs>) => {
+    setSelectedRoute(e.detail!.route);
+  }
+
+  useEffect(() => {
+    if (props.mode !== 'drawDeck') {
       switch (props.card.color) {
         case TrainCardColor.Black:
           image.src = blackCard;
@@ -117,21 +128,31 @@ export const TrainDeckCard = (props: TrainDeckCardProps) => {
         case 'drawFaceUp':
           props.game.drawFaceUpTrainCard(props.card);
           break;
+        case 'playerHand':
+          props.game.selectTrainCard(props.card);
+          break;
+        case 'playerHandSelected':
+          props.game.unselectTrainCard(props.card);
+          break;
       }
     }
   }
 
   const canClick = () => {
-    return props.mode === 'drawDeck' && (localPlayerState === PlayerState.StartingTurn || localPlayerState === PlayerState.DrawingTrainCards)
-      || props.mode === 'drawFaceUp' && (localPlayerState === PlayerState.StartingTurn
-        || (localPlayerState === PlayerState.DrawingTrainCards && props.card.color !== TrainCardColor.Wild))
+    return (props.mode === 'drawDeck' && (localPlayerState === PlayerState.StartingTurn || localPlayerState === PlayerState.DrawingTrainCards))
+      || (props.mode === 'drawFaceUp' && (localPlayerState === PlayerState.StartingTurn
+        || (localPlayerState === PlayerState.DrawingTrainCards && props.card.color !== TrainCardColor.Wild)))
+      || (props.mode === 'playerHand' && localPlayerState === PlayerState.StartingTurn && selectedRoute
+        && props.game.selectableTrainCardsForRoute(selectedRoute).find(value => value === props.card.color) !== undefined)
+      || (props.mode === 'playerHandSelected');
   }
 
   const style = { ...props.extraProps?.style };
   if (canClick()) {
     style['cursor'] = 'pointer';
   } else {
-    if (props.mode === 'drawFaceUp' && localPlayerState === PlayerState.DrawingTrainCards) {
+    if ((props.mode === 'drawFaceUp' && localPlayerState === PlayerState.DrawingTrainCards)
+      || (props.mode === 'playerHand' && localPlayerState === PlayerState.StartingTurn && selectedRoute)) {
       style['filter'] = 'brightness(0.4)';
     }
   }
