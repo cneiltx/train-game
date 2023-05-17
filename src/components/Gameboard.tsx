@@ -173,7 +173,7 @@ export const Gameboard = (props: GameboardProps) => {
         break;
       case TrainCardColor.Purple:
         context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
-        context.fillStyle = 'palevioletred';
+        context.fillStyle = 'mediumorchid';
         break;
     }
 
@@ -182,7 +182,7 @@ export const Gameboard = (props: GameboardProps) => {
     context.rotate(segment.angle * Math.PI / 180);
     context.globalAlpha = 1;
     context.strokeRect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
-    context.globalAlpha = 0.55;
+    context.globalAlpha = route.id === selectedRoute?.id ? 1 : 0.55;
     context.fillRect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
     context.restore();
   }
@@ -233,6 +233,8 @@ export const Gameboard = (props: GameboardProps) => {
             context.beginPath();
             context.rect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
             if (context.isPointInPath(canvasCoords.x, canvasCoords.y)) {
+              // TODO: In 2 or 3 player games, only 1 route can be used for double-route cities.
+              // TODO: One player cannot claim both routes for double-route cities.
               props.game.selectRoute(route);
             }
             context.restore();

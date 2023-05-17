@@ -170,6 +170,9 @@ export class RemoteGameController extends EventTarget {
     return this.players.find(value => value.state !== PlayerState.Waiting);
   }
 
+  // TODO: Official game keeps completed destinations secret until end of game scoring, update local player card state.
+  // TODO: Game end and scoring: When one player has only 0, 1 or 2 trains left at end of turn, each player, including that player, gets 1 final turn.
+  // TODO: Implement cool final scoring tally dynamic bar graph to reveal final scores.
   private nextPlayer() {
     const prevPlayer = this.activePlayer;
     let nextPlayer;
@@ -383,11 +386,49 @@ export class RemoteGameController extends EventTarget {
       this.dispatch('onPlayerScoreChange', new PlayerScoreChangeEventArgs(this.activePlayer, this.activePlayer.score));
 
       if (city1 && city2) {
-        this.addMessage(`${this.activePlayer.name} claimed route ${city1.name} - ${city2.name}`);
+        this.addMessage(`${this.activePlayer.name} earned ${points} points for claiming route ${city1.name} - ${city2.name}`);
+      }
+
+      for (const card of this.activePlayer.destinationCards.filter(value => !value.complete)) {
+        if (this.areCitiesConnected(card.city1, card.city2)) {
+          card.complete = true;
+        }
       }
 
       this.nextPlayer();
     }
+  }
+
+  // TODO: Run this check when player takes new destination cards
+  // TODO: Implement this algorithm: https://stackoverflow.com/questions/354330/how-to-determine-if-two-nodes-are-connected
+  private areCitiesConnected(city1: USCities, city2: USCities) {
+    const visitedCities = new Set<USCities>();
+    const citiesToVisit: USCities[] = [city1];
+
+    while (citiesToVisit.length > 0) {
+      const city = citiesToVisit.pop()!;
+      visitedCities.add(city);
+
+      for (const route of this.map.routes.filter(value => value.train === this.activePlayer?.color && (value.city1 === city || value.city2 === city))) {
+        let targetCity: USCities;
+
+        if (route.city1 === city) {
+          targetCity = city2;
+        } else {
+          targetCity = city1;
+        }
+
+        if (!visitedCities.has(targetCity)) {
+          if (targetCity === city2) {
+            return true;
+          } else {
+            citiesToVisit.push(targetCity);
+          }
+        }
+      }
+    }
+
+    return false;
   }
 
   private initializeTrainCards() {
