@@ -20,7 +20,7 @@ export class USMap implements GameMap {
     this.cities.push(new City(USCities.Atlanta, 1064, 615, 156, 109, 'Atlanta', -33, -11, 'right'));
     this.cities.push(new City(USCities.Billings, 432, 215, 79, 62, 'Billings', -31, 13, 'right')); // substituted for Helena
     this.cities.push(new City(USCities.Boston, 1353, 255, 188, 66, 'Boston', 5, -15, 'left'));
-    this.cities.push(new City(USCities.Calgary, 330, 25, 66, 40, 'Calgary', 10, -14, 'left'));
+    this.cities.push(new City(USCities.Calgary, 330, 25, 66, 40, 'Calgary', 45, -10, 'left'));
     this.cities.push(new City(USCities.Charleston, 1210, 608, 173, 108, 'Charleston', 15, 3, 'left'));
     this.cities.push(new City(USCities.Chicago, 936, 347, 139, 78, 'Chicago', 2, 26, 'left'));
     this.cities.push(new City(USCities.Dallas, 720, 682, 112, 118, 'Dallas', -27, -10, 'right'));

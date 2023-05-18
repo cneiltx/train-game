@@ -102,6 +102,14 @@ export class PlayerScoreChangeEventArgs {
   }
 }
 
+export class RouteChangeEventArgs {
+  readonly route: Route;
+
+  constructor(route: Route) {
+    this.route = route;
+  }
+}
+
 export class MessagesChangeEventArgs {
   readonly messages: string[];
 
@@ -122,6 +130,7 @@ export class MessagesChangeEventArgs {
  *   onPlayerDestinationCardsChange
  *   onPlayerTrainsChange
  *   onPlayerScoreChange
+ *   onRouteChange
  *   onMessagesChange
  */
 export class RemoteGameController extends EventTarget {
@@ -354,6 +363,20 @@ export class RemoteGameController extends EventTarget {
       }
 
       route.train = this.activePlayer.color;
+      this.dispatch('onRouteChange', new RouteChangeEventArgs(route));
+      const doubleRoute = this.map.routes.find(value => value.id !== route.id
+        && ((value.city1 === route.city1 && value.city2 === route.city2)
+          || (value.city1 === route.city2 && value.city2 === route.city1)));
+
+      if (doubleRoute) {
+        doubleRoute.unavailableFor = this.activePlayer;
+
+        if (this.players.length < 4) {
+          doubleRoute.available = false;
+        }
+
+        this.dispatch('onRouteChange', new RouteChangeEventArgs(doubleRoute));
+      }
 
       let points = 0;
 
@@ -400,7 +423,6 @@ export class RemoteGameController extends EventTarget {
   }
 
   // TODO: Run this check when player takes new destination cards
-  // TODO: Implement this algorithm: https://stackoverflow.com/questions/354330/how-to-determine-if-two-nodes-are-connected
   private areCitiesConnected(city1: USCities, city2: USCities) {
     const visitedCities = new Set<USCities>();
     const citiesToVisit: USCities[] = [city1];

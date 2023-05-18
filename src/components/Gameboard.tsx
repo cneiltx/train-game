@@ -7,7 +7,7 @@ import yellowCar from '../images/train-cars/car-yellow.png';
 import { Route } from '../model/Route';
 import { TrainColor } from '../model/TrainColor';
 import { Box } from '@mui/material';
-import { GameController, LocalSelectedCitiesChangeEventArgs, LocalSelectedRouteChangeEventArgs } from '../controllers/GameController';
+import { GameController, LocalSelectedCitiesChangeEventArgs, LocalSelectedRouteChangeEventArgs, RouteChangeEventArgs } from '../controllers/GameController';
 import { RouteSegment } from '../model/RouteSegment';
 import { PlayerState } from '../model/PlayerState';
 import { TrainCardColor } from '../model/TrainCardColor';
@@ -37,12 +37,22 @@ export const Gameboard = (props: GameboardProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    props.game.addEventListener('onRouteChange', (e) => handleRouteChange(e));
+    return props.game.removeEventListener('onRouteChange', handleRouteChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleLocalSelectedRouteChange = (e: CustomEventInit<LocalSelectedRouteChangeEventArgs>) => {
     setSelectedRoute(e.detail!.route);
   }
 
   const handleLocalSelectedCitiesChange = (e: CustomEventInit<LocalSelectedCitiesChangeEventArgs>) => {
     setSelectedCities(e.detail!.cities);
+  }
+
+  const handleRouteChange = (e: CustomEventInit<RouteChangeEventArgs>) => {
+    onResize();
   }
 
   useEffect(() => {
@@ -137,42 +147,43 @@ export const Gameboard = (props: GameboardProps) => {
 
   const drawRouteSegment = (context: CanvasRenderingContext2D, segment: RouteSegment, route: Route) => {
     context.save();
+    const highlight = route.id === selectedRoute?.id && route.available && props.game.localPlayer?.name !== route.unavailableFor?.name;
 
     switch (route.color) {
       case TrainCardColor.Wild:
-        context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
+        context.strokeStyle = highlight ? 'yellow' : 'gainsboro';
         context.fillStyle = 'dimgrey';
         break;
       case TrainCardColor.Black:
-        context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
+        context.strokeStyle = highlight ? 'yellow' : 'gainsboro';
         context.fillStyle = 'black';
         break;
       case TrainCardColor.White:
-        context.strokeStyle = route.id === selectedRoute?.id ? 'blue' : 'dimgrey';
+        context.strokeStyle = highlight ? 'blue' : 'dimgrey';
         context.fillStyle = 'floralwhite';
         break;
       case TrainCardColor.Red:
-        context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
+        context.strokeStyle = highlight ? 'yellow' : 'gainsboro';
         context.fillStyle = 'firebrick';
         break;
       case TrainCardColor.Yellow:
-        context.strokeStyle = route.id === selectedRoute?.id ? 'blue' : 'dimgrey';
+        context.strokeStyle = highlight ? 'blue' : 'dimgrey';
         context.fillStyle = 'gold';
         break;
       case TrainCardColor.Blue:
-        context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
+        context.strokeStyle = highlight ? 'yellow' : 'gainsboro';
         context.fillStyle = 'royalblue';
         break;
       case TrainCardColor.Orange:
-        context.strokeStyle = route.id === selectedRoute?.id ? 'blue' : 'gainsboro';
+        context.strokeStyle = highlight ? 'blue' : 'gainsboro';
         context.fillStyle = 'orange';
         break;
       case TrainCardColor.Green:
-        context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
+        context.strokeStyle = highlight ? 'yellow' : 'gainsboro';
         context.fillStyle = 'mediumseagreen';
         break;
       case TrainCardColor.Purple:
-        context.strokeStyle = route.id === selectedRoute?.id ? 'yellow' : 'gainsboro';
+        context.strokeStyle = highlight ? 'yellow' : 'gainsboro';
         context.fillStyle = 'mediumorchid';
         break;
     }
@@ -180,9 +191,16 @@ export const Gameboard = (props: GameboardProps) => {
     context.lineWidth = route.id === selectedRoute?.id ? 8 : 4;
     context.translate(segment.x, segment.y);
     context.rotate(segment.angle * Math.PI / 180);
-    context.globalAlpha = 1;
     context.strokeRect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
-    context.globalAlpha = route.id === selectedRoute?.id ? 1 : 0.55;
+
+    if (highlight) {
+      context.globalAlpha = 1;
+    } else if (!route.available || route.unavailableFor?.name === props.game.localPlayer?.name) {
+      context.globalAlpha = 0.2;
+    } else {
+      context.globalAlpha = 0.55;
+    }
+
     context.fillRect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
     context.restore();
   }
@@ -233,8 +251,6 @@ export const Gameboard = (props: GameboardProps) => {
             context.beginPath();
             context.rect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
             if (context.isPointInPath(canvasCoords.x, canvasCoords.y)) {
-              // TODO: In 2 or 3 player games, only 1 route can be used for double-route cities.
-              // TODO: One player cannot claim both routes for double-route cities.
               props.game.selectRoute(route);
             }
             context.restore();

@@ -101,6 +101,14 @@ export class PlayerScoreChangeEventArgs {
   }
 }
 
+export class RouteChangeEventArgs {
+  readonly route: Route;
+
+  constructor(route: Route) {
+    this.route = route;
+  }
+}
+
 export class MessagesChangeEventArgs {
   readonly messages: string[];
 
@@ -145,6 +153,7 @@ export class LocalSelectedRouteChangeEventArgs {
  *   onPlayerDestinationCardsChange
  *   onPlayerTrainsChange
  *   onPlayerScoreChange
+ *   onRouteChange
  *   onMessagesChange
  * 
  * Raises local events:
@@ -191,6 +200,7 @@ export class GameController extends EventTarget {
       this._remoteGame.addEventListener('onPlayerTrainsChange', (e) => this.handlePlayerTrainsChange(e));
       this._remoteGame.addEventListener('onPlayerScoreChange', (e) => this.handlePlayerScoreChange(e));
       this._remoteGame.addEventListener('onPlayerDestinationCardsChange', (e) => this.handlePlayerDestinationCardsChange(e));
+      this._remoteGame.addEventListener('onRouteChange', (e) => this.handleRouteChange(e));
       this._remoteGame.addEventListener('onMessagesChange', (e) => this.handleMessagesChange(e));
     } else {
       throw new Error(`No remote game with ID '${gameID}' exists.`);
@@ -309,6 +319,12 @@ export class GameController extends EventTarget {
       player.score = e.detail!.score;
       this.dispatch('onPlayerScoreChange', new PlayerScoreChangeEventArgs(player, player.score));
     }
+  }
+
+  private handleRouteChange(e: CustomEventInit<RouteChangeEventArgs>) {
+    const routeIndex = this._map.routes.findIndex(value => value.id === e.detail!.route.id);
+    this._map.routes[routeIndex] = e.detail!.route;
+    this.dispatch('onRouteChange', new RouteChangeEventArgs(e.detail!.route));
   }
 
   private handleMessagesChange(e: CustomEventInit<MessagesChangeEventArgs>) {

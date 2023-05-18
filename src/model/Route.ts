@@ -1,3 +1,4 @@
+import { Player } from "./Player";
 import { RouteSegment } from "./RouteSegment";
 import { TrainCardColor } from "./TrainCardColor";
 import { TrainColor } from "./TrainColor";
@@ -11,6 +12,8 @@ export class Route {
   readonly segmentLength: number;
   readonly segments: RouteSegment[] = [];
   train: TrainColor | null = null;
+  available = true;
+  unavailableFor: Player | null = null;
 
   constructor(id: number, city1: USCities, city2: USCities, color: TrainCardColor, segmentLength: number) {
     this.id = id;
