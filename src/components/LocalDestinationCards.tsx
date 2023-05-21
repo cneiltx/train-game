@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { DestinationDeckCard } from './DestinationDeckCard';
 import { useEffect, useState } from 'react';
-import { GameController, PlayerDestinationCardsChangeEventArgs } from '../controllers/GameController';
+import { GameController, PlayerDestinationCardCompleteEventArgs, PlayerDestinationCardsChangeEventArgs } from '../controllers/GameController';
 
 export interface LocalDestinationCardsProps {
   game: GameController;
@@ -21,6 +21,18 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
   const handlePlayerDestinationCardsChange = (e: CustomEventInit<PlayerDestinationCardsChangeEventArgs>) => {
     if (props.game.localPlayer && props.game.localPlayer.name === e.detail!.player.name) {
       setLocalPlayerDestinationCards([...e.detail!.cards]);
+    }
+  }
+
+  useEffect(() => {
+    props.game.addEventListener('onPlayerDestinationCardComplete', (e) => handlePlayerDestinationCardComplete(e));
+    return props.game.removeEventListener('onPlayerDestinationCardComplete', handlePlayerDestinationCardComplete);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handlePlayerDestinationCardComplete = (e: CustomEventInit<PlayerDestinationCardCompleteEventArgs>) => {
+    if (props.game.localPlayer && props.game.localPlayer.name === e.detail!.player.name) {
+      setLocalPlayerDestinationCards([...props.game.localPlayer.destinationCards]);
     }
   }
 

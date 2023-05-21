@@ -10,6 +10,7 @@ import { DestinationCard } from "../model/DestinationCard";
 import { TrainCardColor } from "../model/TrainCardColor";
 import { EnumFunctions } from "../model/EnumFunctions";
 import { USCities } from "../model/USCities";
+import { Message } from "../model/Message";
 
 export class GameStateChangeEventArgs {
   readonly state: GameState;
@@ -81,6 +82,16 @@ export class PlayerDestinationCardsChangeEventArgs {
   }
 }
 
+export class PlayerDestinationCardCompleteEventArgs {
+  readonly player: Player;
+  readonly card: DestinationCard;
+
+  constructor(player: Player, card: DestinationCard) {
+    this.player = player;
+    this.card = card;
+  }
+}
+
 export class PlayerTrainsChangeEventArgs {
   readonly player: Player;
   readonly trains: number;
@@ -110,9 +121,9 @@ export class RouteChangeEventArgs {
 }
 
 export class MessagesChangeEventArgs {
-  readonly messages: string[];
+  readonly messages: Message[];
 
-  constructor(messages: string[]) {
+  constructor(messages: Message[]) {
     this.messages = messages;
   }
 }
@@ -151,6 +162,7 @@ export class LocalSelectedRouteChangeEventArgs {
  *   onPlayerStateChange
  *   onPlayerTrainCardsChange
  *   onPlayerDestinationCardsChange
+ *   onPlayerDestinationCardComplete
  *   onPlayerTrainsChange
  *   onPlayerScoreChange
  *   onRouteChange
@@ -170,7 +182,7 @@ export class GameController extends EventTarget {
   private _faceUpTrainCards: (TrainCard | null)[];
   private _destinationCardDeck: DestinationCard[];
   private _map: GameMap;
-  private _messages: string[];
+  private _messages: Message[];
   private _remoteGame: RemoteGameController;
   private _localSelectedTrainCards: TrainCard[] = [];
   private _localSelectedCities: USCities[] = [];
@@ -200,6 +212,7 @@ export class GameController extends EventTarget {
       this._remoteGame.addEventListener('onPlayerTrainsChange', (e) => this.handlePlayerTrainsChange(e));
       this._remoteGame.addEventListener('onPlayerScoreChange', (e) => this.handlePlayerScoreChange(e));
       this._remoteGame.addEventListener('onPlayerDestinationCardsChange', (e) => this.handlePlayerDestinationCardsChange(e));
+      this._remoteGame.addEventListener('onPlayerDestinationCardComplete', (e) => this.handlePlayerDestinationCardComplete(e));
       this._remoteGame.addEventListener('onRouteChange', (e) => this.handleRouteChange(e));
       this._remoteGame.addEventListener('onMessagesChange', (e) => this.handleMessagesChange(e));
     } else {
@@ -300,6 +313,16 @@ export class GameController extends EventTarget {
     if (player) {
       player.destinationCards = [...e.detail!.cards];
       this.dispatch('onPlayerDestinationCardsChange', new PlayerDestinationCardsChangeEventArgs(player, player.destinationCards));
+    }
+  }
+
+  private handlePlayerDestinationCardComplete(e: CustomEventInit<PlayerDestinationCardCompleteEventArgs>) {
+    const player = this._players.find((value) => value.name === e.detail!.player.name);
+
+    if (player) {
+      const cardIndex = player.destinationCards.findIndex(value => value.id === e.detail!.card.id);
+      player.destinationCards[cardIndex] = e.detail!.card;
+      this.dispatch('onPlayerDestinationCardComplete', new PlayerDestinationCardCompleteEventArgs(player, e.detail!.card));
     }
   }
 

@@ -11,6 +11,7 @@ import { PlayerState } from "../model/PlayerState";
 import { GameMap } from "../model/GameMap";
 import { GameMaps } from "../model/GameMaps";
 import { USMap } from "../model/USMap";
+import { Message } from "../model/Message";
 
 export class GameStateChangeEventArgs {
   readonly state: GameState;
@@ -82,6 +83,16 @@ export class PlayerDestinationCardsChangeEventArgs {
   }
 }
 
+export class PlayerDestinationCardCompleteEventArgs {
+  readonly player: Player;
+  readonly card: DestinationCard;
+
+  constructor(player: Player, card: DestinationCard) {
+    this.player = player;
+    this.card = card;
+  }
+}
+
 export class PlayerTrainsChangeEventArgs {
   readonly player: Player;
   readonly trains: number;
@@ -111,9 +122,9 @@ export class RouteChangeEventArgs {
 }
 
 export class MessagesChangeEventArgs {
-  readonly messages: string[];
+  readonly messages: Message[];
 
-  constructor(messages: string[]) {
+  constructor(messages: Message[]) {
     this.messages = messages;
   }
 }
@@ -128,6 +139,7 @@ export class MessagesChangeEventArgs {
  *   onPlayerStateChange
  *   onPlayerTrainCardsChange
  *   onPlayerDestinationCardsChange
+ *   onPlayerDestinationCardComplete
  *   onPlayerTrainsChange
  *   onPlayerScoreChange
  *   onRouteChange
@@ -141,9 +153,10 @@ export class RemoteGameController extends EventTarget {
   readonly discardedTrainCards: TrainCard[] = [];
   readonly destinationCardDeck: DestinationCard[] = [];
   readonly map: GameMap;
-  readonly messages: string[] = [];
+  readonly messages: Message[] = [];
   private _state = GameState.Initializing;
   private _drawnDestinationCards: DestinationCard[] = [];
+  private _finalPlayer: Player | null = null;
 
   constructor(gameID: string, map: GameMaps) {
     super();
@@ -179,9 +192,6 @@ export class RemoteGameController extends EventTarget {
     return this.players.find(value => value.state !== PlayerState.Waiting);
   }
 
-  // TODO: Official game keeps completed destinations secret until end of game scoring, update local player card state.
-  // TODO: Game end and scoring: When one player has only 0, 1 or 2 trains left at end of turn, each player, including that player, gets 1 final turn.
-  // TODO: Implement cool final scoring tally dynamic bar graph to reveal final scores.
   private nextPlayer() {
     const prevPlayer = this.activePlayer;
     let nextPlayer;
@@ -199,10 +209,19 @@ export class RemoteGameController extends EventTarget {
       prevPlayer.state = PlayerState.Waiting;
       this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(prevPlayer, prevPlayer.state));
 
-      if (prevIndex >= 0 && prevIndex < this.players.length - 1) {
+      if (prevIndex < this.players.length - 1) {
         nextPlayer = this.players[prevIndex + 1];
       } else {
         nextPlayer = this.players[0];
+      }
+
+      if (this._finalPlayer?.name === this.activePlayer?.name) {
+        this.endGame();
+      }
+
+      if (prevPlayer.trains <= 2 && !this._finalPlayer) {
+        this.addMessage(`This is the final round since ${prevPlayer.name} has ${prevPlayer.trains > 0 ? 'only ' + prevPlayer.trains : 'no'} remaining train${prevPlayer.trains === 1 ? '' : 's'}!`, true);
+        this._finalPlayer = prevPlayer;
       }
     } else {
       nextPlayer = this.players[0];
@@ -214,8 +233,124 @@ export class RemoteGameController extends EventTarget {
     this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(nextPlayer, nextPlayer.state));
   }
 
-  private addMessage(message: string) {
-    this.messages.push(message);
+  private endGame() {
+    const tallyDelay = 2000; // TODO: Add delay between score adjustments
+    this.addMessage('The game is over. Tallying scores...');
+    const longestRoutes = this.getLongestRoutes();
+    const longestRouteLengths = new Map<string, number>();
+    let longestRouteLength = 0;
+
+    for (const player of this.players) {
+      for (const card of player.destinationCards.filter(value => value.complete)) {
+        player.score += card.points;
+        this.addMessage(`${player.name} gets ${card.points} points for connecting ${this.map.cities.find(value => value.city === card.city1)?.name} and ${this.map.cities.find(value => value.city === card.city2)?.name}.`)
+        this.dispatch('onPlayerScoreChange', new PlayerScoreChangeEventArgs(player, player.score));
+        // TODO: Highlight connected cities and routes on the board
+      }
+
+      for (const card of player.destinationCards.filter(value => !value.complete)) {
+        player.score -= card.points;
+        this.addMessage(`${player.name} loses ${card.points} points for not connecting ${this.map.cities.find(value => value.city === card.city1)?.name} and ${this.map.cities.find(value => value.city === card.city2)?.name}.`)
+        this.dispatch('onPlayerScoreChange', new PlayerScoreChangeEventArgs(player, player.score));
+        // TODO: Highlight cities not connected on the board
+      }
+
+      const playerLongestRouteLength = longestRoutes.get(player.name)?.reduce((a, b) => a + b.segments.length, 0) ?? 0;
+      longestRouteLengths.set(player.name, playerLongestRouteLength);
+
+      if (playerLongestRouteLength > longestRouteLength) {
+        longestRouteLength = playerLongestRouteLength;
+      }
+
+      if (playerLongestRouteLength === 0) {
+        this.addMessage(`${player.name} has no routes.`);
+      } else {
+        this.addMessage(`${player.name}'s longest continuous path is ${playerLongestRouteLength} car${playerLongestRouteLength === 1 ? '' : 's'}.`);
+        // TODO: Highlight route on the board
+      }
+    }
+
+    const longestPlayers: Player[] = [];
+
+    longestRouteLengths.forEach((length, name) => {
+      if (length === longestRouteLength) {
+        longestPlayers.push(this.players.find(value => value.name === name)!);
+      }
+    });
+
+    if (longestPlayers.length === 1) {
+      const player = longestPlayers[0];
+      this.addMessage(`${player.name} gets 10 points for the longest continuous path.`);
+      player.score += 10;
+      this.dispatch('onPlayerScoreChange', new PlayerScoreChangeEventArgs(player, player.score));
+    } else {
+      // TODO: Handle longest path tie - all tied players get 10 points
+    }
+
+    this.players.map(value => value.score)
+  }
+
+  private getLongestRoutes() {
+    const longestRoutes = new Map<string, Route[]>();
+
+    for (const player of this.players) {
+      longestRoutes.set(player.name, []);
+
+      for (const city of EnumFunctions.getEnumValues(USCities)) {
+        const connectedRoutes = this.map.routes.filter(value => value.train === player.color && (value.city1 === city || value.city2 === city));
+        const visitedRoutes = new Map<number, Route>();
+        let longestConnectedRoute: Route[] = [];
+        let secondLongestConnectedRoute: Route[] = [];
+
+        for (const connectedRoute of connectedRoutes) {
+          const longestRoute = this.getLongestRoute(connectedRoute, city, visitedRoutes);
+          const length = longestRoute.reduce((a, b) => a + b.segments.length, 0);
+
+          if (length > longestConnectedRoute.reduce((a, b) => a + b.segments.length, 0)) {
+            secondLongestConnectedRoute = longestConnectedRoute;
+            longestConnectedRoute = longestRoute;
+          } else if (length > secondLongestConnectedRoute.reduce((a, b) => a + b.segments.length, 0)) {
+            secondLongestConnectedRoute = longestRoute;
+          }
+        }
+
+        if (longestConnectedRoute.reduce((a, b) => a + b.segments.length, 0) + secondLongestConnectedRoute.reduce((a, b) => a + b.segments.length, 0)
+          > longestRoutes.get(player.name)!.reduce((a, b) => a + b.segments.length, 0)) {
+          longestRoutes.set(player.name, [...longestConnectedRoute, ...secondLongestConnectedRoute]);
+        }
+      }
+    }
+
+    return longestRoutes;
+  }
+
+  private getLongestRoute(route: Route, startCity: USCities, visitedRoutes: Map<number, Route>) {
+    visitedRoutes.set(route.id, route);
+    let targetCity: USCities;
+
+    if (route.city1 === startCity) {
+      targetCity = route.city2;
+    } else {
+      targetCity = route.city1;
+    }
+
+    const connectedRoutes = this.map.routes.filter(value => value.train === route.train && (value.city1 === targetCity || value.city2 === targetCity)
+      && !visitedRoutes.has(value.id));
+    let longestConnectedRoute: Route[] = [];
+
+    for (const connectedRoute of connectedRoutes) {
+      const longestRoute = this.getLongestRoute(connectedRoute, targetCity, visitedRoutes);
+
+      if (longestRoute.reduce((a, b) => a + b.segments.length, 0) > longestConnectedRoute.reduce((a, b) => a + b.segments.length, 0)) {
+        longestConnectedRoute = longestRoute;
+      }
+    }
+
+    return [route, ...longestConnectedRoute];
+  }
+
+  private addMessage(message: string, priority = false) {
+    this.messages.push(new Message(message, priority));
 
     if (this.messages.length > 10) {
       this.messages.splice(0, 1);
@@ -332,6 +467,10 @@ export class RemoteGameController extends EventTarget {
         const card = this.drawDestinationCard();
 
         if (card) {
+          if (this.areCitiesConnected(card.city1, card.city2)) {
+            card.complete = true;
+          }
+
           this._drawnDestinationCards.push(card);
         }
       }
@@ -345,6 +484,7 @@ export class RemoteGameController extends EventTarget {
       const card = this._drawnDestinationCards[index];
 
       if (cards.find(value => value.id === card.id)) {
+        card.complete = false;
         this.destinationCardDeck.unshift(card);
         this._drawnDestinationCards.splice(index, 1);
       }
@@ -358,7 +498,7 @@ export class RemoteGameController extends EventTarget {
       this.activePlayer.trains -= route.segments.length;
 
       for (const card of cards) {
-        this.activePlayer.trainCards.splice(this.activePlayer.trainCards.findIndex((value) => value.id === card.id));
+        this.activePlayer.trainCards.splice(this.activePlayer.trainCards.findIndex((value) => value.id === card.id), 1);
         this.discardedTrainCards.push(card);
       }
 
@@ -415,6 +555,7 @@ export class RemoteGameController extends EventTarget {
       for (const card of this.activePlayer.destinationCards.filter(value => !value.complete)) {
         if (this.areCitiesConnected(card.city1, card.city2)) {
           card.complete = true;
+          this.dispatch('onPlayerDestinationCardComplete', new PlayerDestinationCardCompleteEventArgs(this.activePlayer, card));
         }
       }
 
@@ -422,10 +563,9 @@ export class RemoteGameController extends EventTarget {
     }
   }
 
-  // TODO: Run this check when player takes new destination cards
   private areCitiesConnected(city1: USCities, city2: USCities) {
     const visitedCities = new Set<USCities>();
-    const citiesToVisit: USCities[] = [city1];
+    const citiesToVisit = [city1];
 
     while (citiesToVisit.length > 0) {
       const city = citiesToVisit.pop()!;

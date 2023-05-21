@@ -1,5 +1,5 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { GameController, GameStateChangeEventArgs, PlayerStateChangeEventArgs, PlayersChangeEventArgs } from "../controllers/GameController";
+import { GameController, GameStateChangeEventArgs, PlayerDestinationCardCompleteEventArgs, PlayerStateChangeEventArgs, PlayersChangeEventArgs } from "../controllers/GameController";
 import { useEffect, useState } from "react";
 import { PlayerState } from "../model/PlayerState";
 import { GameState } from "../model/GameState";
@@ -44,6 +44,18 @@ export const PlayerControls = (props: PlayerControlsProps) => {
 
   const handlePlayersChange = (e: CustomEventInit<PlayersChangeEventArgs>) => {
     setPlayerCount(e.detail!.players.length);
+  }
+
+  useEffect(() => {
+    props.game.addEventListener('onPlayerDestinationCardComplete', (e) => handlePlayerDestinationCardComplete(e));
+    return props.game.removeEventListener('onPlayerDestinationCardComplete', handlePlayerDestinationCardComplete);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handlePlayerDestinationCardComplete = (e: CustomEventInit<PlayerDestinationCardCompleteEventArgs>) => {
+    if (props.game.localPlayer && props.game.localPlayer.name === e.detail!.player.name) {
+      // TODO: Display message about completing route (and highlight route on board?)
+    }
   }
 
   return (

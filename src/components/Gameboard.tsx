@@ -191,12 +191,17 @@ export const Gameboard = (props: GameboardProps) => {
     context.lineWidth = route.id === selectedRoute?.id ? 8 : 4;
     context.translate(segment.x, segment.y);
     context.rotate(segment.angle * Math.PI / 180);
+
+    if (!route.available || route.unavailableFor?.name === props.game.localPlayer?.name) {
+      context.globalAlpha = 0.5;
+    }
+
     context.strokeRect(-route.segmentLength / 2, -carWidth / 2, route.segmentLength, carWidth);
 
     if (highlight) {
       context.globalAlpha = 1;
     } else if (!route.available || route.unavailableFor?.name === props.game.localPlayer?.name) {
-      context.globalAlpha = 0.2;
+      context.globalAlpha = 0.35;
     } else {
       context.globalAlpha = 0.55;
     }

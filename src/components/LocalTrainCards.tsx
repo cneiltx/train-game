@@ -25,9 +25,6 @@ export const LocalTrainCards = (props: LocalTrainCardsProps) => {
     }
   }
 
-  // TODO: Fix reordering when pushing back selected cards to hand
-  // TODO: Fix disappearing cards after claiming route
-
   for (const card of localPlayerTrainCards ?? []) {
     const index = trainCardsByColor.findIndex((value) => value[0].color === card.color);
     if (index === -1) {

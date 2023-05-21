@@ -21,7 +21,7 @@ export const LocalTrainCardStack = (props: LocalTrainCardStackProps) => {
   return (
     <Fade in={fade} timeout={750}>
       <Stack key={props.cards[props.cards.length - 1].id} direction='row' {...props.extraProps}>
-        <TrainDeckCard key='card' card={props.cards[0]} game={props.game} mode={props.mode} extraProps={{ height: '5vh', width: '7.75vh' }} />
+        <TrainDeckCard key='card' card={props.cards[props.cards.length - 1]} game={props.game} mode={props.mode} extraProps={{ height: '5vh', width: '7.75vh' }} />
         <Box display='flex' alignItems='center' key={props.cards.length} paddingLeft='1vh' sx={{ font: 'bold 2.5vh roboto', userSelect: 'none' }}>
           {props.cards.length}
         </Box>

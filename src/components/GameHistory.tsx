@@ -23,9 +23,15 @@ export const GameHistory = (props: GameHistoryProps) => {
   const messageList: JSX.Element[] = [];
   let index = messages.length - 1;
   for (const message of messages) {
+    const priorityStyle: any = {};
+
+    if (message.priority) {
+      priorityStyle['sx'] = { color: 'goldenrod' };
+    }
+
     messageList.push(
-      <ListItem key={index} disablePadding={true}>
-        <ListItemText primary={message} primaryTypographyProps={{ variant: 'body2' }} />
+      <ListItem key={index} disablePadding={true} >
+        <ListItemText primary={message.message} primaryTypographyProps={{ variant: 'body2' }} {...priorityStyle} />
       </ListItem>
     );
     index--;
