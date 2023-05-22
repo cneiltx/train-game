@@ -82,7 +82,7 @@ export class PlayerDestinationCardsChangeEventArgs {
   }
 }
 
-export class PlayerDestinationCardCompleteEventArgs {
+class PlayerDestinationCardCompleteEventArgs {
   readonly player: Player;
   readonly card: DestinationCard;
 
@@ -162,7 +162,6 @@ export class LocalSelectedRouteChangeEventArgs {
  *   onPlayerStateChange
  *   onPlayerTrainCardsChange
  *   onPlayerDestinationCardsChange
- *   onPlayerDestinationCardComplete
  *   onPlayerTrainsChange
  *   onPlayerScoreChange
  *   onRouteChange
@@ -172,6 +171,7 @@ export class LocalSelectedRouteChangeEventArgs {
  *   onLocalSelectedTrainCardsChange
  *   onLocalSelectedCitiesChange
  *   onLocalSelectedRouteChange
+ *   onLocalMessagesChange
  */
 export class GameController extends EventTarget {
   localPlayer: Player | undefined;
@@ -187,6 +187,7 @@ export class GameController extends EventTarget {
   private _localSelectedTrainCards: TrainCard[] = [];
   private _localSelectedCities: USCities[] = [];
   private _localSelectedRoute: (Route | null) = null;
+  private _localMessages: Message[] = [];
 
   constructor(gameID: string) {
     super();
@@ -264,6 +265,10 @@ export class GameController extends EventTarget {
     return this._localSelectedRoute;
   }
 
+  get localMessages() {
+    return this._localMessages;
+  }
+
   private handleGameStateChange(e: CustomEventInit<GameStateChangeEventArgs>) {
     this._state = e.detail!.state;
     this.dispatch('onGameStateChange', new GameStateChangeEventArgs(this._state));
@@ -317,12 +322,10 @@ export class GameController extends EventTarget {
   }
 
   private handlePlayerDestinationCardComplete(e: CustomEventInit<PlayerDestinationCardCompleteEventArgs>) {
-    const player = this._players.find((value) => value.name === e.detail!.player.name);
-
-    if (player) {
-      const cardIndex = player.destinationCards.findIndex(value => value.id === e.detail!.card.id);
-      player.destinationCards[cardIndex] = e.detail!.card;
-      this.dispatch('onPlayerDestinationCardComplete', new PlayerDestinationCardCompleteEventArgs(player, e.detail!.card));
+    if (this.localPlayer?.name === e.detail?.player.name) {
+      this.addLocalMessage(
+        `You connected ${this.map.cities.find(value => value.city === e.detail!.card.city1)?.name} and ${this.map.cities.find(value => value.city === e.detail!.card.city2)?.name}!`,
+        true);
     }
   }
 
@@ -376,6 +379,16 @@ export class GameController extends EventTarget {
       this.dispatch('onLocalSelectedTrainCardsChange', new LocalSelectedTrainCardsChangeEventArgs(this._localSelectedTrainCards));
       this.dispatch('onPlayerTrainCardsChange', new PlayerTrainCardsChangeEventArgs(this.localPlayer, this.localPlayer.trainCards));
     }
+  }
+
+  private addLocalMessage(message: string, priority = false) {
+    this._localMessages.push(new Message(message, priority));
+
+    if (this._localMessages.length > 10) {
+      this._localMessages.splice(0, 1);
+    }
+
+    this.dispatch('onLocalMessagesChange', new MessagesChangeEventArgs(this._localMessages));
   }
 
   drawTrainCardFromDeck() {

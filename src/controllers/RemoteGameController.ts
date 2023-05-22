@@ -278,16 +278,14 @@ export class RemoteGameController extends EventTarget {
       }
     });
 
-    if (longestPlayers.length === 1) {
-      const player = longestPlayers[0];
-      this.addMessage(`${player.name} gets 10 points for the longest continuous path.`);
+    for (const player of longestPlayers) {
       player.score += 10;
       this.dispatch('onPlayerScoreChange', new PlayerScoreChangeEventArgs(player, player.score));
-    } else {
-      // TODO: Handle longest path tie - all tied players get 10 points
     }
 
-    this.players.map(value => value.score)
+    this.addMessage(`${longestPlayers.map(value => value.name).join(', ').replace(/,\s([^,]+)$/, ' and $1')} get${longestPlayers.length === 1 ? 's' : ''} 10 points for having the longest continuous path${longestPlayers.length === 1 ? '' : 's'}.`);
+
+    // TODO: Figure out highest scoring player and handle tie scenarios
   }
 
   private getLongestRoutes() {
