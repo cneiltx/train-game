@@ -283,9 +283,34 @@ export class RemoteGameController extends EventTarget {
       this.dispatch('onPlayerScoreChange', new PlayerScoreChangeEventArgs(player, player.score));
     }
 
-    this.addMessage(`${longestPlayers.map(value => value.name).join(', ').replace(/,\s([^,]+)$/, ' and $1')} get${longestPlayers.length === 1 ? 's' : ''} 10 points for having the longest continuous path${longestPlayers.length === 1 ? '' : 's'}.`);
+    this.addMessage(`${this.joinNames(longestPlayers.map(value => value.name))} get${longestPlayers.length === 1 ? 's' : ''} 10 points for having the longest continuous path${longestPlayers.length === 1 ? '' : 's'}.`, true);
+    const highestScore = this.players.reduce((a, b) => Math.max(a, b.score), 0);
+    const tiedWinners = this.players.filter(value => value.score === highestScore);
 
-    // TODO: Figure out highest scoring player and handle tie scenarios
+    if (tiedWinners.length === 1) {
+      this.addMessage(`${tiedWinners[0].name} is the winner. Congratulations!`, true);
+    } else {
+      const mostCompletedDestinations = tiedWinners.reduce((a, b) => Math.max(a, b.destinationCards.filter(value => value.complete).length), 0);
+      const tiedCompletedDestinations = tiedWinners.filter(value => value.destinationCards.filter(card => card.complete).length === mostCompletedDestinations);
+
+      if (tiedCompletedDestinations.length === 1) {
+        this.addMessage(`${this.joinNames(tiedWinners.map(value => value.name))} are tied for highest score but ${tiedCompletedDestinations[0].name} wins for having the most (${mostCompletedDestinations}) completed destination cards. Congratulations!`, true);
+      } else {
+        const longestPathHolders = tiedCompletedDestinations.filter(value => longestPlayers.map(player => player.name).includes(value.name));
+
+        if (longestPathHolders.length === 0) {
+          this.addMessage(`${this.joinNames(tiedCompletedDestinations.map(value => value.name))} are tied winners with highest score and most (${mostCompletedDestinations}) completed destination cards. Congratulations!`, true);
+        } else if (longestPathHolders.length === 1) {
+          this.addMessage(`${this.joinNames(tiedCompletedDestinations.map(value => value.name))} are tied for highest score and most (${mostCompletedDestinations}) completed destination cards, but ${longestPathHolders[0].name} wins for having the longest continuous path. Congratulations!`, true);
+        } else {
+          this.addMessage(`${this.joinNames(longestPathHolders.map(value => value.name))} are tied winners with highest score, most (${mostCompletedDestinations}) completed destination cards, and longest continuous paths! Congratulations!`, true);
+        }
+      }
+    }
+  }
+
+  private joinNames(names: string[]) {
+    return names.join(', ').replace(/,\s([^,]+)$/, ' and $1');
   }
 
   private getLongestRoutes() {

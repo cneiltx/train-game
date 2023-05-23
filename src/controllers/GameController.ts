@@ -82,7 +82,7 @@ export class PlayerDestinationCardsChangeEventArgs {
   }
 }
 
-class PlayerDestinationCardCompleteEventArgs {
+export class PlayerDestinationCardCompleteEventArgs {
   readonly player: Player;
   readonly card: DestinationCard;
 
@@ -162,6 +162,7 @@ export class LocalSelectedRouteChangeEventArgs {
  *   onPlayerStateChange
  *   onPlayerTrainCardsChange
  *   onPlayerDestinationCardsChange
+ *   onPlayerDestinationCardComplete
  *   onPlayerTrainsChange
  *   onPlayerScoreChange
  *   onRouteChange
@@ -322,7 +323,10 @@ export class GameController extends EventTarget {
   }
 
   private handlePlayerDestinationCardComplete(e: CustomEventInit<PlayerDestinationCardCompleteEventArgs>) {
-    if (this.localPlayer?.name === e.detail?.player.name) {
+    if (this.localPlayer && this.localPlayer.name === e.detail?.player.name) {
+      const cardIndex = this.localPlayer?.destinationCards.findIndex(value => value.id === e.detail!.card.id);
+      this.localPlayer.destinationCards[cardIndex] = e.detail!.card;
+      this.dispatch('onPlayerDestinationCardComplete', new PlayerDestinationCardCompleteEventArgs(e.detail!.player, e.detail!.card));
       this.addLocalMessage(
         `You connected ${this.map.cities.find(value => value.city === e.detail!.card.city1)?.name} and ${this.map.cities.find(value => value.city === e.detail!.card.city2)?.name}!`,
         true);
