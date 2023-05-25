@@ -188,7 +188,7 @@ export class RemoteGameController extends EventTarget {
     }
   }
 
-  private get activePlayer() {
+  protected get activePlayer() {
     return this.players.find(value => value.state !== PlayerState.Waiting);
   }
 
@@ -206,9 +206,6 @@ export class RemoteGameController extends EventTarget {
         this._drawnDestinationCards = [];
       }
 
-      prevPlayer.state = PlayerState.Waiting;
-      this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(prevPlayer, prevPlayer.state));
-
       if (prevIndex < this.players.length - 1) {
         nextPlayer = this.players[prevIndex + 1];
       } else {
@@ -223,6 +220,9 @@ export class RemoteGameController extends EventTarget {
         this.addMessage(`This is the final round since ${prevPlayer.name} has ${prevPlayer.trains > 0 ? 'only ' + prevPlayer.trains : 'no'} remaining train${prevPlayer.trains === 1 ? '' : 's'}!`, true);
         this._finalPlayer = prevPlayer;
       }
+
+      prevPlayer.state = PlayerState.Waiting;
+      this.dispatch('onPlayerStateChange', new PlayerStateChangeEventArgs(prevPlayer, prevPlayer.state));
     } else {
       nextPlayer = this.players[0];
     }

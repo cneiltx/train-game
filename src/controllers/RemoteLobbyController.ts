@@ -1,12 +1,16 @@
 import { RemoteGameController } from "./RemoteGameController";
 import { GameMaps } from "../model/GameMaps";
+import { FivePlayerRemoteGameController } from "../test/controllers/FivePlayerRemoteGameController";
 
 export class RemoteLobbyController {
   static readonly games: RemoteGameController[] = [];
 
   static createGame(map: GameMaps) {
     const gameID = this.generateGameID();
-    const game = new RemoteGameController(gameID, map);
+
+    //const game = new RemoteGameController(gameID, map);
+    const game = new FivePlayerRemoteGameController(gameID, map);
+
     this.games.push(game);
     return game.gameID;
   }
