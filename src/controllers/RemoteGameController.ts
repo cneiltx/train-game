@@ -188,7 +188,7 @@ export class RemoteGameController extends EventTarget {
     }
   }
 
-  protected get activePlayer() {
+  private get activePlayer() {
     return this.players.find(value => value.state !== PlayerState.Waiting);
   }
 

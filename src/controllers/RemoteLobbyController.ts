@@ -1,6 +1,5 @@
 import { RemoteGameController } from "./RemoteGameController";
 import { GameMaps } from "../model/GameMaps";
-import { FivePlayerRemoteGameController } from "../test/controllers/FivePlayerRemoteGameController";
 
 export class RemoteLobbyController {
   static readonly games: RemoteGameController[] = [];
@@ -8,22 +7,20 @@ export class RemoteLobbyController {
   static createGame(map: GameMaps) {
     const gameID = this.generateGameID();
 
-    //const game = new RemoteGameController(gameID, map);
-    const game = new FivePlayerRemoteGameController(gameID, map);
+    const game = new RemoteGameController(gameID, map);
 
     this.games.push(game);
     return game.gameID;
   }
 
-  static joinGame(gameID: string, playerName: string, avatar: string) {
+  static getGame(gameID: string) {
     const game = this.games.find(game => game.gameID === gameID);
 
     if (!game) {
       throw new Error(`No game with ID '${gameID}' exists. Please check the game ID and try again.`);
     }
 
-    const player = game.join(playerName, avatar);
-    return player;
+    return game;
   }
 
   private static generateGameID() {

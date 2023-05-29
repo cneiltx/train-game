@@ -6,15 +6,14 @@ export class LobbyController {
   createGame(playerName: string, avatar: string, map: GameMaps) {
     const gameID = RemoteLobbyController.createGame(map);
     const game = new GameController(gameID);
-    const player = game.join(playerName, avatar);
-    game.localPlayer = player;
+    game.join(playerName, avatar);
     return game;
   }
 
   joinGame(gameID: string, playerName: string, avatar: string) {
-    const player = RemoteLobbyController.joinGame(gameID, playerName, avatar);
+    RemoteLobbyController.getGame(gameID);
     const game = new GameController(gameID);
-    game.localPlayer = player;
+    game.join(playerName, avatar);
     return game;
   }
 }

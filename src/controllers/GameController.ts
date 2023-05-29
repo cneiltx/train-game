@@ -175,7 +175,7 @@ export class LocalSelectedRouteChangeEventArgs {
  *   onLocalMessagesChange
  */
 export class GameController extends EventTarget {
-  localPlayer: Player | undefined;
+  private _localPlayer: Player | undefined;
   readonly gameID: string;
   private _state: GameState;
   private _players: Player[];
@@ -224,6 +224,10 @@ export class GameController extends EventTarget {
 
   private dispatch(event: string, eventArgs: any) {
     this.dispatchEvent(new CustomEvent(event, { detail: eventArgs }));
+  }
+
+  get localPlayer() {
+    return this._localPlayer;
   }
 
   get state() {
@@ -362,9 +366,9 @@ export class GameController extends EventTarget {
     this.dispatch('onMessagesChange', new MessagesChangeEventArgs(this._messages));
   }
 
-  join(name: string, avatar: string): Player | undefined {
+  join(name: string, avatar: string) {
     const player = this._remoteGame.join(name, avatar);
-    return player;
+    this._localPlayer = player;
   }
 
   startGame() {
