@@ -4,6 +4,7 @@ import { GameController } from '../controllers/GameController';
 import { LobbyController } from '../controllers/LobbyController';
 import bwTrain from '../images/backgrounds/bw-train-building.jpeg';
 import { GameMaps } from '../model/GameMaps';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export interface LobbyProps {
   lobby: LobbyController;
@@ -16,6 +17,17 @@ export const Lobby = (props: LobbyProps) => {
   const [name, setName] = useState('');
   const [gameID, setGameID] = useState('');
   const [joinError, setJoinError] = useState('');
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setAvatar(user.photoURL ?? '');
+      setName(user.displayName ?? '');
+    } else {
+      setAvatar('');
+      setName('');
+    }
+  });
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -75,11 +87,12 @@ export const Lobby = (props: LobbyProps) => {
           padding={2}
           spacing={2}
         >
-          <Grid item xs={12} sx={{ fontSize: 'h4.fontSize' }}>Ticket to Ride</Grid>
+          <Grid item xs={12} sx={{ fontSize: 'h4.fontSize' }}>The Train Game</Grid>
           <Grid item xs={12} height='1rem' />
           <Grid item xs={7}>
             <TextField
               name='name'
+              value={name}
               size='small'
               required
               fullWidth
