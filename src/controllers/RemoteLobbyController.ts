@@ -1,3 +1,4 @@
+// TODO: Delete this class
 import { RemoteGameController } from "./RemoteGameController";
 import { GameMaps } from "../model/GameMaps";
 

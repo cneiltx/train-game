@@ -1,22 +1,12 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { auth, signInWithGoogle, logInWithEmailAndPassword } from "../Firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { signInWithGoogle, logInWithEmailAndPassword } from "../Firebase";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, loading, error] = useAuthState(auth);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (loading) {
-      // maybe trigger a loading screen
-      return;
-    }
-    if (user) navigate("/lobby");
-  }, [user, loading]);
-
+  // TODO: Make this look nice with MUI
   return (
     <div className="login">
       <div className="login__container">

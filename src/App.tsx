@@ -9,7 +9,7 @@ import { Game } from './pages/Game';
 import { Lobby } from './pages/Lobby';
 import { LobbyController } from './controllers/LobbyController';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Login } from './pages/Login';
+import { Login } from './components/Login';
 
 export function App() {
   const lobby = new LobbyController();
@@ -44,8 +44,8 @@ export function App() {
       <CssBaseline />
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Login />} />
-          <Route path='/lobby' element={!game && <Lobby lobby={lobby} onCreateGame={onCreateGame} onJoinGame={onJoinGame} />} />
+          {/* <Route path='/' element={<Login />} /> */}
+          <Route path='/' element={<Lobby lobby={lobby} onCreateGame={onCreateGame} onJoinGame={onJoinGame} />} />
           <Route path='/game' element={game && <Game game={game} />} />
         </Routes>
       </BrowserRouter>

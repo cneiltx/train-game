@@ -1,3 +1,4 @@
+// TODO: Delete this class
 import { Player } from "../model/Player";
 import { DestinationCard } from "../model/DestinationCard";
 import { TrainCard } from "../model/TrainCard";
@@ -234,7 +235,7 @@ export class RemoteGameController extends EventTarget {
   }
 
   private endGame() {
-    const tallyDelay = 2000; // TODO: Add delay between score adjustments
+    const tallyDelay = 2000;
     this.addMessage('The game is over. Tallying scores...');
     const longestRoutes = this.getLongestRoutes();
     const longestRouteLengths = new Map<string, number>();
@@ -245,14 +246,12 @@ export class RemoteGameController extends EventTarget {
         player.score += card.points;
         this.addMessage(`${player.name} gets ${card.points} points for connecting ${this.map.cities.find(value => value.city === card.city1)?.name} and ${this.map.cities.find(value => value.city === card.city2)?.name}.`)
         this.dispatch('onPlayerScoreChange', new PlayerScoreChangeEventArgs(player, player.score));
-        // TODO: Highlight connected cities and routes on the board
       }
 
       for (const card of player.destinationCards.filter(value => !value.complete)) {
         player.score -= card.points;
         this.addMessage(`${player.name} loses ${card.points} points for not connecting ${this.map.cities.find(value => value.city === card.city1)?.name} and ${this.map.cities.find(value => value.city === card.city2)?.name}.`)
         this.dispatch('onPlayerScoreChange', new PlayerScoreChangeEventArgs(player, player.score));
-        // TODO: Highlight cities not connected on the board
       }
 
       const playerLongestRouteLength = longestRoutes.get(player.name)?.reduce((a, b) => a + b.segments.length, 0) ?? 0;
@@ -266,7 +265,6 @@ export class RemoteGameController extends EventTarget {
         this.addMessage(`${player.name} has no routes.`);
       } else {
         this.addMessage(`${player.name}'s longest continuous path is ${playerLongestRouteLength} car${playerLongestRouteLength === 1 ? '' : 's'}.`);
-        // TODO: Highlight route on the board
       }
     }
 
