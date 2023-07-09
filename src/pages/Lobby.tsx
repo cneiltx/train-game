@@ -7,6 +7,7 @@ import { auth } from '../Firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { JoinGame } from '../components/JoinGame';
 import { Login } from '../components/Login';
+import { Register } from '../components/Register';
 
 export interface LobbyProps {
   lobby: LobbyController;
@@ -16,16 +17,19 @@ export interface LobbyProps {
 
 export const Lobby = (props: LobbyProps) => {
   const [authenticated, setAuthenticated] = useState(false);
+  const [register, setRegister] = useState(false);
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setAuthenticated(true);
-      } else {
-        setAuthenticated(false);
-      }
-    });
-  }, []);
+  const handleSignIn = () => {
+    setAuthenticated(true);
+  }
+
+  const handleRegister = () => {
+    setRegister(true);
+  }
+
+  const handleSignOut = () => {
+    setAuthenticated(false);
+  }
 
   return (
     <Stack
@@ -39,8 +43,9 @@ export const Lobby = (props: LobbyProps) => {
       }}
     >
       <Stack direction='row' sx={{ backgroundColor: 'background.default', opacity: 0.85 }}>
-        {!authenticated && <Login />}
-        {authenticated && <JoinGame lobby={props.lobby} onCreateGame={props.onCreateGame} onJoinGame={props.onJoinGame} />}
+        {!authenticated && !register && < Login onSignIn={handleSignIn} onRegister={handleRegister} />}
+        {!authenticated && register && <Register />}
+        {authenticated && <JoinGame lobby={props.lobby} onCreateGame={props.onCreateGame} onJoinGame={props.onJoinGame} onSignOut={handleSignOut} />}
       </Stack>
     </Stack>
   );

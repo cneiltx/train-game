@@ -1,8 +1,7 @@
 import { Alert, Avatar, Box, Button, Grid, IconButton, Stack, TextField } from "@mui/material";
-import { onAuthStateChanged, updateProfile } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { auth, logout, storage } from "../Firebase";
-import { deleteObject, getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
+import { auth, logout, updateAvatar, updateName } from "../Firebase";
 import { GameMaps } from "../model/GameMaps";
 import { LobbyController } from "../controllers/LobbyController";
 import { GameController } from "../controllers/GameController";
@@ -11,60 +10,41 @@ export interface JoinGameProps {
   lobby: LobbyController;
   onCreateGame: (game: GameController) => void;
   onJoinGame: (game: GameController) => void;
+  onSignOut: () => void;
 }
 
 export const JoinGame = (props: JoinGameProps) => {
   const [avatar, setAvatar] = useState('');
   const [name, setName] = useState('');
   const [gameID, setGameID] = useState('');
-  const [joinError, setJoinError] = useState('');
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setAvatar(user.photoURL ?? '');
-        setName(user.displayName ?? '');
-      }
-    });
-  }, []);
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setAvatar(user.photoURL ?? '');
+      setName(user.displayName ?? '');
+    }
+  });
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const avatarVal = URL.createObjectURL(e.target.files[0]);
-      setAvatar(avatarVal);
-      if (auth.currentUser) {
-        const prevPhotos = ref(storage, `/user/${auth.currentUser!.uid}/profile-picture.*`);
-        listAll(prevPhotos)
-          .then(files => {
-            files.items.forEach(file => {
-              deleteObject(file);
-            });
-          })
-          .catch(error => console.error(error));
-
-        const newPhoto = ref(storage, `/user/${auth.currentUser.uid}/profile-picture${e.target.files[0].name.substring(e.target.files[0].name.lastIndexOf('.'))}`);
-        uploadBytes(newPhoto, e.target.files[0])
-          .then((result) => {
-            getDownloadURL(newPhoto)
-              .then((url) => {
-                updateProfile(auth.currentUser!, {
-                  photoURL: url,
-                })
-              })
-          })
-          .catch(error => console.error(error));
-      }
+      updateAvatar(e.target.files[0])
+        .then((url) => setAvatar(url))
+        .catch((err) => {
+          console.error(err);
+          setError(err);
+        });
     }
   }
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nameVal = e.target.value.trim();
-    setName(nameVal);
-    if (auth.currentUser) {
-      updateProfile(auth.currentUser, {
-        displayName: nameVal
-      });
-    }
+    setName(nameVal)
+    updateName(nameVal)
+      .catch((err) => {
+        console.error(err);
+        setError(err);
+      })
   }
 
   const handleGameIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,34 +52,46 @@ export const JoinGame = (props: JoinGameProps) => {
   }
 
   const handleJoinGame = () => {
+    setError('');
+
     try {
       const game = props.lobby.joinGame(gameID, name, avatar);
-      setJoinError('');
+      setError('');
       props.onJoinGame(game);
     } catch (e) {
       if (e instanceof Error) {
-        setJoinError(e.message);
+        setError(e.message);
       }
     }
   }
 
   const handleCreateGame = () => {
+    setError('');
+
     try {
       const game = props.lobby.createGame(name, avatar, GameMaps.US);
-      setJoinError('');
+      setError('');
       props.onCreateGame(game);
     } catch (e) {
       if (e instanceof Error) {
-        setJoinError(e.message);
+        setError(e.message);
       }
     }
   }
 
   const handleSignOut = () => {
-    logout();
-  }
+    setError('');
 
-  // TODO: Email sign in
+    logout()
+      .then(() => {
+        console.log('Signout successful');
+        props.onSignOut();
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(err);
+      });
+  }
 
   return (
     <Stack justifyContent='space-between' alignItems='center' >
@@ -110,6 +102,7 @@ export const JoinGame = (props: JoinGameProps) => {
           textAlign='center'
           alignItems='center'
           padding={2}
+          spacing={1}
         >
           <Grid item xs={12} sx={{ fontSize: 'h4.fontSize' }}>Welcome to<br></br>The Train Game!</Grid>
           <Grid item xs={12} height='1rem' />
@@ -156,7 +149,7 @@ export const JoinGame = (props: JoinGameProps) => {
             </Button>
           </Grid>
           <Grid item xs={12} sx={{ textAlign: 'left' }}>
-            {joinError !== '' && <Alert severity='error'>{joinError}</Alert>}
+            {error !== '' && <Alert severity='error'>{error}</Alert>}
           </Grid>
           <Grid item xs={12} height='1rem' />
           <Grid item xs={8} />

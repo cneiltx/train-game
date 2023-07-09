@@ -4,20 +4,18 @@ import {
   getAuth,
   signInWithPopup,
   signInWithEmailAndPassword,
-  signInWithEmailLink,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
-  signOut
+  signOut,
+  updateProfile,
+  signInWithRedirect,
+  getRedirectResult,
+  UserCredential,
 } from 'firebase/auth';
 import {
   getFirestore,
-  query,
-  getDocs,
-  collection,
-  where,
-  addDoc,
 } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { deleteObject, getDownloadURL, getStorage, listAll, ref, uploadBytes } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAUu85QZQCJ0bk1sYDOKpxkg6AJIk-ka3I",
@@ -34,61 +32,85 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-const handleErr = (err: any) => {
-  console.error(err);
-}
-
 export const signInWithGoogle = async () => {
+  console.log('Signing in with Google');
   const googleProvider = new GoogleAuthProvider();
   googleProvider.setCustomParameters({
     prompt: "select_account"
   });
 
-  try {
-    const res = await signInWithPopup(auth, googleProvider);
-    // const user = res.user;
-    // const q = query(collection(db, "users"), where("uid", "==", user.uid));
-    // const docs = await getDocs(q);
-    // if (docs.docs.length === 0) {
-    //   await addDoc(collection(db, "users"), {
-    //     uid: user.uid,
-    //     name: user.displayName,
-    //     authProvider: "google",
-    //     email: user.email,
-    //     verified: user.emailVerified,
-    //     photoUrl: user.photoURL,
-    //   });
-    // }
-  } catch (err) {
-    handleErr(err);
-  }
+  //return signInWithPopup(auth, googleProvider);
+  signInWithRedirect(auth, googleProvider);
 };
 
 export const logInWithEmailAndPassword = async (email: string, password: string) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
-    handleErr(err);
+    //handleErr(err);
   }
-};
+}
 
-export const registerWithEmailAndPassword = async (name: string, email: string, password: string) => {
-  try {
-    const res = await createUserWithEmailAndPassword(auth, email, password);
-  } catch (err) {
-    handleErr(err);
-  }
-};
+export const registerWithEmailAndPassword = (name: string, avatarFile: File, email: string, password: string) => {
+  console.log(`Registering new user ${email}`);
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((credential) => {
+      const user = credential.user;
+
+      console.log(`Registered user ${credential.user.email}`);
+    })
+    .catch((err) => console.error(err));
+}
 
 export const sendPasswordReset = async (email: string) => {
   try {
     await sendPasswordResetEmail(auth, email);
     alert("Password reset link sent!");
   } catch (err) {
-    handleErr(err);
+    //handleErr(err);
   }
 };
 
 export const logout = () => {
-  signOut(auth);
+  console.log(`Signing out user ${auth.currentUser?.email}`);
+  return signOut(auth);
 };
+
+export const updateName = (name: string) => {
+  if (auth.currentUser) {
+    return updateProfile(auth.currentUser, {
+      displayName: name
+    });
+  } else {
+    return new Promise(() => {
+      throw new Error('There is no logged in user');
+    });
+  }
+}
+
+export const updateAvatar = (avatarFile: File): Promise<string> => {
+  const user = auth.currentUser;
+  if (user) {
+    const prevPhotos = ref(storage, `/user/${user.uid}/profile-picture.*`);
+    const newPhoto = ref(storage, `/user/${user.uid}/profile-picture${avatarFile.name.substring(avatarFile.name.lastIndexOf('.'))}`);
+
+    return listAll(prevPhotos)
+      .then((files) => {
+        Promise.all(
+          files.items.map((file) => deleteObject(file))
+        );
+      })
+      .then(() => uploadBytes(newPhoto, avatarFile))
+      .then(() => getDownloadURL(newPhoto))
+      .then((url) => {
+        updateProfile(user, {
+          photoURL: url,
+        });
+        return url;
+      });
+  } else {
+    return new Promise(() => {
+      throw new Error('There is no logged in user');
+    });
+  }
+}
