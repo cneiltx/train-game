@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import { GameController } from '../controllers/GameController';
 import { LobbyController } from '../controllers/LobbyController';
 import bwTrain from '../images/backgrounds/bw-train-building.jpeg';
-import { auth } from '../Firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { JoinGame } from '../components/JoinGame';
 import { Login } from '../components/Login';
 import { Register } from '../components/Register';
+import { Loading } from '../components/Loading';
 
 export interface LobbyProps {
   lobby: LobbyController;
@@ -16,19 +16,16 @@ export interface LobbyProps {
 }
 
 export const Lobby = (props: LobbyProps) => {
-  const [authenticated, setAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>();
   const [register, setRegister] = useState(false);
 
-  const handleSignIn = () => {
-    setAuthenticated(true);
-  }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(getAuth(), setUser);
+    return unsubscribe;
+  }, []);
 
   const handleRegister = () => {
     setRegister(true);
-  }
-
-  const handleSignOut = () => {
-    setAuthenticated(false);
   }
 
   return (
@@ -43,9 +40,10 @@ export const Lobby = (props: LobbyProps) => {
       }}
     >
       <Stack direction='row' sx={{ backgroundColor: 'background.default', opacity: 0.85 }}>
-        {!authenticated && !register && < Login onSignIn={handleSignIn} onRegister={handleRegister} />}
-        {!authenticated && register && <Register />}
-        {authenticated && <JoinGame lobby={props.lobby} onCreateGame={props.onCreateGame} onJoinGame={props.onJoinGame} onSignOut={handleSignOut} />}
+        {user === undefined && <Loading />}
+        {user === null && !register && < Login onRegister={handleRegister} />}
+        {user === null && register && <Register />}
+        {user && <JoinGame lobby={props.lobby} user={user} onCreateGame={props.onCreateGame} onJoinGame={props.onJoinGame} />}
       </Stack>
     </Stack>
   );

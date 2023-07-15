@@ -5,7 +5,6 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { getAuth, getRedirectResult } from "firebase/auth";
 
 export interface LoginProps {
-  onSignIn: () => void;
   onRegister: () => void;
 }
 
@@ -24,7 +23,6 @@ export const Login = (props: LoginProps) => {
     .then((credential) => {
       if (credential) {
         console.log(`Signed in user ${credential.user.email}`);
-        props.onSignIn();
       }
     })
     .catch((err) => {

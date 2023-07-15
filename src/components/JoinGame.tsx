@@ -1,30 +1,23 @@
 import { Alert, Avatar, Box, Button, Grid, IconButton, Stack, TextField } from "@mui/material";
-import { onAuthStateChanged } from "firebase/auth";
-import { useEffect, useState } from "react";
-import { auth, logout, updateAvatar, updateName } from "../Firebase";
+import { User } from "firebase/auth";
+import { useState } from "react";
+import { logout, updateAvatar, updateName } from "../Firebase";
 import { GameMaps } from "../model/GameMaps";
 import { LobbyController } from "../controllers/LobbyController";
 import { GameController } from "../controllers/GameController";
 
 export interface JoinGameProps {
   lobby: LobbyController;
+  user: User;
   onCreateGame: (game: GameController) => void;
   onJoinGame: (game: GameController) => void;
-  onSignOut: () => void;
 }
 
 export const JoinGame = (props: JoinGameProps) => {
-  const [avatar, setAvatar] = useState('');
-  const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState(props.user.photoURL ?? '');
+  const [name, setName] = useState(props.user.displayName ?? '');
   const [gameID, setGameID] = useState('');
   const [error, setError] = useState('');
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      setAvatar(user.photoURL ?? '');
-      setName(user.displayName ?? '');
-    }
-  });
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -39,12 +32,17 @@ export const JoinGame = (props: JoinGameProps) => {
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nameVal = e.target.value.trim();
-    setName(nameVal)
-    updateName(nameVal)
-      .catch((err) => {
-        console.error(err);
-        setError(err);
-      })
+    setName(nameVal);
+  }
+
+  const handleNameLostFocus = () => {
+    if (props.user.displayName !== name) {
+      updateName(name)
+        .catch((err) => {
+          console.error(err);
+          setError(err);
+        });
+    }
   }
 
   const handleGameIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,7 +83,6 @@ export const JoinGame = (props: JoinGameProps) => {
     logout()
       .then(() => {
         console.log('Signout successful');
-        props.onSignOut();
       })
       .catch((err) => {
         console.error(err);
@@ -117,6 +114,7 @@ export const JoinGame = (props: JoinGameProps) => {
               label="Name"
               autoFocus
               onChange={handleNameChange}
+              onBlur={handleNameLostFocus}
             />
           </Grid>
           <Grid item xs={4}>

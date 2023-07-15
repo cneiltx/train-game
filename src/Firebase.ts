@@ -2,15 +2,12 @@ import { initializeApp } from "firebase/app";
 import {
   GoogleAuthProvider,
   getAuth,
-  signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
   updateProfile,
   signInWithRedirect,
-  getRedirectResult,
-  UserCredential,
 } from 'firebase/auth';
 import {
   getFirestore,
