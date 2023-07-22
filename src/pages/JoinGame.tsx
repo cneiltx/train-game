@@ -31,13 +31,14 @@ export const JoinGame = (props: JoinGameProps) => {
   }
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nameVal = e.target.value.trim();
+    const nameVal = e.target.value;
     setName(nameVal);
   }
 
   const handleNameLostFocus = () => {
-    if (props.user.displayName !== name) {
-      updateName(name)
+    const nameVal = name.trim();
+    if (props.user.displayName !== nameVal) {
+      updateName(nameVal)
         .catch((err) => {
           console.error(err);
           setError(err);
@@ -81,9 +82,6 @@ export const JoinGame = (props: JoinGameProps) => {
     setError('');
 
     logout()
-      .then(() => {
-        console.log('Signout successful');
-      })
       .catch((err) => {
         console.error(err);
         setError(err);
@@ -99,12 +97,13 @@ export const JoinGame = (props: JoinGameProps) => {
           textAlign='center'
           alignItems='center'
           padding={2}
-          spacing={1}
+          spacing={1.5}
         >
-          <Grid item xs={12} sx={{ fontSize: 'h4.fontSize' }}>Welcome to<br></br>The Train Game!</Grid>
+          <Grid item xs={12} sx={{ fontSize: 'h4.fontSize', userSelect: 'none' }}>Welcome to<br></br>The Train Game!</Grid>
           <Grid item xs={12} height='1rem' />
           <Grid item xs={8}>
             <TextField
+              InputLabelProps={{ shrink: true }}
               name='name'
               value={name}
               size='small'
@@ -128,6 +127,7 @@ export const JoinGame = (props: JoinGameProps) => {
           <Grid item xs={12} height='1rem' />
           <Grid item xs={8}>
             <TextField
+              InputLabelProps={{ shrink: true }}
               name='gameID'
               size='small'
               fullWidth

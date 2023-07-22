@@ -32,7 +32,15 @@ export const Register = (props: RegisterProps) => {
       setError('Passwords do not match');
     } else {
       setError('');
-      registerWithEmailAndPassword(name, avatarFile!, email, password1);
+      registerWithEmailAndPassword(name, avatarFile!, email, password1)
+        .then((credential) => {
+          const user = credential.user;
+          console.log(`Registered user ${credential.user.email}`);
+        })
+        .catch((err) => {
+          console.error(err)
+          setError(err.message);
+        });
     }
   }
 
@@ -44,12 +52,13 @@ export const Register = (props: RegisterProps) => {
         textAlign='center'
         alignItems='center'
         padding={2}
-        spacing={1}
+        spacing={1.5}
       >
-        <Grid item xs={12} sx={{ fontSize: 'h4.fontSize' }}>Welcome to<br></br>The Train Game!</Grid>
+        <Grid item xs={12} sx={{ fontSize: 'h4.fontSize', userSelect: 'none' }}>Welcome to<br></br>The Train Game!</Grid>
         <Grid item xs={12} height='2rem' />
         <Grid item xs={8}>
           <TextField
+            InputLabelProps={{ shrink: true }}
             name='name'
             value={name}
             size='small'
@@ -72,6 +81,7 @@ export const Register = (props: RegisterProps) => {
         <Grid item xs={1} />
         <Grid item xs={10}>
           <TextField
+            InputLabelProps={{ shrink: true }}
             name='email'
             value={email}
             size='small'
@@ -86,6 +96,7 @@ export const Register = (props: RegisterProps) => {
         <Grid item xs={1} />
         <Grid item xs={10}>
           <TextField
+            InputLabelProps={{ shrink: true }}
             name='password1'
             value={password1}
             size='small'
@@ -101,6 +112,7 @@ export const Register = (props: RegisterProps) => {
         <Grid item xs={1} />
         <Grid item xs={10}>
           <TextField
+            InputLabelProps={{ shrink: true }}
             name='password2'
             value={password2}
             size='small'

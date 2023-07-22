@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { signInWithGoogle, logInWithEmailAndPassword, registerWithEmailAndPassword } from "../Firebase";
+import { signInWithGoogle, registerWithEmailAndPassword, firebaseAuth } from "../Firebase";
 import { Alert, Button, Grid, Link, Stack, TextField } from "@mui/material";
 import GoogleIcon from '@mui/icons-material/Google';
-import { getAuth, getRedirectResult } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export interface LoginProps {
   onRegister: () => void;
@@ -15,25 +15,20 @@ export const Login = (props: LoginProps) => {
 
   const handleGoogleSignIn = () => {
     setError('');
-    signInWithGoogle();
+    signInWithGoogle()
+      .catch((err) => {
+        console.error(err);
+        setError(err.message);
+      });
   }
 
-  const auth = getAuth();
-  getRedirectResult(auth)
-    .then((credential) => {
-      if (credential) {
-        console.log(`Signed in user ${credential.user.email}`);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      if (err instanceof Error) {
-        setError(err.message);
-      }
-    });
-
   const handleEmailSignIn = () => {
-
+    signInWithEmailAndPassword(firebaseAuth, email, password)
+      .then((credential) => { })
+      .catch((err) => {
+        console.error(err);
+        setError(err.message);
+      });
   }
 
   return (
@@ -44,9 +39,9 @@ export const Login = (props: LoginProps) => {
         textAlign='center'
         alignItems='center'
         padding={2}
-        spacing={1}
+        spacing={1.5}
       >
-        <Grid item xs={12} sx={{ fontSize: 'h4.fontSize' }}>Welcome to<br></br>The Train Game!</Grid>
+        <Grid item xs={12} sx={{ fontSize: 'h4.fontSize', userSelect: 'none' }}>Welcome to<br></br>The Train Game!</Grid>
         <Grid item xs={12} height='2rem' />
         <Grid item xs={12}>
           <Button
@@ -61,6 +56,7 @@ export const Login = (props: LoginProps) => {
         <Grid item xs={1} />
         <Grid item xs={10}>
           <TextField
+            InputLabelProps={{ shrink: true }}
             name='email'
             value={email}
             size='small'
@@ -76,6 +72,7 @@ export const Login = (props: LoginProps) => {
         <Grid item xs={1} />
         <Grid item xs={10}>
           <TextField
+            InputLabelProps={{ shrink: true }}
             name='password'
             value={password}
             size='small'
@@ -97,11 +94,11 @@ export const Login = (props: LoginProps) => {
           </Button>
         </Grid>
         <Grid item xs={12} height='2rem' />
-        <Grid item xs={12}>
-          <Link>Forgot Password</Link>
+        <Grid item xs={12} sx={{ userSelect: 'none' }}>
+          <Link style={{ cursor: 'pointer' }}>Forgot Password</Link>
         </Grid>
-        <Grid item xs={12}>
-          Don't have an account? <Link onClick={props.onRegister}>Register</Link> now.
+        <Grid item xs={12} sx={{ userSelect: 'none' }}>
+          Don't have an account? <Link onClick={props.onRegister} style={{ cursor: 'pointer' }}>Register</Link> now.
         </Grid>
         <Grid item xs={12} height='2rem' />
         <Grid item xs={12} sx={{ textAlign: 'left' }}>

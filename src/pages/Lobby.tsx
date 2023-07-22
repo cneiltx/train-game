@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 import { GameController } from '../controllers/GameController';
 import { LobbyController } from '../controllers/LobbyController';
 import bwTrain from '../images/backgrounds/bw-train-building.jpeg';
-import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
-import { JoinGame } from '../components/JoinGame';
-import { Login } from '../components/Login';
-import { Register } from '../components/Register';
-import { Loading } from '../components/Loading';
+import { User, onAuthStateChanged } from 'firebase/auth';
+import { JoinGame } from './JoinGame';
+import { Login } from './Login';
+import { Register } from './Register';
+import { Loading } from './Loading';
+import { firebaseAuth } from '../Firebase';
 
 export interface LobbyProps {
   lobby: LobbyController;
@@ -20,9 +21,19 @@ export const Lobby = (props: LobbyProps) => {
   const [register, setRegister] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(getAuth(), setUser);
+    const unsubscribe = onAuthStateChanged(firebaseAuth, handleAuthStateChanged);
     return unsubscribe;
   }, []);
+
+  const handleAuthStateChanged = (user: User | null) => {
+    setUser(user);
+
+    if (user) {
+      console.log(`Signed in user ${user.email}`);
+    } else {
+      console.log('Signed out user');
+    }
+  }
 
   const handleRegister = () => {
     setRegister(true);
