@@ -1,16 +1,16 @@
-import cardBack from '../images/destination-cards/card-back.png';
-import cardFront from '../images/destination-cards/card-front.png';
+import cardBack from "../images/destination-cards/card-back.png";
+import cardFront from "../images/destination-cards/card-front.png";
 import { Box, Fade } from "@mui/material";
-import { useEffect, useRef, useState } from 'react';
-import { DestinationCard } from '../model/DestinationCard';
-import { City } from '../model/City';
-import { GameController, PlayerStateChangeEventArgs } from '../controllers/GameController';
-import { PlayerState } from '../model/PlayerState';
+import { useEffect, useRef, useState } from "react";
+import { DestinationCard } from "../model/DestinationCard";
+import { City } from "../model/City";
+import { GameController, PlayerStateChangeEventArgs } from "../controllers/GameController";
+import { PlayerState } from "../model/PlayerState";
 
 export interface DestinationDeckCardProps {
   card: DestinationCard;
   game: GameController;
-  mode: 'drawDeck' | 'drawFaceUp' | 'playerHand';
+  mode: "drawDeck" | "drawFaceUp" | "playerHand";
   onClick?: (card: DestinationCard) => void;
   selected?: boolean;
   extraProps?: any;
@@ -27,8 +27,8 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   }, []);
 
   useEffect(() => {
-    props.game.addEventListener('onPlayerStateChange', (e) => handlePlayerStateChange(e));
-    return props.game.removeEventListener('onPlayerStateChange', handlePlayerStateChange);
+    props.game.addEventListener("onPlayerStateChange", (e) => handlePlayerStateChange(e));
+    return props.game.removeEventListener("onPlayerStateChange", handlePlayerStateChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -39,13 +39,13 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   }
 
   useEffect(() => {
-    if (props.mode === 'drawDeck') {
+    if (props.mode === "drawDeck") {
       image.src = cardBack;
     } else {
       image.src = cardFront;
     }
 
-    window.addEventListener('resize', onResize);
+    window.addEventListener("resize", onResize);
     image.onload = () => {
       const canvas = canvasRef.current;
 
@@ -55,7 +55,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
         onResize();
       }
     }
-    return () => window.removeEventListener('resize', onResize);
+    return () => window.removeEventListener("resize", onResize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props]);
 
@@ -63,7 +63,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     const canvas = canvasRef.current;
 
     if (canvas) {
-      const context = canvas.getContext('2d')!;
+      const context = canvas.getContext("2d")!;
       drawCard(canvas, context);
     }
   }
@@ -71,7 +71,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   const drawCard = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
     drawBackground(canvas, context);
 
-    if (props.mode !== 'drawDeck') {
+    if (props.mode !== "drawDeck") {
       const city1 = props.game.map.cities.find((item) => item.city === props.card.city1);
       const city2 = props.game.map.cities.find((item) => item.city === props.card.city2);
 
@@ -89,14 +89,14 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     context.drawImage(image, 0, 0);
 
     if (props.card.complete) {
-      context.fillStyle = 'rgba(76, 187, 23, 0.5)'
+      context.fillStyle = "rgba(76, 187, 23, 0.5)"
       context.beginPath();
       context.roundRect(0, 0, canvas.width, canvas.height, 10);
       context.fill();
     }
 
     if (props.selected) {
-      context.strokeStyle = 'gold';
+      context.strokeStyle = "gold";
       context.lineWidth = 7;
       context.beginPath();
       context.roundRect(context.lineWidth / 2, context.lineWidth / 2, canvas.width - context.lineWidth, canvas.height - context.lineWidth, 10);
@@ -106,7 +106,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
 
   const drawCities = (context: CanvasRenderingContext2D) => {
     const cityRadius = 1.1;
-    context.fillStyle = 'indianred';
+    context.fillStyle = "indianred";
     props.game.map.cities.forEach((city) => {
       context.beginPath();
       let [x, y] = [city.cardX, city.cardY];
@@ -119,9 +119,9 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     let [x, y] = [125, 27];
     context.save();
     context.font = `bold 18px roboto`;
-    context.fillStyle = 'black';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
+    context.fillStyle = "black";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
     const text = `${city1.name} - ${city2.name}`;
     context.lineWidth = 1;
     context.fillText(text, x, y, 180);
@@ -132,9 +132,9 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     let [x, y] = [211, 125];
     context.save();
     context.font = `bold 28px roboto`;
-    context.fillStyle = 'black';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
+    context.fillStyle = "black";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
     const text = props.card.points.toString();
     context.fillText(text, x, y);
     context.restore();
@@ -146,7 +146,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
     context.beginPath();
     context.moveTo(x1, y1);
     context.lineTo(x2, y2);
-    context.strokeStyle = 'darkgoldenrod';
+    context.strokeStyle = "darkgoldenrod";
     context.lineWidth = 3;
     context.stroke();
     drawCityRing(context, city1);
@@ -154,10 +154,10 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   }
 
   const drawCityRing = (context: CanvasRenderingContext2D, city: City) => {
-    context.fillStyle = 'navy';
+    context.fillStyle = "navy";
     context.beginPath();
     let [x, y] = [city.cardX, city.cardY];
-    context.strokeStyle = 'navy';
+    context.strokeStyle = "navy";
     context.lineWidth = 4;
     context.arc(x, y, 4, 0, 2 * Math.PI);
     context.stroke();
@@ -170,7 +170,7 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   }
 
   const handleMouseEnter = () => {
-    if (props.mode !== 'drawDeck') {
+    if (props.mode !== "drawDeck") {
       props.game.selectCities([props.card.city1, props.card.city2]);
     }
   }
@@ -180,31 +180,31 @@ export const DestinationDeckCard = (props: DestinationDeckCardProps) => {
   }
 
   const canClick = () => {
-    return props.mode === 'drawFaceUp' || (props.mode === 'drawDeck' && localPlayerState === PlayerState.StartingTurn);
+    return props.mode === "drawFaceUp" || (props.mode === "drawDeck" && localPlayerState === PlayerState.StartingTurn);
   }
 
   const style = { ...props.extraProps?.style };
   if (canClick()) {
-    style['cursor'] = 'pointer';
+    style["cursor"] = "pointer";
   } else {
-    if (props.mode !== 'playerHand' && localPlayerState !== PlayerState.Waiting) {
-      style['filter'] = 'brightness(0.4)';
+    if (props.mode !== "playerHand" && localPlayerState !== PlayerState.Waiting) {
+      style["filter"] = "brightness(0.4)";
     }
   }
 
   const newProps = { ...props.extraProps };
-  newProps['style'] = style;
+  newProps["style"] = style;
 
   return (
     <Fade in={fade} timeout={750}>
       <Box
-        component='canvas'
+        component="canvas"
         {...newProps}
         ref={canvasRef}
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        sx={{ maxHeight: '100%', maxWidth: '100%' }} />
+        sx={{ maxHeight: "100%", maxWidth: "100%" }} />
     </Fade>
   );
 }

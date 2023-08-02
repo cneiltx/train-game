@@ -18,24 +18,24 @@ export const DestinationCardStack = (props: DestinationCardStackProps) => {
   }
 
   if (props.cards.length === 0) {
-    return <Box {...props.extraProps} style={{ background: 'rgba(255, 255, 255, 0.2)', borderRadius: '10%' }} />;
+    return <Box {...props.extraProps} style={{ background: "rgba(255, 255, 255, 0.2)", borderRadius: "10%" }} />;
   } else if (props.cards.length === 1) {
     return (
       <DestinationDeckCard
         card={props.cards[0]}
         game={props.game}
-        mode='drawDeck'
+        mode="drawDeck"
         onClick={handleClick}
         extraProps={props.extraProps} />
     );
   } else {
     const newProps = { ...props.extraProps };
-    newProps['style'] = { boxShadow: '0.1vb 0.1vh 0 0px black, 0.3vh 0.3vh 0 0px gray, 0.4vh 0.4vh 0 0px black, 0.6vh 0.6vh 0 0px gray', borderRadius: '10%' };
+    newProps["style"] = { boxShadow: "0.1vb 0.1vh 0 0px black, 0.3vh 0.3vh 0 0px gray, 0.4vh 0.4vh 0 0px black, 0.6vh 0.6vh 0 0px gray", borderRadius: "10%" };
     return (
       <DestinationDeckCard
         card={props.cards[0]}
         game={props.game}
-        mode='drawDeck'
+        mode="drawDeck"
         onClick={handleClick}
         extraProps={newProps} />
     );

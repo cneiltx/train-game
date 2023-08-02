@@ -9,9 +9,9 @@ export class City {
   readonly mapName: string;
   readonly printXOffset: number;
   readonly printYOffset: number;
-  readonly printAlign: 'left' | 'right' | 'center';
+  readonly printAlign: "left" | "right" | "center";
 
-  constructor(city: Cities, mapX: number, mapY: number, cardX: number, cardY: number, printName: string, printXOffset: number, printYOffset: number, printAlign: 'left' | 'right' | 'center') {
+  constructor(city: Cities, mapX: number, mapY: number, cardX: number, cardY: number, printName: string, printXOffset: number, printYOffset: number, printAlign: "left" | "right" | "center") {
     this.city = city;
     this.mapX = mapX;
     this.mapY = mapY;
@@ -24,6 +24,6 @@ export class City {
   }
 
   get name() {
-    return this.mapName.replaceAll('\n', ' ');
+    return this.mapName.replaceAll("\n", " ");
   }
 }

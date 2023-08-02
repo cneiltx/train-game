@@ -16,8 +16,8 @@ export const PlayerControls = (props: PlayerControlsProps) => {
   const [localMessages, setLocalMessages] = useState(props.game.localMessages);
 
   useEffect(() => {
-    props.game.addEventListener('onGameStateChange', (e) => handleGameStateChange(e));
-    return props.game.removeEventListener('onGameStateChange', handleGameStateChange);
+    props.game.addEventListener("onGameStateChange", (e) => handleGameStateChange(e));
+    return props.game.removeEventListener("onGameStateChange", handleGameStateChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -26,8 +26,8 @@ export const PlayerControls = (props: PlayerControlsProps) => {
   }
 
   useEffect(() => {
-    props.game.addEventListener('onPlayerStateChange', (e) => handlePlayerStateChange(e));
-    return props.game.removeEventListener('onPlayerStateChange', handlePlayerStateChange);
+    props.game.addEventListener("onPlayerStateChange", (e) => handlePlayerStateChange(e));
+    return props.game.removeEventListener("onPlayerStateChange", handlePlayerStateChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -38,8 +38,8 @@ export const PlayerControls = (props: PlayerControlsProps) => {
   }
 
   useEffect(() => {
-    props.game.addEventListener('onPlayersChange', (e) => handlePlayersChange(e));
-    return props.game.removeEventListener('onPlayersChange', handlePlayersChange);
+    props.game.addEventListener("onPlayersChange", (e) => handlePlayersChange(e));
+    return props.game.removeEventListener("onPlayersChange", handlePlayersChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -48,8 +48,8 @@ export const PlayerControls = (props: PlayerControlsProps) => {
   }
 
   useEffect(() => {
-    props.game.addEventListener('onLocalMessagesChange', (e) => handleLocalMessagesChange(e));
-    return props.game.removeEventListener('onLocalMessagesChange', handleLocalMessagesChange);
+    props.game.addEventListener("onLocalMessagesChange", (e) => handleLocalMessagesChange(e));
+    return props.game.removeEventListener("onLocalMessagesChange", handleLocalMessagesChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -63,7 +63,7 @@ export const PlayerControls = (props: PlayerControlsProps) => {
     const priorityStyle: any = {};
 
     if (message.priority) {
-      priorityStyle['sx'] = { color: 'goldenrod' };
+      priorityStyle["sx"] = { color: "goldenrod" };
     }
 
     messageList.push(
@@ -75,24 +75,24 @@ export const PlayerControls = (props: PlayerControlsProps) => {
   }
 
   return (
-    <Box padding='1.5vh' {...props.extraProps} flexShrink={0} >
-      <Typography variant='body2' sx={{ height: '100%', overflowY: 'auto', userSelect: 'none' }} >
+    <Box padding="1.5vh" {...props.extraProps} flexShrink={0} >
+      <Typography variant="body2" sx={{ height: "100%", overflowY: "auto", userSelect: "none" }} >
         {gameState === GameState.Initializing &&
-          <Stack spacing='1.5vh'>
+          <Stack spacing="1.5vh">
             <Box>{`Game ID: ${props.game.gameID}`}</Box>
             {playerCount < 5 ? <Box>Waiting for players to join.</Box> :
               <Box>No more players can join.</Box>}
-            <Box display='flex' justifyContent='center'>
-              <Button variant='outlined' size='small' disabled={playerCount < 2} onClick={() => props.game.startGame()}>Start Game</Button>
+            <Box display="flex" justifyContent="center">
+              <Button variant="outlined" size="small" disabled={playerCount < 2} onClick={() => props.game.startGame()}>Start Game</Button>
             </Box>
           </Stack>}
         {gameState === GameState.Playing && localPlayerState === PlayerState.StartingTurn &&
-          <Stack spacing='1.5vh'>
+          <Stack spacing="1.5vh">
             <Box>Your turn!</Box>
             <Box>Draw a train card, draw destination cards, or claim a route.</Box>
           </Stack>}
         {gameState === GameState.Playing && localPlayerState === PlayerState.DrawingTrainCards &&
-          <Stack spacing='1.5vh'>
+          <Stack spacing="1.5vh">
             <Box>Draw another train card.</Box>
           </Stack>}
         {gameState === GameState.Playing && localPlayerState === PlayerState.Waiting &&

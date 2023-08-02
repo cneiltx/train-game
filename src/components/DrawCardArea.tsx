@@ -1,13 +1,13 @@
-import { TrainDeckCard } from './TrainDeckCard';
-import { Box, Button, Stack, Typography } from '@mui/material';
-import { TrainCardStack } from './TrainCardStack';
-import { DestinationCardStack } from './DestinationCardStack';
-import { DestinationCardDeckChangeEventArgs, GameController, PlayerStateChangeEventArgs, TrainCardDeckChangeEventArgs } from '../controllers/GameController';
-import { useEffect, useState } from 'react';
-import { TrainCard } from '../model/TrainCard';
-import { PlayerState } from '../model/PlayerState';
-import { DestinationCard } from '../model/DestinationCard';
-import { DestinationDeckCard } from './DestinationDeckCard';
+import { TrainDeckCard } from "./TrainDeckCard";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { TrainCardStack } from "./TrainCardStack";
+import { DestinationCardStack } from "./DestinationCardStack";
+import { DestinationCardDeckChangeEventArgs, GameController, PlayerStateChangeEventArgs, TrainCardDeckChangeEventArgs } from "../controllers/GameController";
+import { useEffect, useState } from "react";
+import { TrainCard } from "../model/TrainCard";
+import { PlayerState } from "../model/PlayerState";
+import { DestinationCard } from "../model/DestinationCard";
+import { DestinationDeckCard } from "./DestinationDeckCard";
 
 export interface DrawCardAreaProps {
   game: GameController;
@@ -27,26 +27,26 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
   const [selectedDestinationCards, setSelectedDestinationCards] = useState<DestinationCard[]>([]);
 
   useEffect(() => {
-    props.game.addEventListener('onTrainCardDeckChange', (e) => handleTrainCardDeckChange(e));
-    return props.game.removeEventListener('onTrainCardDeckChange', handleTrainCardDeckChange);
+    props.game.addEventListener("onTrainCardDeckChange", (e) => handleTrainCardDeckChange(e));
+    return props.game.removeEventListener("onTrainCardDeckChange", handleTrainCardDeckChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    props.game.addEventListener('onFaceUpTrainCardsChange', (e) => handleFaceUpTrainCardsChange(e));
-    return props.game.removeEventListener('onFaceUpTrainCardsChange', handleFaceUpTrainCardsChange);
+    props.game.addEventListener("onFaceUpTrainCardsChange", (e) => handleFaceUpTrainCardsChange(e));
+    return props.game.removeEventListener("onFaceUpTrainCardsChange", handleFaceUpTrainCardsChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    props.game.addEventListener('onDestinationCardDeckChange', (e) => handleDestinationCardDeckChange(e));
-    return props.game.removeEventListener('onDestinationCardDeckChange', handleDestinationCardDeckChange);
+    props.game.addEventListener("onDestinationCardDeckChange", (e) => handleDestinationCardDeckChange(e));
+    return props.game.removeEventListener("onDestinationCardDeckChange", handleDestinationCardDeckChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    props.game.addEventListener('onPlayerStateChange', (e) => handlePlayerStateChange(e));
-    return props.game.removeEventListener('onPlayerStateChange', handlePlayerStateChange);
+    props.game.addEventListener("onPlayerStateChange", (e) => handlePlayerStateChange(e));
+    return props.game.removeEventListener("onPlayerStateChange", handlePlayerStateChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -93,11 +93,11 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
           key={card.id}
           card={card}
           game={props.game}
-          mode='drawFaceUp'
-          extraProps={{ height: '9vh', width: '14vh' }} />
+          mode="drawFaceUp"
+          extraProps={{ height: "9vh", width: "14vh" }} />
       );
     } else {
-      trainCards.push(<Box key={`empty-${index}`} height='9vh' width='14vh' style={{ background: 'rgba(255, 255, 255, 0.2)', borderRadius: '10%' }} />);
+      trainCards.push(<Box key={`empty-${index}`} height="9vh" width="14vh" style={{ background: "rgba(255, 255, 255, 0.2)", borderRadius: "10%" }} />);
     }
     index++;
   }
@@ -108,10 +108,10 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
         key={card.id}
         card={card}
         game={props.game}
-        mode='drawFaceUp'
+        mode="drawFaceUp"
         onClick={handleDrawnDestinationCardClick}
         selected={selectedDestinationCards.findIndex(value => value.id === card.id) >= 0}
-        extraProps={{ height: '9vh', width: '14vh' }} />
+        extraProps={{ height: "9vh", width: "14vh" }} />
     );
   }
 
@@ -122,28 +122,28 @@ export const DrawCardArea = (props: DrawCardAreaProps) => {
 
   return (
     localPlayerState === PlayerState.DrawingDestinationCards ?
-      <Typography variant='body2' sx={{ userSelect: 'none' }} {...props.extraProps}>
-        <Stack padding='1.5vh' spacing='1.5vh' alignItems='center' >
+      <Typography variant="body2" sx={{ userSelect: "none" }} {...props.extraProps}>
+        <Stack padding="1.5vh" spacing="1.5vh" alignItems="center" >
           {destinationCards}
           <Box>Select 1 or more cards.</Box>
-          <Box display='flex' justifyContent='center'>
-            <Button variant='outlined' size='small' disabled={selectedDestinationCards.length === 0} onClick={handleSelectDestinationCards}>Select</Button>
+          <Box display="flex" justifyContent="center">
+            <Button variant="outlined" size="small" disabled={selectedDestinationCards.length === 0} onClick={handleSelectDestinationCards}>Select</Button>
           </Box>
         </Stack>
       </Typography> :
-      <Stack padding='1.5vh' spacing='1.5vh' alignItems='center' {...props.extraProps}>
+      <Stack padding="1.5vh" spacing="1.5vh" alignItems="center" {...props.extraProps}>
         <TrainCardStack
-          key='trainDeck'
+          key="trainDeck"
           cards={trainCardDeck}
           game={props.game}
-          extraProps={{ height: '9vh', width: '14vh' }} />
+          extraProps={{ height: "9vh", width: "14vh" }} />
         {trainCards}
         <DestinationCardStack
-          key='destinationDeck'
+          key="destinationDeck"
           cards={destinationCardDeck}
           game={props.game}
           onClick={handleDestinationDeckClick}
-          extraProps={{ height: '9vh', width: '14vh' }} />
+          extraProps={{ height: "9vh", width: "14vh" }} />
       </Stack>
   );
 }

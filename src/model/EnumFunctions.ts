@@ -9,38 +9,38 @@ export class EnumFunctions {
   static getHtmlColor(color: TrainColor) {
     switch (color) {
       case TrainColor.Black:
-        return 'black';
+        return "black";
       case TrainColor.Blue:
-        return 'darkblue';
+        return "darkblue";
       case TrainColor.Green:
-        return 'darkgreen';
+        return "darkgreen";
       case TrainColor.Red:
-        return 'firebrick';
+        return "firebrick";
       case TrainColor.Yellow:
-        return 'goldenrod';
+        return "goldenrod";
     }
   }
 
   static getName(color: TrainCardColor) {
     switch (color) {
       case TrainCardColor.Black:
-        return 'black';
+        return "black";
       case TrainCardColor.Blue:
-        return 'blue';
+        return "blue";
       case TrainCardColor.Green:
-        return 'green';
+        return "green";
       case TrainCardColor.Orange:
-        return 'orange';
+        return "orange";
       case TrainCardColor.Purple:
-        return 'purple';
+        return "purple";
       case TrainCardColor.Wild:
-        return 'rainbow';
+        return "rainbow";
       case TrainCardColor.Red:
-        return 'red';
+        return "red";
       case TrainCardColor.White:
-        return 'white';
+        return "white";
       case TrainCardColor.Yellow:
-        return 'yellow';
+        return "yellow";
     }
   }
 }

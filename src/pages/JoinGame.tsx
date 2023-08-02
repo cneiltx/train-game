@@ -14,10 +14,10 @@ export interface JoinGameProps {
 }
 
 export const JoinGame = (props: JoinGameProps) => {
-  const [avatar, setAvatar] = useState(props.user.photoURL ?? '');
-  const [name, setName] = useState(props.user.displayName ?? '');
-  const [gameID, setGameID] = useState('');
-  const [error, setError] = useState('');
+  const [avatar, setAvatar] = useState(props.user.photoURL ?? "");
+  const [name, setName] = useState(props.user.displayName ?? "");
+  const [gameID, setGameID] = useState("");
+  const [error, setError] = useState("");
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -51,11 +51,11 @@ export const JoinGame = (props: JoinGameProps) => {
   }
 
   const handleJoinGame = () => {
-    setError('');
+    setError("");
 
     try {
       const game = props.lobby.joinGame(gameID, name, avatar);
-      setError('');
+      setError("");
       props.onJoinGame(game);
     } catch (e) {
       if (e instanceof Error) {
@@ -65,11 +65,11 @@ export const JoinGame = (props: JoinGameProps) => {
   }
 
   const handleCreateGame = () => {
-    setError('');
+    setError("");
 
     try {
       const game = props.lobby.createGame(name, avatar, GameMaps.US);
-      setError('');
+      setError("");
       props.onCreateGame(game);
     } catch (e) {
       if (e instanceof Error) {
@@ -79,7 +79,7 @@ export const JoinGame = (props: JoinGameProps) => {
   }
 
   const handleSignOut = () => {
-    setError('');
+    setError("");
 
     logout()
       .catch((err) => {
@@ -89,27 +89,27 @@ export const JoinGame = (props: JoinGameProps) => {
   }
 
   return (
-    <Stack justifyContent='space-between' alignItems='center' >
+    <Stack justifyContent="space-between" alignItems="center" >
       <Stack>
         <Grid
           width={400}
           container
-          textAlign='center'
-          alignItems='center'
+          textAlign="center"
+          alignItems="center"
           padding={2}
           spacing={1.5}
         >
-          <Grid item xs={12} sx={{ fontSize: 'h4.fontSize', userSelect: 'none' }}>Welcome to<br></br>The Train Game!</Grid>
-          <Grid item xs={12} height='1rem' />
+          <Grid item xs={12} sx={{ fontSize: "h4.fontSize", userSelect: "none" }}>Welcome to<br></br>The Train Game!</Grid>
+          <Grid item xs={12} height="1rem" />
           <Grid item xs={8}>
             <TextField
               InputLabelProps={{ shrink: true }}
-              name='name'
+              name="name"
               value={name}
-              size='small'
+              size="small"
               required
               fullWidth
-              id='name'
+              id="name"
               label="Name"
               autoFocus
               onChange={handleNameChange}
@@ -117,44 +117,44 @@ export const JoinGame = (props: JoinGameProps) => {
             />
           </Grid>
           <Grid item xs={4}>
-            <input accept='image/*' id='upload-avatar' type='file' hidden onChange={handleAvatarChange} />
-            <label htmlFor='upload-avatar'>
-              <IconButton component='span'>
-                <Avatar sx={{ width: '5rem', height: '5rem', fontSize: '1rem' }} src={avatar}>Choose Avatar</Avatar>
+            <input accept="image/*" id="upload-avatar" type="file" hidden onChange={handleAvatarChange} />
+            <label htmlFor="upload-avatar">
+              <IconButton component="span">
+                <Avatar sx={{ width: "5rem", height: "5rem", fontSize: "1rem" }} src={avatar}>Choose Avatar</Avatar>
               </IconButton>
             </label>
           </Grid>
-          <Grid item xs={12} height='1rem' />
+          <Grid item xs={12} height="1rem" />
           <Grid item xs={8}>
             <TextField
               InputLabelProps={{ shrink: true }}
-              name='gameID'
-              size='small'
+              name="gameID"
+              size="small"
               fullWidth
-              id='gameID'
-              label='Game ID'
-              inputProps={{ sx: { textTransform: 'uppercase' } }}
+              id="gameID"
+              label="Game ID"
+              inputProps={{ sx: { textTransform: "uppercase" } }}
               onChange={handleGameIDChange}
             />
           </Grid>
           <Grid item xs={4}>
             <Button
-              variant='outlined'
-              disabled={name === '' || avatar === '' || gameID === ''}
+              variant="outlined"
+              disabled={name === "" || avatar === "" || gameID === ""}
               onClick={handleJoinGame}
             >
               Join Game
             </Button>
           </Grid>
-          <Grid item xs={12} sx={{ textAlign: 'left' }}>
-            {error !== '' && <Alert severity='error'>{error}</Alert>}
+          <Grid item xs={12} sx={{ textAlign: "left" }}>
+            {error !== "" && <Alert severity="error">{error}</Alert>}
           </Grid>
-          <Grid item xs={12} height='1rem' />
+          <Grid item xs={12} height="1rem" />
           <Grid item xs={8} />
           <Grid item xs={4}>
             <Button
-              variant='outlined'
-              disabled={name === '' || avatar === ''}
+              variant="outlined"
+              disabled={name === "" || avatar === ""}
               onClick={handleCreateGame}
             >
               New Game
@@ -163,7 +163,7 @@ export const JoinGame = (props: JoinGameProps) => {
         </Grid>
       </Stack>
       <Box padding={2}>
-        <Button variant='outlined' onClick={handleSignOut}>Sign Out</Button>
+        <Button variant="outlined" onClick={handleSignOut}>Sign Out</Button>
       </Box>
     </Stack>
   );

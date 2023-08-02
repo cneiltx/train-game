@@ -2,13 +2,13 @@ import { Box } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { Player } from "../model/Player";
 import { TrainColor } from "../model/TrainColor";
-import destinationCardBack from '../images/destination-cards/card-back.png';
-import trainCardBack from '../images/train-cards/card-back.png';
-import blackCar from '../images/train-cars/car-black.png';
-import blueCar from '../images/train-cars/car-blue.png';
-import greenCar from '../images/train-cars/car-green.png';
-import redCar from '../images/train-cars/car-red.png';
-import yellowCar from '../images/train-cars/car-yellow.png';
+import destinationCardBack from "../images/destination-cards/card-back.png";
+import trainCardBack from "../images/train-cards/card-back.png";
+import blackCar from "../images/train-cars/car-black.png";
+import blueCar from "../images/train-cars/car-blue.png";
+import greenCar from "../images/train-cars/car-green.png";
+import redCar from "../images/train-cars/car-red.png";
+import yellowCar from "../images/train-cars/car-yellow.png";
 import { EnumFunctions } from "../model/EnumFunctions";
 import { PlayerStateChangeEventArgs, GameController, PlayerTrainCardsChangeEventArgs, PlayerDestinationCardsChangeEventArgs, PlayerTrainsChangeEventArgs, PlayerScoreChangeEventArgs } from "../controllers/GameController";
 import { PlayerState } from "../model/PlayerState";
@@ -34,8 +34,8 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   const [score, setScore] = useState(props.player.score);
 
   useEffect(() => {
-    props.game.addEventListener('onPlayerStateChange', (e) => handlePlayerStateChange(e));
-    return props.game.removeEventListener('onPlayerStateChange', handlePlayerStateChange);
+    props.game.addEventListener("onPlayerStateChange", (e) => handlePlayerStateChange(e));
+    return props.game.removeEventListener("onPlayerStateChange", handlePlayerStateChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -46,8 +46,8 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   useEffect(() => {
-    props.game.addEventListener('onPlayerTrainCardsChange', (e) => handlePlayerTrainCardsChange(e));
-    return props.game.removeEventListener('onPlayerTrainCardsChange', handlePlayerTrainCardsChange);
+    props.game.addEventListener("onPlayerTrainCardsChange", (e) => handlePlayerTrainCardsChange(e));
+    return props.game.removeEventListener("onPlayerTrainCardsChange", handlePlayerTrainCardsChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -59,8 +59,8 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   useEffect(() => {
-    props.game.addEventListener('onPlayerDestinationCardsChange', (e) => handlePlayerDestinationCardsChange(e));
-    return props.game.removeEventListener('onPlayerDestinationCardsChange', handlePlayerDestinationCardsChange);
+    props.game.addEventListener("onPlayerDestinationCardsChange", (e) => handlePlayerDestinationCardsChange(e));
+    return props.game.removeEventListener("onPlayerDestinationCardsChange", handlePlayerDestinationCardsChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -72,8 +72,8 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   useEffect(() => {
-    props.game.addEventListener('onPlayerTrainsChange', (e) => handlePlayerTrainsChange(e));
-    return props.game.removeEventListener('onPlayerTrainsChange', handlePlayerTrainsChange);
+    props.game.addEventListener("onPlayerTrainsChange", (e) => handlePlayerTrainsChange(e));
+    return props.game.removeEventListener("onPlayerTrainsChange", handlePlayerTrainsChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -85,8 +85,8 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   useEffect(() => {
-    props.game.addEventListener('onPlayerScoreChange', (e) => handlePlayerScoreChange(e));
-    return props.game.removeEventListener('onPlayerScoreChange', handlePlayerScoreChange);
+    props.game.addEventListener("onPlayerScoreChange", (e) => handlePlayerScoreChange(e));
+    return props.game.removeEventListener("onPlayerScoreChange", handlePlayerScoreChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -126,7 +126,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
       canvas.height = referenceHeight;
     }
 
-    window.addEventListener('resize', drawPlayerSummary);
+    window.addEventListener("resize", drawPlayerSummary);
 
     avatarImage.onload = () => {
       drawPlayerSummary();
@@ -141,7 +141,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
       drawPlayerSummary();
     }
 
-    return () => window.removeEventListener('resize', drawPlayerSummary);
+    return () => window.removeEventListener("resize", drawPlayerSummary);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trainCards, destinationCards, trains, score]);
 
@@ -149,7 +149,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
     const canvas = canvasRef.current;
 
     if (canvas) {
-      const context = canvas.getContext('2d')!;
+      const context = canvas.getContext("2d")!;
       drawBackground(context);
       drawAvatar(context);
       drawName(context);
@@ -161,7 +161,7 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   const drawBackground = (context: CanvasRenderingContext2D) => {
-    context.fillStyle = '#203030';
+    context.fillStyle = "#203030";
     context.fillRect(0, 0, referenceWidth, referenceHeight);
     context.fillStyle = EnumFunctions.getHtmlColor(props.player.color);
     context.fillRect(0, 0, referenceWidth, referenceHeight * 0.4);
@@ -178,24 +178,24 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
   }
 
   const drawName = (context: CanvasRenderingContext2D) => {
-    context.font = '1.5em roboto';
-    context.fillStyle = 'white';
-    context.textAlign = 'left';
-    context.textBaseline = 'middle';
+    context.font = "1.5em roboto";
+    context.fillStyle = "white";
+    context.textAlign = "left";
+    context.textBaseline = "middle";
     const x = referenceHeight * 0.95;
     const padding = referenceWidth * 0.02;
-    const line1 = props.player.name.trim().split(' ');
+    const line1 = props.player.name.trim().split(" ");
     const line2: string[] = [];
 
-    while (line1.length > 1 && context.measureText(line1.join(' ')).width > referenceWidth - x - padding) {
+    while (line1.length > 1 && context.measureText(line1.join(" ")).width > referenceWidth - x - padding) {
       line2.unshift(line1.pop()!);
     }
 
     if (line2.length > 0) {
-      context.fillText(line1.join(' '), x, referenceHeight * 0.12);
-      context.fillText(line2.join(' '), x, referenceHeight * 0.29);
+      context.fillText(line1.join(" "), x, referenceHeight * 0.12);
+      context.fillText(line2.join(" "), x, referenceHeight * 0.29);
     } else {
-      context.fillText(line1.join(' '), x, referenceHeight * 0.21);
+      context.fillText(line1.join(" "), x, referenceHeight * 0.21);
     }
   }
 
@@ -204,53 +204,53 @@ export const PlayerSummary = (props: PlayerSummaryProps) => {
     context.beginPath();
     context.roundRect(referenceHeight * 0.25, referenceHeight * 0.75, referenceHeight * 0.5, referenceHeight * 0.25, referenceHeight * 0.08);
     context.fill();
-    context.fillStyle = 'white';
-    context.font = 'bold 1.5em roboto';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
+    context.fillStyle = "white";
+    context.font = "bold 1.5em roboto";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
     context.fillText(score.toString(), referenceHeight * 0.5, referenceHeight * 0.89);
   }
 
   const drawTrainCount = (context: CanvasRenderingContext2D) => {
     context.strokeStyle = EnumFunctions.getHtmlColor(props.player.color);
-    context.fillStyle = 'white';
+    context.fillStyle = "white";
     context.lineWidth = 4;
     context.beginPath();
     context.arc(referenceHeight, referenceHeight * 0.75, referenceHeight * 0.2, 0, 2 * Math.PI);
     context.fill();
     context.stroke();
     context.drawImage(trainCar, referenceHeight * 0.85, referenceHeight * 0.63);
-    context.fillStyle = 'black';
-    context.font = 'bold 1.2em roboto';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
+    context.fillStyle = "black";
+    context.font = "bold 1.2em roboto";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
     context.fillText(trains.toString(), referenceHeight, referenceHeight * 0.84);
   }
 
   const drawTrainCardCount = (context: CanvasRenderingContext2D) => {
     context.drawImage(trainCardImage, referenceHeight * 1.35, referenceHeight * 0.475, referenceHeight * 0.2 * trainCardImage.width / trainCardImage.height, referenceHeight * 0.2);
-    context.fillStyle = 'white';
-    context.font = 'bold 1.2em roboto';
-    context.textAlign = 'left';
-    context.textBaseline = 'middle';
+    context.fillStyle = "white";
+    context.font = "bold 1.2em roboto";
+    context.textAlign = "left";
+    context.textBaseline = "middle";
     context.fillText(trainCards.length.toString(), referenceHeight * 1.72, referenceHeight * 0.58);
   }
 
   const drawDestinationCardCount = (context: CanvasRenderingContext2D) => {
     context.drawImage(destinationCardImage, referenceHeight * 1.35, referenceHeight * 0.725, referenceHeight * 0.2 * destinationCardImage.width / destinationCardImage.height, referenceHeight * 0.2);
-    context.fillStyle = 'white';
-    context.font = 'bold 1.2em roboto';
-    context.textAlign = 'left';
-    context.textBaseline = 'middle';
+    context.fillStyle = "white";
+    context.font = "bold 1.2em roboto";
+    context.textAlign = "left";
+    context.textBaseline = "middle";
     context.fillText(destinationCards.length.toString(), referenceHeight * 1.72, referenceHeight * 0.835);
   }
 
   const glow: any = {};
   if (state !== PlayerState.Waiting) {
-    glow['boxShadow'] = '0 0 4px 3px gold';
+    glow["boxShadow"] = "0 0 4px 3px gold";
   }
 
   return (
-    <Box {...props.extraProps} {...glow} component='canvas' ref={canvasRef} />
+    <Box {...props.extraProps} {...glow} component="canvas" ref={canvasRef} />
   );
 }

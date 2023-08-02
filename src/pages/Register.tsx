@@ -6,13 +6,13 @@ export interface RegisterProps {
 }
 
 export const Register = (props: RegisterProps) => {
-  const [email, setEmail] = useState('');
-  const [password1, setPassword1] = useState('');
-  const [password2, setPassword2] = useState('');
-  const [name, setName] = useState('');
-  const [avatar, setAvatar] = useState('');
+  const [email, setEmail] = useState("");
+  const [password1, setPassword1] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState("");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -29,9 +29,9 @@ export const Register = (props: RegisterProps) => {
 
   const handleRegister = () => {
     if (password1 !== password2) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
     } else {
-      setError('');
+      setError("");
       registerWithEmailAndPassword(name, avatarFile!, email, password1)
         .then((credential) => {
           const user = credential.user;
@@ -45,36 +45,36 @@ export const Register = (props: RegisterProps) => {
   }
 
   return (
-    <Stack justifyContent='space-between' alignItems='center' >
+    <Stack justifyContent="space-between" alignItems="center" >
       <Grid
         width={400}
         container
-        textAlign='center'
-        alignItems='center'
+        textAlign="center"
+        alignItems="center"
         padding={2}
         spacing={1.5}
       >
-        <Grid item xs={12} sx={{ fontSize: 'h4.fontSize', userSelect: 'none' }}>Welcome to<br></br>The Train Game!</Grid>
-        <Grid item xs={12} height='2rem' />
+        <Grid item xs={12} sx={{ fontSize: "h4.fontSize", userSelect: "none" }}>Welcome to<br></br>The Train Game!</Grid>
+        <Grid item xs={12} height="2rem" />
         <Grid item xs={8}>
           <TextField
             InputLabelProps={{ shrink: true }}
-            name='name'
+            name="name"
             value={name}
-            size='small'
+            size="small"
             required
             fullWidth
-            id='name'
+            id="name"
             label="Name"
             autoFocus
             onChange={handleNameChange}
           />
         </Grid>
         <Grid item xs={4}>
-          <input accept='image/*' id='upload-avatar' type='file' hidden onChange={handleAvatarChange} />
-          <label htmlFor='upload-avatar'>
-            <IconButton component='span'>
-              <Avatar sx={{ width: '5rem', height: '5rem', fontSize: '1rem' }} src={avatar}>Choose Avatar</Avatar>
+          <input accept="image/*" id="upload-avatar" type="file" hidden onChange={handleAvatarChange} />
+          <label htmlFor="upload-avatar">
+            <IconButton component="span">
+              <Avatar sx={{ width: "5rem", height: "5rem", fontSize: "1rem" }} src={avatar}>Choose Avatar</Avatar>
             </IconButton>
           </label>
         </Grid>
@@ -82,12 +82,12 @@ export const Register = (props: RegisterProps) => {
         <Grid item xs={10}>
           <TextField
             InputLabelProps={{ shrink: true }}
-            name='email'
+            name="email"
             value={email}
-            size='small'
+            size="small"
             required
             fullWidth
-            id='email'
+            id="email"
             label="Email"
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -97,14 +97,14 @@ export const Register = (props: RegisterProps) => {
         <Grid item xs={10}>
           <TextField
             InputLabelProps={{ shrink: true }}
-            name='password1'
+            name="password1"
             value={password1}
-            size='small'
+            size="small"
             required
             fullWidth
-            id='password1'
-            label='Password'
-            type='password'
+            id="password1"
+            label="Password"
+            type="password"
             onChange={(e) => setPassword1(e.target.value)}
           />
         </Grid>
@@ -113,31 +113,31 @@ export const Register = (props: RegisterProps) => {
         <Grid item xs={10}>
           <TextField
             InputLabelProps={{ shrink: true }}
-            name='password2'
+            name="password2"
             value={password2}
-            size='small'
+            size="small"
             required
             fullWidth
-            id='password2'
-            label='Retype Password'
-            type='password'
+            id="password2"
+            label="Retype Password"
+            type="password"
             onChange={(e) => setPassword2(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
           <Button
-            variant='outlined'
-            disabled={email === '' || password1 === '' || password2 === '' || name === '' || avatarFile === null}
+            variant="outlined"
+            disabled={email === "" || password1 === "" || password2 === "" || name === "" || avatarFile === null}
             onClick={handleRegister}
           >
             Register
           </Button>
         </Grid>
-        <Grid item xs={12} height='2rem' />
-        <Grid item xs={12} sx={{ textAlign: 'left' }}>
-          {error !== '' && <Alert severity='error'>{error}</Alert>}
+        <Grid item xs={12} height="2rem" />
+        <Grid item xs={12} sx={{ textAlign: "left" }}>
+          {error !== "" && <Alert severity="error">{error}</Alert>}
         </Grid>
-        <Grid item xs={12} height='1rem' />
+        <Grid item xs={12} height="1rem" />
       </Grid>
     </Stack>
   );

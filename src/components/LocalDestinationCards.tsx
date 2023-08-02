@@ -1,7 +1,7 @@
-import { Box } from '@mui/material';
-import { DestinationDeckCard } from './DestinationDeckCard';
-import { useEffect, useState } from 'react';
-import { GameController, PlayerDestinationCardCompleteEventArgs, PlayerDestinationCardsChangeEventArgs } from '../controllers/GameController';
+import { Box } from "@mui/material";
+import { DestinationDeckCard } from "./DestinationDeckCard";
+import { useEffect, useState } from "react";
+import { GameController, PlayerDestinationCardCompleteEventArgs, PlayerDestinationCardsChangeEventArgs } from "../controllers/GameController";
 
 export interface LocalDestinationCardsProps {
   game: GameController;
@@ -13,8 +13,8 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
   const [localPlayerDestinationCards, setLocalPlayerDestinationCards] = useState(props.game.localPlayer?.destinationCards);
 
   useEffect(() => {
-    props.game.addEventListener('onPlayerDestinationCardsChange', (e) => handlePlayerDestinationCardsChange(e));
-    return props.game.removeEventListener('onPlayerDestinationCardsChange', handlePlayerDestinationCardsChange);
+    props.game.addEventListener("onPlayerDestinationCardsChange", (e) => handlePlayerDestinationCardsChange(e));
+    return props.game.removeEventListener("onPlayerDestinationCardsChange", handlePlayerDestinationCardsChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -25,8 +25,8 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
   }
 
   useEffect(() => {
-    props.game.addEventListener('onPlayerDestinationCardComplete', (e) => handlePlayerDestinationCardComplete(e));
-    return props.game.removeEventListener('onPlayerDestinationCardComplete', handlePlayerDestinationCardComplete);
+    props.game.addEventListener("onPlayerDestinationCardComplete", (e) => handlePlayerDestinationCardComplete(e));
+    return props.game.removeEventListener("onPlayerDestinationCardComplete", handlePlayerDestinationCardComplete);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -53,14 +53,14 @@ export const LocalDestinationCards = (props: LocalDestinationCardsProps) => {
         key={card.id}
         card={card}
         game={props.game}
-        mode='playerHand'
-        extraProps={{ height: '12vh' }} />
+        mode="playerHand"
+        extraProps={{ height: "12vh" }} />
     );
   }
 
   return (
-    <Box display='flex' padding='1.5vh' height='100%' flexGrow={1} {...props.extraProps} sx={{ overflow: 'hidden' }}>
-      <Box sx={{ display: 'grid', gridAutoColumns: 'max-content', columnGap: '1vh', gridAutoFlow: 'column', overflowX: 'auto' }} height='100%'>
+    <Box display="flex" padding="1.5vh" height="100%" flexGrow={1} {...props.extraProps} sx={{ overflow: "hidden" }}>
+      <Box sx={{ display: "grid", gridAutoColumns: "max-content", columnGap: "1vh", gridAutoFlow: "column", overflowX: "auto" }} height="100%">
         {destinationCards}
       </Box>
     </Box>

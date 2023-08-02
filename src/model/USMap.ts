@@ -3,7 +3,7 @@ import { RouteSegment } from "./RouteSegment";
 import { USCities } from "./USCities";
 import { City } from "./City";
 import { GameMap } from "./GameMap";
-import usMap from '../images/ttr-us-map.png';
+import usMap from "../images/ttr-us-map.png";
 import { TrainCardColor } from "./TrainCardColor";
 
 export class USMap implements GameMap {
@@ -17,42 +17,42 @@ export class USMap implements GameMap {
   }
 
   private populateCities() {
-    this.cities.push(new City(USCities.Atlanta, 1064, 615, 156, 109, 'Atlanta', -33, -11, 'right'));
-    this.cities.push(new City(USCities.Billings, 432, 215, 79, 62, 'Billings', -31, 13, 'right')); // substituted for Helena
-    this.cities.push(new City(USCities.Boston, 1353, 255, 188, 66, 'Boston', 5, -15, 'left'));
-    this.cities.push(new City(USCities.Calgary, 330, 25, 66, 40, 'Calgary', 45, -10, 'left'));
-    this.cities.push(new City(USCities.Charleston, 1210, 608, 173, 108, 'Charleston', 15, 3, 'left'));
-    this.cities.push(new City(USCities.Chicago, 936, 347, 139, 78, 'Chicago', 2, 26, 'left'));
-    this.cities.push(new City(USCities.Dallas, 720, 682, 112, 118, 'Dallas', -27, -10, 'right'));
-    this.cities.push(new City(USCities.Denver, 498, 437, 87, 88, 'Denver', -38, 22, 'right'));
-    this.cities.push(new City(USCities.ElPaso, 450, 708, 81, 120, 'El Paso', 5, 25, 'right'));
-    this.cities.push(new City(USCities.Houston, 762, 769, 115, 128, 'Houston', 0, 25, 'center'));
-    this.cities.push(new City(USCities.KansasCity, 760, 465, 117, 91, 'Kansas\nCity', 7, 31, 'left'));
-    this.cities.push(new City(USCities.LasVegas, 213, 524, 52, 97, 'Las Vegas', -5, 21, 'left'));
-    this.cities.push(new City(USCities.LittleRock, 843, 608, 128, 109, 'Little\nRock', 12, 15, 'left'));
-    this.cities.push(new City(USCities.LosAngeles, 105, 573, 36, 102, 'Los\nAngeles', 5, 20, 'right'));
-    this.cities.push(new City(USCities.Miami, 1238, 862, 176, 137, 'Miami', 15, 0, 'left'));
-    this.cities.push(new City(USCities.Minneapolis, 799, 266, 122, 68, 'Minneapolis', -37, 15, 'right')); // substituted for Duluth
-    this.cities.push(new City(USCities.Montreal, 1264, 158, 176, 55, 'Montreal', -10, -20, 'left'));
-    this.cities.push(new City(USCities.Nashville, 985, 545, 145, 102, 'Nashville', 15, 0, 'left'));
-    this.cities.push(new City(USCities.NewOrleans, 932, 766, 138, 127, 'New\nOrleans', 10, 22, 'right'));
-    this.cities.push(new City(USCities.NewYork, 1304, 316, 182, 73, 'New York', 12, 17, 'left'));
-    this.cities.push(new City(USCities.OklahomaCity, 697, 588, 110, 106, 'Oklahoma\nCity', 40, -31, 'left'));
-    this.cities.push(new City(USCities.Omaha, 724, 389, 113, 82, 'Omaha', -11, 24, 'right'));
-    this.cities.push(new City(USCities.Phoenix, 286, 614, 60, 109, 'Phoenix', 5, 21, 'right'));
-    this.cities.push(new City(USCities.Pittsburgh, 1148, 364, 165, 80, 'Pittsburgh', -8, -41, 'right'));
-    this.cities.push(new City(USCities.Portland, 84, 188, 37, 57, 'Portland', 26, -3, 'left'));
-    this.cities.push(new City(USCities.Raleigh, 1208, 516, 174, 98, 'Raleigh', 15, 0, 'left'));
-    this.cities.push(new City(USCities.SaintLouis, 877, 472, 131, 93, 'Saint\nLouis', -12, -47, 'right'));
-    this.cities.push(new City(USCities.SaltLakeCity, 318, 381, 63, 82, 'Salt Lake City', -45, -20, 'right'));
-    this.cities.push(new City(USCities.SanFrancisco, 27, 430, 30, 88, 'San Francisco', 30, 27, 'left'));
-    this.cities.push(new City(USCities.SantaFe, 458, 564, 81, 104, 'Santa Fe', 9, 26, 'left'));
-    this.cities.push(new City(USCities.SaultSteMarie, 1005, 175, 148, 59, 'Sault Ste.\nMarie', 0, -44, 'center'));
-    this.cities.push(new City(USCities.Seattle, 116, 106, 41, 49, 'Seattle', -15, 0, 'right'));
-    this.cities.push(new City(USCities.Toronto, 1154, 255, 165, 66, 'Toronto', 12, 17, 'left'));
-    this.cities.push(new City(USCities.Vancouver, 120, 45, 41, 41, 'Vancouver', 5, -21, 'right'));
-    this.cities.push(new City(USCities.Washington, 1229, 402, 175, 84, 'Washington', 16, 22, 'left'));
-    this.cities.push(new City(USCities.Winnipeg, 698, 91, 109, 47, 'Winnipeg', -10, -20, 'left'));
+    this.cities.push(new City(USCities.Atlanta, 1064, 615, 156, 109, "Atlanta", -33, -11, "right"));
+    this.cities.push(new City(USCities.Billings, 432, 215, 79, 62, "Billings", -31, 13, "right")); // substituted for Helena
+    this.cities.push(new City(USCities.Boston, 1353, 255, 188, 66, "Boston", 5, -15, "left"));
+    this.cities.push(new City(USCities.Calgary, 330, 25, 66, 40, "Calgary", 45, -10, "left"));
+    this.cities.push(new City(USCities.Charleston, 1210, 608, 173, 108, "Charleston", 15, 3, "left"));
+    this.cities.push(new City(USCities.Chicago, 936, 347, 139, 78, "Chicago", 2, 26, "left"));
+    this.cities.push(new City(USCities.Dallas, 720, 682, 112, 118, "Dallas", -27, -10, "right"));
+    this.cities.push(new City(USCities.Denver, 498, 437, 87, 88, "Denver", -38, 22, "right"));
+    this.cities.push(new City(USCities.ElPaso, 450, 708, 81, 120, "El Paso", 5, 25, "right"));
+    this.cities.push(new City(USCities.Houston, 762, 769, 115, 128, "Houston", 0, 25, "center"));
+    this.cities.push(new City(USCities.KansasCity, 760, 465, 117, 91, "Kansas\nCity", 7, 31, "left"));
+    this.cities.push(new City(USCities.LasVegas, 213, 524, 52, 97, "Las Vegas", -5, 21, "left"));
+    this.cities.push(new City(USCities.LittleRock, 843, 608, 128, 109, "Little\nRock", 12, 15, "left"));
+    this.cities.push(new City(USCities.LosAngeles, 105, 573, 36, 102, "Los\nAngeles", 5, 20, "right"));
+    this.cities.push(new City(USCities.Miami, 1238, 862, 176, 137, "Miami", 15, 0, "left"));
+    this.cities.push(new City(USCities.Minneapolis, 799, 266, 122, 68, "Minneapolis", -37, 15, "right")); // substituted for Duluth
+    this.cities.push(new City(USCities.Montreal, 1264, 158, 176, 55, "Montreal", -10, -20, "left"));
+    this.cities.push(new City(USCities.Nashville, 985, 545, 145, 102, "Nashville", 15, 0, "left"));
+    this.cities.push(new City(USCities.NewOrleans, 932, 766, 138, 127, "New\nOrleans", 10, 22, "right"));
+    this.cities.push(new City(USCities.NewYork, 1304, 316, 182, 73, "New York", 12, 17, "left"));
+    this.cities.push(new City(USCities.OklahomaCity, 697, 588, 110, 106, "Oklahoma\nCity", 40, -31, "left"));
+    this.cities.push(new City(USCities.Omaha, 724, 389, 113, 82, "Omaha", -11, 24, "right"));
+    this.cities.push(new City(USCities.Phoenix, 286, 614, 60, 109, "Phoenix", 5, 21, "right"));
+    this.cities.push(new City(USCities.Pittsburgh, 1148, 364, 165, 80, "Pittsburgh", -8, -41, "right"));
+    this.cities.push(new City(USCities.Portland, 84, 188, 37, 57, "Portland", 26, -3, "left"));
+    this.cities.push(new City(USCities.Raleigh, 1208, 516, 174, 98, "Raleigh", 15, 0, "left"));
+    this.cities.push(new City(USCities.SaintLouis, 877, 472, 131, 93, "Saint\nLouis", -12, -47, "right"));
+    this.cities.push(new City(USCities.SaltLakeCity, 318, 381, 63, 82, "Salt Lake City", -45, -20, "right"));
+    this.cities.push(new City(USCities.SanFrancisco, 27, 430, 30, 88, "San Francisco", 30, 27, "left"));
+    this.cities.push(new City(USCities.SantaFe, 458, 564, 81, 104, "Santa Fe", 9, 26, "left"));
+    this.cities.push(new City(USCities.SaultSteMarie, 1005, 175, 148, 59, "Sault Ste.\nMarie", 0, -44, "center"));
+    this.cities.push(new City(USCities.Seattle, 116, 106, 41, 49, "Seattle", -15, 0, "right"));
+    this.cities.push(new City(USCities.Toronto, 1154, 255, 165, 66, "Toronto", 12, 17, "left"));
+    this.cities.push(new City(USCities.Vancouver, 120, 45, 41, 41, "Vancouver", 5, -21, "right"));
+    this.cities.push(new City(USCities.Washington, 1229, 402, 175, 84, "Washington", 16, 22, "left"));
+    this.cities.push(new City(USCities.Winnipeg, 698, 91, 109, 47, "Winnipeg", -10, -20, "left"));
   }
 
   private populateRoutes() {

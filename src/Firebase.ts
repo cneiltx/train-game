@@ -8,7 +8,7 @@ import {
   signOut,
   updateProfile,
   signInWithRedirect,
-} from 'firebase/auth';
+} from "firebase/auth";
 import {
   getFirestore,
 } from "firebase/firestore";
@@ -30,7 +30,7 @@ export const firestoreDB = getFirestore(firebaseApp);
 export const firebaseStorage = getStorage(firebaseApp);
 
 export const signInWithGoogle = () => {
-  console.log('Signing in with Google');
+  console.log("Signing in with Google.");
   const googleProvider = new GoogleAuthProvider();
   googleProvider.setCustomParameters({
     prompt: "select_account"
@@ -40,13 +40,13 @@ export const signInWithGoogle = () => {
 };
 
 export const registerWithEmailAndPassword = (name: string, avatarFile: File, email: string, password: string) => {
-  console.log(`Registering new user ${email}`);
+  console.log(`Registering new user ${email}.`);
   return createUserWithEmailAndPassword(firebaseAuth, email, password);
 }
 
 export const sendPasswordReset = (email: string) => {
   sendPasswordResetEmail(firebaseAuth, email)
-    .then(() => console.log("Password reset link sent"))
+    .then(() => console.log("Password reset link sent."))
     .catch((err) => {
       console.error(err);
     });
@@ -59,12 +59,13 @@ export const logout = () => {
 
 export const updateName = (name: string) => {
   if (firebaseAuth.currentUser) {
+    console.log(`Updating username to ${name}`);
     return updateProfile(firebaseAuth.currentUser, {
       displayName: name
     });
   } else {
     return new Promise(() => {
-      throw new Error('There is no logged in user');
+      throw new Error("There is no logged in user");
     });
   }
 }
@@ -72,13 +73,16 @@ export const updateName = (name: string) => {
 export const updateAvatar = (avatarFile: File): Promise<string> => {
   const user = firebaseAuth.currentUser;
   if (user) {
-    const prevPhotos = ref(firebaseStorage, `/user/${user.uid}/profile-picture.*`);
-    const newPhoto = ref(firebaseStorage, `/user/${user.uid}/profile-picture${avatarFile.name.substring(avatarFile.name.lastIndexOf('.'))}`);
+    const prevPhotos = ref(firebaseStorage, `/user/${user.uid}/`);
+    const newPhoto = ref(firebaseStorage, `/user/${user.uid}/profile-picture${avatarFile.name.substring(avatarFile.name.lastIndexOf("."))}`);
 
     return listAll(prevPhotos)
       .then((files) => {
         Promise.all(
-          files.items.map((file) => deleteObject(file))
+          files.items.filter((file) => file.name.startsWith("profile-picture.")).map((file) => {
+            console.log(`Deleting file ${file.fullPath}.`);
+            deleteObject(file);
+          })
         );
       })
       .then(() => uploadBytes(newPhoto, avatarFile))
@@ -91,7 +95,7 @@ export const updateAvatar = (avatarFile: File): Promise<string> => {
       });
   } else {
     return new Promise(() => {
-      throw new Error('There is no logged in user');
+      throw new Error("There is no logged in user.");
     });
   }
 }
