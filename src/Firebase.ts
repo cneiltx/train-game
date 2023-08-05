@@ -8,6 +8,7 @@ import {
   signOut,
   updateProfile,
   signInWithRedirect,
+  sendEmailVerification,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -41,7 +42,15 @@ export const signInWithGoogle = () => {
 
 export const registerWithEmailAndPassword = (name: string, avatarFile: File, email: string, password: string) => {
   console.log(`Registering new user ${email}.`);
-  return createUserWithEmailAndPassword(firebaseAuth, email, password);
+  return createUserWithEmailAndPassword(firebaseAuth, email, password)
+    .then((cred) => {
+      updateName(name);
+      return cred;
+    })
+    .then((cred) => {
+      updateAvatar(avatarFile);
+      return cred;
+    });
 }
 
 export const sendPasswordReset = (email: string) => {
@@ -75,6 +84,7 @@ export const updateAvatar = (avatarFile: File): Promise<string> => {
   if (user) {
     const prevPhotos = ref(firebaseStorage, `/user/${user.uid}/`);
     const newPhoto = ref(firebaseStorage, `/user/${user.uid}/profile-picture${avatarFile.name.substring(avatarFile.name.lastIndexOf("."))}`);
+    console.log(`Updating avatar to ${avatarFile.name}.`);
 
     return listAll(prevPhotos)
       .then((files) => {

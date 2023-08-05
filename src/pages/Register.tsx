@@ -3,6 +3,7 @@ import { registerWithEmailAndPassword } from "../Firebase";
 import { Alert, Avatar, Button, Grid, IconButton, Stack, TextField } from "@mui/material";
 
 export interface RegisterProps {
+  onCancel: () => void;
 }
 
 export const Register = (props: RegisterProps) => {
@@ -33,10 +34,6 @@ export const Register = (props: RegisterProps) => {
     } else {
       setError("");
       registerWithEmailAndPassword(name, avatarFile!, email, password1)
-        .then((credential) => {
-          const user = credential.user;
-          console.log(`Registered user ${credential.user.email}`);
-        })
         .catch((err) => {
           console.error(err)
           setError(err.message);
@@ -125,13 +122,16 @@ export const Register = (props: RegisterProps) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button
-            variant="outlined"
-            disabled={email === "" || password1 === "" || password2 === "" || name === "" || avatarFile === null}
-            onClick={handleRegister}
-          >
-            Register
-          </Button>
+          <Stack direction='row' spacing="1rem" justifyContent='center'>
+            <Button variant="outlined" onClick={props.onCancel}>Cancel</Button>
+            <Button
+              variant="outlined"
+              disabled={email === "" || password1 === "" || password2 === "" || name === "" || avatarFile === null}
+              onClick={handleRegister}
+            >
+              Register
+            </Button>
+          </Stack>
         </Grid>
         <Grid item xs={12} height="2rem" />
         <Grid item xs={12} sx={{ textAlign: "left" }}>
@@ -139,6 +139,6 @@ export const Register = (props: RegisterProps) => {
         </Grid>
         <Grid item xs={12} height="1rem" />
       </Grid>
-    </Stack>
+    </Stack >
   );
 }
