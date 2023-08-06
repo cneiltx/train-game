@@ -18,7 +18,7 @@ export class RemoteLobbyController {
     const game = this.games.find(game => game.gameID === gameID);
 
     if (!game) {
-      throw new Error(`No game with ID '${gameID}' exists. Please check the game ID and try again.`);
+      throw new Error(`No game with ID ${gameID} exists. Please check the game ID and try again.`);
     }
 
     return game;

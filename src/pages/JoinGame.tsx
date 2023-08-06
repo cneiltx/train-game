@@ -95,8 +95,9 @@ export const JoinGame = (props: JoinGameProps) => {
   }
 
   return (
-    <Stack>
-      {browseGames && <BrowseGames />}
+    <Stack alignItems="center" height="100vh" sx={{ overflow: "hidden" }}>
+      <Box fontSize="h5.fontSize">Welcome to The Train Game!</Box>
+      {browseGames && <BrowseGames onCancel={() => setBrowseGames(false)} />}
       {!browseGames && <Stack justifyContent="space-between" alignItems="center" height="100%" >
         <Grid
           container

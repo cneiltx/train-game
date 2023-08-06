@@ -16,7 +16,7 @@ export class LobbyController {
     const game = this._games.find(game => game.gameID === gameID);
 
     if (!game) {
-      throw new Error(`No game with ID '${gameID}' exists. Please check the game ID and try again.`);
+      throw new Error(`No game with ID ${gameID} exists. Please check the game ID and try again.`);
     }
 
     game.join(playerName, avatar);

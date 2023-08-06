@@ -388,7 +388,7 @@ export class RemoteGameController extends EventTarget {
     if (this.state !== GameState.Initializing) {
       throw new Error("You cannot join because this game it is not in Initializing status.");
     } else if (this.players.find((item) => item.name.toLowerCase() === name.toLowerCase())) {
-      throw new Error(`A player named '${name}' already exists in this game. Please use a different name.`);
+      throw new Error(`A player named ${name} already exists in this game. Please use a different name.`);
     } else if (this.players.length > 4) {
       throw new Error("You cannot join because there are already 5 players in the game.");
     } else {

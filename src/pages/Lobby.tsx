@@ -68,6 +68,7 @@ export const Lobby = (props: LobbyProps) => {
     setResetPassword(true);
   }
 
+  //TODO: Move Register and ForgotPassword under Login page
   return (
     <Stack
       direction="row"
@@ -79,9 +80,8 @@ export const Lobby = (props: LobbyProps) => {
         backgroundPosition: "center",
       }}
     >
-      <Stack direction="row" sx={{ backgroundColor: "background.default", opacity: 0.85 }}>
-        <Stack width={400} spacing={1} padding={2} alignItems="center" >
-          <Box fontSize="h5.fontSize">Welcome to The Train Game!</Box>
+      <Stack direction="row" height="100vh" sx={{ backgroundColor: "background.default", opacity: 0.85 }}>
+        <Stack width={400} spacing={1} padding={2} alignItems="center">
           {forgotPassword && <ForgotPassword onResetPassword={handleResetPassword} onCancel={handleForgotPasswordCancel} />}
           {resetPassword && <Login onForgotPassword={handleForgotPassword} onRegister={handleRegister}
             info="A password reset email has been sent. The email is from noreply@train-game-e75ed.firebaseapp.com. Please click the link to reset your password, then sign in again. If you don't see the email, check your Spam folder." />}
