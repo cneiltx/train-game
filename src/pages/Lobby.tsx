@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { GameController } from "../controllers/GameController";
 import { LobbyController } from "../controllers/LobbyController";
@@ -80,15 +80,18 @@ export const Lobby = (props: LobbyProps) => {
       }}
     >
       <Stack direction="row" sx={{ backgroundColor: "background.default", opacity: 0.85 }}>
-        {forgotPassword && <ForgotPassword onResetPassword={handleResetPassword} onCancel={handleForgotPasswordCancel} />}
-        {resetPassword && <Login onForgotPassword={handleForgotPassword} onRegister={handleRegister}
-          info="A password reset email has been sent. The email is from noreply@train-game-e75ed.firebaseapp.com. Please click the link to reset your password, then sign in again. If you don't see the email, check your Spam folder." />}
-        {user === undefined && <Loading />}
-        {user === null && register && <Register onCancel={handleRegisterCancel} />}
-        {user && !user.emailVerified && <Login onForgotPassword={handleForgotPassword} onRegister={handleRegister}
-          info="A verification link has been sent to your email. The email is from noreply@train-game-e75ed.firebaseapp.com. Please click the link to verify your email, then sign in again. If you don't see the email, check your Spam folder." />}
-        {user === null && !register && !forgotPassword && !resetPassword && <Login onForgotPassword={handleForgotPassword} onRegister={handleRegister} />}
-        {user && user.emailVerified && <JoinGame lobby={props.lobby} user={user} onCreateGame={props.onCreateGame} onJoinGame={props.onJoinGame} />}
+        <Stack width={400} spacing={1} padding={2} alignItems="center" >
+          <Box fontSize="h5.fontSize">Welcome to The Train Game!</Box>
+          {forgotPassword && <ForgotPassword onResetPassword={handleResetPassword} onCancel={handleForgotPasswordCancel} />}
+          {resetPassword && <Login onForgotPassword={handleForgotPassword} onRegister={handleRegister}
+            info="A password reset email has been sent. The email is from noreply@train-game-e75ed.firebaseapp.com. Please click the link to reset your password, then sign in again. If you don't see the email, check your Spam folder." />}
+          {user === undefined && <Loading />}
+          {user === null && register && <Register onCancel={handleRegisterCancel} />}
+          {user && !user.emailVerified && <Login onForgotPassword={handleForgotPassword} onRegister={handleRegister}
+            info="A verification link has been sent to your email. The email is from noreply@train-game-e75ed.firebaseapp.com. Please click the link to verify your email, then sign in again. If you don't see the email, check your Spam folder." />}
+          {user === null && !register && !forgotPassword && !resetPassword && <Login onForgotPassword={handleForgotPassword} onRegister={handleRegister} />}
+          {user && user.emailVerified && <JoinGame lobby={props.lobby} user={user} onCreateGame={props.onCreateGame} onJoinGame={props.onJoinGame} />}
+        </Stack>
       </Stack>
     </Stack>
   );
