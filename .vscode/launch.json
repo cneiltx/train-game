@@ -10,6 +10,7 @@
             "name": "Launch Chrome against localhost",
             "url": "http://172.17.213.101:3000",
             "webRoot": "${workspaceFolder}",
+            "userDataDir": false
         }
     ]
 }

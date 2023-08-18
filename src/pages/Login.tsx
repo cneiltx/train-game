@@ -3,18 +3,19 @@ import { signInWithGoogle, firebaseAuth } from "../Firebase";
 import { Alert, Box, Button, Grid, Link, Stack, TextField } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { ForgotPassword } from "./ForgotPassword";
+import { Register } from "./Register";
 
 export interface LoginProps {
-  onRegister: () => void;
-  onForgotPassword: () => void;
-  info?: string;
+  emailVerificationSent?: boolean;
 }
 
 export const Login = (props: LoginProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [info, setInfo] = useState(props.info ?? "");
+  const [state, setState] = useState<"login" | "forgotPassword" | "register">("login");
+  const [message, setMessage] = useState<"passwordResetSent" | "emailVerificationSent" | "">(props.emailVerificationSent ? "emailVerificationSent" : "");
 
   const handleGoogleSignIn = () => {
     setError("");
@@ -36,10 +37,33 @@ export const Login = (props: LoginProps) => {
       });
   }
 
+  const handleRegister = () => {
+    setState("register");
+  }
+
+  const handleRegisterCancel = () => {
+    setState("login");
+  }
+
+  const handleForgotPassword = () => {
+    setState("forgotPassword");
+  }
+
+  const handleForgotPasswordCancel = () => {
+    setState("login");
+  }
+
+  const handleResetPassword = () => {
+    setState("login");
+    setMessage("passwordResetSent");
+  }
+
   return (
     <Stack alignItems="center">
-      <Box fontSize="h5.fontSize">Welcome to The Train Game!</Box>
-      <Grid
+      <Box paddingBottom={3} fontSize="h5.fontSize">Welcome to The Train Game!</Box>
+      {state === "forgotPassword" && <ForgotPassword onResetPassword={handleResetPassword} onCancel={handleForgotPasswordCancel} />}
+      {state === "register" && <Register onCancel={handleRegisterCancel} />}
+      {state === "login" && <Grid
         container
         textAlign="center"
         alignItems="center"
@@ -97,19 +121,24 @@ export const Login = (props: LoginProps) => {
         </Grid>
         <Grid item xs={12} />
         <Grid item xs={12} sx={{ userSelect: "none" }}>
-          <Link onClick={props.onForgotPassword} style={{ cursor: "pointer" }}>Forgot Password?</Link>
+          <Link onClick={handleForgotPassword} style={{ cursor: "pointer" }}>Forgot Password?</Link>
         </Grid>
         <Grid item xs={12} sx={{ userSelect: "none" }}>
-          Don't have an account? <Link onClick={props.onRegister} style={{ cursor: "pointer" }}>Register</Link> now.
+          Don't have an account? <Link onClick={handleRegister} style={{ cursor: "pointer" }}>Register</Link> now.
         </Grid>
         <Grid item xs={12} />
         <Grid item xs={12} sx={{ textAlign: "left" }}>
-          {info !== "" && <Alert severity="info">{info}</Alert>}
+          {message === "passwordResetSent" && <Alert severity="info">
+            A password reset email has been sent. The email is from noreply@train-game-e75ed.firebaseapp.com.
+            Please click the link to reset your password, then sign in again. If you don't see the email, check your Spam folder.</Alert>}
+          {message === "emailVerificationSent" && <Alert severity="info">
+            A verification link has been sent to your email. The email is from noreply@train-game-e75ed.firebaseapp.com.
+            Please click the link to verify your email, then sign in again. If you don't see the email, check your Spam folder.</Alert>}
         </Grid>
         <Grid item xs={12} sx={{ textAlign: "left" }}>
           {error !== "" && <Alert severity="error">{error}</Alert>}
         </Grid>
-      </Grid>
+      </Grid>}
     </Stack>
   );
 }

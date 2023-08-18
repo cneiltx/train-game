@@ -2,13 +2,11 @@ import { initializeApp } from "firebase/app";
 import {
   GoogleAuthProvider,
   getAuth,
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
   updateProfile,
   signInWithRedirect,
-  sendEmailVerification,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -91,7 +89,7 @@ export const updateAvatar = (avatarFile: File): Promise<string> => {
         Promise.all(
           files.items.filter((file) => file.name.startsWith("profile-picture.")).map((file) => {
             console.log(`Deleting file ${file.fullPath}.`);
-            deleteObject(file);
+            return deleteObject(file);
           })
         );
       })
