@@ -59,7 +59,7 @@ export const Login = (props: LoginProps) => {
   }
 
   return (
-    <Stack alignItems="center">
+    <Stack alignItems="center" sx={{ overflow: "hidden" }}>
       <Box paddingBottom={3} fontSize="h5.fontSize">Welcome to The Train Game!</Box>
       {state === "forgotPassword" && <ForgotPassword onResetPassword={handleResetPassword} onCancel={handleForgotPasswordCancel} />}
       {state === "register" && <Register onCancel={handleRegisterCancel} />}
@@ -68,6 +68,7 @@ export const Login = (props: LoginProps) => {
         textAlign="center"
         alignItems="center"
         spacing={2}
+        sx={{ overflowY: "auto" }}
       >
         <Grid item xs={12}>
           <Button

@@ -46,11 +46,12 @@ export const Lobby = (props: LobbyProps) => {
     <Stack
       direction="row"
       justifyContent="flex-end"
-      minHeight="100vh"
+      height="100vh"
       sx={{
         backgroundImage: `url(${bwTrain})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        overflow: "hidden"
       }}
     >
       <Stack direction="row" height="100vh" sx={{ backgroundColor: "background.default", opacity: 0.85 }}>

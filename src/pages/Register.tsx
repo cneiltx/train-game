@@ -47,6 +47,7 @@ export const Register = (props: RegisterProps) => {
       textAlign="center"
       alignItems="center"
       spacing={2}
+      sx={{ overflowY: "auto" }}
     >
       <Grid item xs={8}>
         <TextField
