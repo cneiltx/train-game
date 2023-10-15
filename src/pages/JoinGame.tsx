@@ -49,7 +49,7 @@ export const JoinGame = (props: JoinGameProps) => {
   }
 
   const handleGameIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setGameID(e.target.value.toUpperCase().trim());
+    setGameID(e.target.value.toUpperCase().replace(/\s/g, ""));
   }
 
   const handleJoinGame = () => {
@@ -132,6 +132,7 @@ export const JoinGame = (props: JoinGameProps) => {
             <TextField
               InputLabelProps={{ shrink: true }}
               name="gameID"
+              value={gameID}
               size="small"
               fullWidth
               id="gameID"

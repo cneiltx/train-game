@@ -212,12 +212,23 @@ export class GameController extends EventTarget {
     return this._localPlayer;
   }
 
-  private get activePlayer() {
-    return this.players.find(value => value.state !== PlayerState.Waiting);
-  }
-
   get state() {
     return this._state;
+  }
+
+  private set state(state: GameState) {
+    if (this._state !== state) {
+      if (this._state === GameState.Initializing && state === GameState.Playing) {
+        this.addMessage("The game is now starting.");
+      }
+
+      this._state = state;
+      this.dispatch("onGameStateChange", new GameStateChangeEventArgs(state));
+    }
+  }
+
+  private get activePlayer() {
+    return this.players.find(value => value.state !== PlayerState.Waiting);
   }
 
   private nextPlayer() {
@@ -410,17 +421,6 @@ export class GameController extends EventTarget {
     this.dispatch("onMessagesChange", new MessagesChangeEventArgs(this.messages));
   }
 
-  private set state(state: GameState) {
-    if (this.state !== state) {
-      if (this._state === GameState.Initializing && state === GameState.Playing) {
-        this.addMessage("The game is now starting.");
-      }
-
-      this._state = state;
-      this.dispatch("onGameStateChange", new GameStateChangeEventArgs(state));
-    }
-  }
-
   get players() {
     return this._players;
   }
@@ -476,7 +476,7 @@ export class GameController extends EventTarget {
     if (this.state !== GameState.Initializing) {
       throw new Error("You cannot join because this game it is not in Initializing status.");
     } else if (this.players.find((item) => item.name.toLowerCase() === name.toLowerCase())) {
-      throw new Error(`A player named '${name}' already exists in this game. Please use a different name.`);
+      throw new Error(`A player named ${name} already exists in this game. Please use a different name.`);
     } else if (this.players.length > 4) {
       throw new Error("You cannot join because there are already 5 players in the game.");
     } else {

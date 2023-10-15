@@ -112,7 +112,7 @@ export const BrowseGames = (props: BrowseGameProps) => {
         </List>
       </Stack>
       <Box paddingTop={2}>
-        <Button variant="outlined" onClick={props.onCancel}>Cancel</Button>
+        <Button variant="outlined" onClick={props.onCancel}>Back</Button>
       </Box>
     </Stack>
   );
