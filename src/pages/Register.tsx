@@ -8,11 +8,8 @@ export interface RegisterProps {
 
 export const Register = (props: RegisterProps) => {
   const EmailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  const PasswordRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
   const InvalidEmailMsg = "Invalid email address";
   const PasswordMatchMsg = "Passwords do not match";
-  const InvalidPasswordMsg = "Password must be at least 8 characters and contain at least one upper case character, one lower case character, " +
-    "one numeric digit, and one special character (!@#$%^&*).";
 
   const [email, setEmail] = useState("");
   const [password1, setPassword1] = useState("");
@@ -37,10 +34,7 @@ export const Register = (props: RegisterProps) => {
         valid = false;
       }
 
-      if (!password1.match(PasswordRegex)) {
-        setPasswordError(InvalidPasswordMsg);
-        valid = false;
-      } else if (password1 !== password2) {
+      if (password1 !== password2) {
         setPasswordError(PasswordMatchMsg);
         valid = false;
       }
@@ -71,10 +65,7 @@ export const Register = (props: RegisterProps) => {
             id="name"
             label="Name"
             autoFocus
-            onChange={(e) => {
-              const nameVal = e.target.value.trim();
-              setName(nameVal);
-            }}
+            onChange={(e) => setName(e.target.value.trim())}
           />
         </Grid>
         <Grid item xs={4}>

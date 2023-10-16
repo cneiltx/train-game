@@ -24,6 +24,13 @@ export const Login = (props: LoginProps) => {
   const [state, setState] = useState<"login" | "forgotPassword" | "register">("login");
   const [message, setMessage] = useState(props.emailVerificationSent ? EmailVerificationSentMsg : "");
 
+  const clearState = () => {
+    setEmail("");
+    setPassword("");
+    setError("");
+    setMessage("");
+  }
+
   return (
     <Stack alignItems="center" sx={{ overflow: "hidden" }}>
       <Box paddingBottom={3} fontSize="h5.fontSize">Welcome to The Train Game!</Box>
@@ -114,10 +121,18 @@ export const Login = (props: LoginProps) => {
           </Grid>
           <Grid item xs={12} />
           <Grid item xs={12} sx={{ userSelect: "none" }}>
-            <Link onClick={() => setState("forgotPassword")} style={{ cursor: "pointer" }}>Forgot Password?</Link>
+            <Link onClick={() => {
+              clearState();
+              setState("forgotPassword");
+            }}
+              style={{ cursor: "pointer" }}>Forgot Password?</Link>
           </Grid>
           <Grid item xs={12} sx={{ userSelect: "none" }}>
-            Don't have an account? <Link onClick={() => setState("register")} style={{ cursor: "pointer" }}>Register</Link> now.
+            Don't have an account? <Link onClick={() => {
+              clearState();
+              setState("register");
+            }}
+              style={{ cursor: "pointer" }}>Register</Link> now.
           </Grid>
           <Grid item xs={12} />
           <Grid item xs={12} sx={{ textAlign: "left" }}>

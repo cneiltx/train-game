@@ -21,77 +21,9 @@ export const JoinGame = (props: JoinGameProps) => {
   const [error, setError] = useState("");
   const [browseGames, setBrowseGames] = useState(false);
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      updateAvatar(e.target.files[0])
-        .then((url) => setAvatar(url))
-        .catch((err) => {
-          console.error(err);
-          setError(err);
-        });
-    }
-  }
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nameVal = e.target.value;
-    setName(nameVal);
-  }
-
-  const handleNameLostFocus = () => {
-    const nameVal = name.trim();
-    if (props.user.displayName !== nameVal) {
-      updateName(nameVal)
-        .catch((err) => {
-          console.error(err);
-          setError(err);
-        });
-    }
-  }
-
-  const handleGameIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setGameID(e.target.value.toUpperCase().replace(/\s/g, ""));
-  }
-
-  const handleJoinGame = () => {
+  const clearState = () => {
+    setGameID("");
     setError("");
-
-    try {
-      const game = props.lobby.joinGame(gameID, name, avatar);
-      setError("");
-      props.onJoinGame(game);
-    } catch (e) {
-      if (e instanceof Error) {
-        setError(e.message);
-      }
-    }
-  }
-
-  const handleCreateGame = () => {
-    setError("");
-
-    try {
-      const game = props.lobby.createGame(name, avatar, GameMaps.US);
-      setError("");
-      props.onCreateGame(game);
-    } catch (e) {
-      if (e instanceof Error) {
-        setError(e.message);
-      }
-    }
-  }
-
-  const handleSignOut = () => {
-    setError("");
-
-    logout()
-      .catch((err) => {
-        console.error(err);
-        setError(err);
-      });
-  }
-
-  const handleBrowseGames = () => {
-    setBrowseGames(true);
   }
 
   return (
@@ -115,13 +47,30 @@ export const JoinGame = (props: JoinGameProps) => {
               fullWidth
               id="name"
               label="Name"
-              autoFocus
-              onChange={handleNameChange}
-              onBlur={handleNameLostFocus}
+              onChange={(e) => setName(e.target.value)}
+              onBlur={(e) => {
+                const nameVal = name.trim();
+                if (props.user.displayName !== nameVal) {
+                  updateName(nameVal)
+                    .catch((err) => {
+                      console.error(err);
+                      setError(err);
+                    });
+                }
+              }}
             />
           </Grid>
           <Grid item xs={4}>
-            <input accept="image/*" id="upload-avatar" type="file" hidden onChange={handleAvatarChange} />
+            <input accept="image/*" id="upload-avatar" type="file" hidden onChange={(e) => {
+              if (e.target.files && e.target.files[0]) {
+                updateAvatar(e.target.files[0])
+                  .then((url) => setAvatar(url))
+                  .catch((err) => {
+                    console.error(err);
+                    setError(err);
+                  });
+              }
+            }} />
             <label htmlFor="upload-avatar">
               <IconButton component="span">
                 <Avatar sx={{ width: "5rem", height: "5rem", fontSize: "1rem" }} src={avatar}>Choose Avatar</Avatar>
@@ -137,42 +86,79 @@ export const JoinGame = (props: JoinGameProps) => {
               fullWidth
               id="gameID"
               label="Game ID"
+              autoFocus
               inputProps={{ sx: { textTransform: "uppercase" } }}
-              onChange={handleGameIDChange}
+              onChange={(e) => setGameID(e.target.value.toUpperCase().replace(/\s/g, ""))}
             />
           </Grid>
           <Grid item xs={4}>
             <Button
               variant="outlined"
               disabled={name === "" || avatar === "" || gameID === ""}
-              onClick={handleJoinGame}
+              onClick={() => {
+                setError("");
+
+                try {
+                  const game = props.lobby.joinGame(gameID, name, avatar);
+                  setError("");
+                  props.onJoinGame(game);
+                } catch (e) {
+                  if (e instanceof Error) {
+                    setError(e.message);
+                  }
+                }
+              }}
             >
               Join Game
             </Button>
           </Grid>
-          <Grid item xs={12} sx={{ textAlign: "left" }}>
-            {error !== "" && <Alert severity="error">{error}</Alert>}
-          </Grid>
+          <Grid item xs={12} />
           <Grid item xs={12}>
             <Stack direction="row" justifyContent="center" spacing={2}>
               <Button
                 variant="outlined"
-                onClick={handleBrowseGames}
+                onClick={() => {
+                  clearState();
+                  setBrowseGames(true);
+                }}
               >
                 View My Games
               </Button>
               <Button
                 variant="outlined"
                 disabled={name === "" || avatar === ""}
-                onClick={handleCreateGame}
+                onClick={() => {
+                  setError("");
+
+                  try {
+                    const game = props.lobby.createGame(name, avatar, GameMaps.US);
+                    setError("");
+                    props.onCreateGame(game);
+                  } catch (e) {
+                    if (e instanceof Error) {
+                      setError(e.message);
+                    }
+                  }
+                }}
               >
                 New Game
               </Button>
             </Stack>
           </Grid>
+          <Grid item xs={12} sx={{ textAlign: "left" }}>
+            {error !== "" && <Alert severity="error">{error}</Alert>}
+          </Grid>
         </Grid>
         <Box>
-          <Button variant="outlined" onClick={handleSignOut}>Sign Out</Button>
+          <Button variant="outlined" onClick={() => {
+            setError("");
+
+            logout()
+              .catch((err) => {
+                console.error(err);
+                setError(err);
+              });
+          }}>Sign Out</Button>
         </Box>
       </Stack>}
     </Stack>

@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Stack, List, ListItem, ListItemText, Button, Box, useTheme, Typography } from "@mui/material";
+import { Stack, List, ListItem, Button, Box, useTheme, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 export interface BrowseGameProps {
@@ -7,8 +6,6 @@ export interface BrowseGameProps {
 }
 
 export const BrowseGames = (props: BrowseGameProps) => {
-  const [error, setError] = useState("");
-
   //TODO: Remove
   const games = [
     {
@@ -67,14 +64,6 @@ export const BrowseGames = (props: BrowseGameProps) => {
     }
   ];
 
-  const handleJoinGame = (id: string) => {
-    alert(`Join game ${id}`);
-  }
-
-  const handleDeleteGame = (id: string) => {
-    alert(`Delete game ${id}`);
-  }
-
   const theme = useTheme();
 
   const gameList = games.map((game) => {
@@ -96,8 +85,8 @@ export const BrowseGames = (props: BrowseGameProps) => {
             </Typography>
           </Stack>
           <Stack spacing={1}>
-            <Button variant="outlined" onClick={() => handleJoinGame(game.id)}>Join</Button>
-            <Button variant="outlined" onClick={() => handleDeleteGame(game.id)}><DeleteIcon /></Button>
+            <Button variant="outlined" onClick={() => alert(`Join game ${game.id}`)}>Join</Button>
+            <Button variant="outlined" onClick={() => alert(`Delete game ${game.id}`)}><DeleteIcon /></Button>
           </Stack>
         </Stack>
       </ListItem>
