@@ -1,11 +1,12 @@
-import { Alert, Avatar, Box, Button, Grid, IconButton, Stack, TextField } from "@mui/material";
+import { Alert, Avatar, Box, Button, Grid, Stack, TextField } from "@mui/material";
 import { User } from "firebase/auth";
 import { useState } from "react";
-import { logout, updateAvatar, updateName } from "../Firebase";
+import { logout } from "../Firebase";
 import { BrowseGames } from "./BrowseGames";
 import { GameMaps } from "../model/GameMaps";
 import { LobbyController } from "../controllers/LobbyController";
 import { GameController } from "../controllers/GameController";
+import { UserProfile } from "./UserProfile";
 
 export interface JoinGameProps {
   lobby: LobbyController;
@@ -15,10 +16,9 @@ export interface JoinGameProps {
 }
 
 export const JoinGame = (props: JoinGameProps) => {
-  const [avatar, setAvatar] = useState(props.user.photoURL ?? "");
-  const [name, setName] = useState(props.user.displayName ?? "");
   const [gameID, setGameID] = useState("");
   const [error, setError] = useState("");
+  const [userProfile, setUserProfile] = useState(false);
   const [browseGames, setBrowseGames] = useState(false);
 
   const clearState = () => {
@@ -29,8 +29,9 @@ export const JoinGame = (props: JoinGameProps) => {
   return (
     <Stack alignItems="center" height="100vh" sx={{ overflow: "hidden" }}>
       <Box paddingBottom={3} fontSize="h5.fontSize">Welcome to The Train Game!</Box>
+      {userProfile && <UserProfile user={props.user} onSave={() => setUserProfile(false)} onCancel={() => setUserProfile(false)} />}
       {browseGames && <BrowseGames onCancel={() => setBrowseGames(false)} />}
-      {!browseGames && <Stack justifyContent="space-between" alignItems="center" height="100%" >
+      {!browseGames && !userProfile && <Stack justifyContent="space-between" alignItems="center" height="100%" >
         <Grid
           container
           textAlign="center"
@@ -38,44 +39,10 @@ export const JoinGame = (props: JoinGameProps) => {
           spacing={2}
         >
           <Grid item xs={8}>
-            <TextField
-              InputLabelProps={{ shrink: true }}
-              name="name"
-              value={name}
-              size="small"
-              required
-              fullWidth
-              id="name"
-              label="Name"
-              onChange={(e) => setName(e.target.value)}
-              onBlur={(e) => {
-                const nameVal = name.trim();
-                if (props.user.displayName !== nameVal) {
-                  updateName(nameVal)
-                    .catch((err) => {
-                      console.error(err);
-                      setError(err);
-                    });
-                }
-              }}
-            />
+            {props.user.displayName}
           </Grid>
           <Grid item xs={4}>
-            <input accept="image/*" id="upload-avatar" type="file" hidden onChange={(e) => {
-              if (e.target.files && e.target.files[0]) {
-                updateAvatar(e.target.files[0])
-                  .then((url) => setAvatar(url))
-                  .catch((err) => {
-                    console.error(err);
-                    setError(err);
-                  });
-              }
-            }} />
-            <label htmlFor="upload-avatar">
-              <IconButton component="span">
-                <Avatar sx={{ width: "5rem", height: "5rem", fontSize: "1rem" }} src={avatar}>Choose Avatar</Avatar>
-              </IconButton>
-            </label>
+            {props.user.photoURL && <Avatar sx={{ width: "5rem", height: "5rem", fontSize: "1rem" }} src={props.user.photoURL} />}
           </Grid>
           <Grid item xs={8}>
             <TextField
@@ -94,13 +61,12 @@ export const JoinGame = (props: JoinGameProps) => {
           <Grid item xs={4}>
             <Button
               variant="outlined"
-              disabled={name === "" || avatar === "" || gameID === ""}
+              disabled={gameID === ""}
               onClick={() => {
                 setError("");
 
                 try {
-                  const game = props.lobby.joinGame(gameID, name, avatar);
-                  setError("");
+                  const game = props.lobby.joinGame(gameID, props.user.displayName ?? "", props.user.photoURL ?? "");
                   props.onJoinGame(game);
                 } catch (e) {
                   if (e instanceof Error) {
@@ -119,6 +85,15 @@ export const JoinGame = (props: JoinGameProps) => {
                 variant="outlined"
                 onClick={() => {
                   clearState();
+                  setUserProfile(true);
+                }}
+              >
+                User Profile
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  clearState();
                   setBrowseGames(true);
                 }}
               >
@@ -126,13 +101,11 @@ export const JoinGame = (props: JoinGameProps) => {
               </Button>
               <Button
                 variant="outlined"
-                disabled={name === "" || avatar === ""}
                 onClick={() => {
                   setError("");
 
                   try {
-                    const game = props.lobby.createGame(name, avatar, GameMaps.US);
-                    setError("");
+                    const game = props.lobby.createGame(props.user.displayName ?? "", props.user.photoURL ?? "", GameMaps.US);
                     props.onCreateGame(game);
                   } catch (e) {
                     if (e instanceof Error) {

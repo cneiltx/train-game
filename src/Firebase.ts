@@ -38,17 +38,9 @@ export const signInWithGoogle = () => {
   return signInWithRedirect(firebaseAuth, googleProvider);
 };
 
-export const registerWithEmailAndPassword = (name: string, avatarFile: File, email: string, password: string) => {
+export const registerWithEmailAndPassword = (email: string, password: string) => {
   console.log(`Registering new user ${email}.`);
-  return createUserWithEmailAndPassword(firebaseAuth, email, password)
-    .then((cred) => {
-      updateName(name);
-      return cred;
-    })
-    .then((cred) => {
-      updateAvatar(avatarFile);
-      return cred;
-    });
+  return createUserWithEmailAndPassword(firebaseAuth, email, password);
 }
 
 export const sendPasswordReset = (email: string) => {

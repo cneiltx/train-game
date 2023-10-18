@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { registerWithEmailAndPassword } from "../Firebase";
-import { Alert, Avatar, Button, Grid, IconButton, Stack, TextField } from "@mui/material";
+import { Alert, Button, Grid, Stack, TextField } from "@mui/material";
 
 export interface RegisterProps {
   onCancel: () => void;
@@ -14,9 +14,6 @@ export const Register = (props: RegisterProps) => {
   const [email, setEmail] = useState("");
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
-  const [name, setName] = useState("");
-  const [avatar, setAvatar] = useState("");
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -40,7 +37,7 @@ export const Register = (props: RegisterProps) => {
       }
 
       if (valid) {
-        registerWithEmailAndPassword(name, avatarFile!, email, password1)
+        registerWithEmailAndPassword(email, password1)
           .catch((err) => {
             console.error(err)
             setError(err.message);
@@ -54,35 +51,6 @@ export const Register = (props: RegisterProps) => {
         spacing={2}
         sx={{ overflowY: "auto" }}
       >
-        <Grid item xs={8}>
-          <TextField
-            InputLabelProps={{ shrink: true }}
-            name="name"
-            value={name}
-            size="small"
-            required
-            fullWidth
-            id="name"
-            label="Name"
-            autoFocus
-            onChange={(e) => setName(e.target.value.trim())}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <input accept="image/*" id="upload-avatar" type="file" hidden onChange={(e) => {
-            if (e.target.files && e.target.files[0]) {
-              const avatarVal = URL.createObjectURL(e.target.files[0]);
-              setAvatar(avatarVal);
-              setAvatarFile(e.target.files[0]);
-            }
-          }} />
-          <label htmlFor="upload-avatar">
-            <IconButton component="span">
-              <Avatar sx={{ width: "5rem", height: "5rem", fontSize: "1rem" }} src={avatar}>Choose Avatar</Avatar>
-            </IconButton>
-          </label>
-        </Grid>
-        <Grid item xs={1} />
         <Grid item xs={10}>
           <TextField
             InputLabelProps={{ shrink: true }}
@@ -133,7 +101,7 @@ export const Register = (props: RegisterProps) => {
             <Button variant="outlined" onClick={props.onCancel}>Back</Button>
             <Button
               variant="outlined"
-              disabled={email === "" || password1 === "" || password2 === "" || name === "" || avatarFile === null}
+              disabled={email === "" || password1 === "" || password2 === ""}
               type="submit"
             >
               Register
